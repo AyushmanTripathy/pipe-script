@@ -1,0 +1,13 @@
+# factorial
+
+call factorial  20
+
+function factorial $count
+  set total 1
+  set n 1
+    
+  while  | ge $count $n
+    set total | multiply $total $n
+    set n | add $n 1
+
+    log $total

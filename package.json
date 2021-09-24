@@ -1,0 +1,20 @@
+{
+  "name": "psre",
+  "version": "1.0.1",
+  "description": "A programming language that revolves around piping",
+  "main": "bin/index.js",
+  "type": "module",
+  "repository": {
+    "type": "git"
+   },
+   "bin": {
+    "pipescript": "bin/index.js"
+  },
+  "keywords": ["language"],
+  "author": "Ayushman Tripathy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AyushmanTripathy/pipe-script/issues"
+  },
+  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme"
+}

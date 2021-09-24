@@ -1,0 +1,17 @@
+# fibonacci
+
+call fibonacci 100
+
+function fibonacci $n
+  set a 1
+  set b 1
+  
+  log $b
+  while | ge $n 0
+  
+    log $a
+    set temp $a
+    set a | add $a $b
+    set b $temp
+
+    set n | subtract $n 1
