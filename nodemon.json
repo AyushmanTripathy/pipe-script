@@ -1,0 +1,12 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules"
+  ],
+  "watch": [
+    "bin",
+    "test.pipescript"
+  ],
+  "ext": "js,pipescript,json"
+}
