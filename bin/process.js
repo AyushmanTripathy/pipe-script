@@ -75,7 +75,7 @@ export async function classifyScopes(rl) {
         }
         // else / else if
         else if (line_before.startsWith("else")) {
-          if(!last_if_hash) error(`${line_before}\ninvalid if statment`)
+          if(!last_if_hash) error(`invalid if statment - ${line_before}`)
           scopes[last(scope_stack)].pop();
 
           const hash_name = hash();

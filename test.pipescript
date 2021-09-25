@@ -1,12 +1,5 @@
-io # pipescript diamond
+# pipescript diamond
 call diamond 10
-
-if true
-  log true
-elseif true
-  log elseif
-else 
-  log false
 
 function diamond $count
   set n 0

@@ -1,11 +1,15 @@
 import { readFileSync } from "fs";
 
 export function value(target, variables) {
-  const value = checkForVars(target, variables)
-  if(typeof value == 'undefined') return error(`${target} is not defined`)
-  return checkType(value);
+  switch (typeof target) {
+    case "string":
+      return checkType(checkForVars(target, variables));
+    case "undefined":
+      return error(`detected undefined value`);
+    default:
+      return target;
+  }
 }
-
 function checkType(value) {
   // check for type
   if (value == 0) {
@@ -25,7 +29,7 @@ function checkForVars(value, variables) {
     if (variables.hasOwnProperty(value.substring(1)))
       return variables[value.substring(1)];
     return scopes.vars[value.substring(1)];
-  } 
+  }
 
   return value;
 }
@@ -34,9 +38,9 @@ export function last(arr) {
   return arr[arr.length - 1];
 }
 
-export function error(msg){
-  console.log('\x1b[31m',msg,"\x1b[31m")
-  process.exit()
+export function error(msg) {
+  console.log("\x1b[31m", msg, "\x1b[31m");
+  process.exit();
 }
 
 export function log(string) {
