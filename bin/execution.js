@@ -117,90 +117,94 @@ function runStatement(line, vars) {
   line = line.split(" ").filter(Boolean);
 
   const command = line.shift();
-  const target = line.shift();
 
-  return runCommand(vars, command, target, line);
+  return runCommand(vars, command, line);
 }
 
-function runCommand(vars, command, target, line) {
-  // basic command
+function runCommand(vars, command, line) {
+  // NO ARG
   switch (command) {
     case "exit":
       process.exit();
-    case "set":
-      if (vars.hasOwnProperty(target))
-        vars[target] = value(line.shift(), vars);
-      else scopes.vars[target] = value(line.shift(), vars);
-      return null;
+    case "random":
+      return Math.random();
+  }
+
+  // MULTIPLE
+  let sum = 0;
+  switch (command) {
+    case "add":
+      for (const num of line) sum += value(num, vars);
+      return sum;
+    case "subtract":
+      for (const num of line) sum -= value(num, vars);
+      return sum;
+  }
+
+  sum = 1;
+  switch (command) {
+    case "multiply":
+      for (const num of line) sum *= value(num, vars);
+      return sum;
+    case "divide":
+      for (const num of line) sum /= value(num, vars);
+      return sum;
+    case "reminder":
+      for (const num of line) sum = sum % value(num, vars);
+      return sum;
+  }
+
+  // 1 ARG
+  const $1 = checkArg(line.shift(), command,vars);
+  switch (command) {
+    case "boolean":
+      return Boolean(value($1, vars));
+    case "not":
+      return !Boolean(value($1, vars));
     case "log":
-      console.log(value(target, vars));
+      console.log(value($1, vars));
       return null;
     case "call":
       const args = [];
       for (const arg of line) args.push(value(arg, vars));
-      return runFunction(target, args);
-    case "boolean":
-      return Boolean(value(target, vars));
-    case "not":
-      return !Boolean(value(target, vars));
-  }
-
-  // Math Methods
-  switch (command) {
-    case "random":
-      return Math.random();
+      return runFunction($1, args);
     case "round":
-      return Math.round(target);
+      return Math.round($1);
     case "floor":
-      return Math.floor(target);
+      return Math.floor($1);
   }
 
-  // operators
-  let sum;
+  // 2 ARG
+  const $2 = checkArg(line.shift(), command,vars,[$1]);
   switch (command) {
-    case "add":
-      sum = value(target, vars);
-      for (const num of line) sum += value(num, vars);
-      return sum;
-    case "subtract":
-      sum = value(target, vars);
-      for (const num of line) sum -= value(num, vars);
-      return sum;
-    case "multiply":
-      sum = value(target, vars);
-      for (const num of line) sum *= value(num, vars);
-      return sum;
-    case "divide":
-      sum = value(target, vars);
-      for (const num of line) sum /= value(num, vars);
-      return sum;
-    case "reminder":
-      sum = value(target, vars);
-      for (const num of line) sum = sum % value(num, vars);
-      return sum;
+    case "set":
+      if (vars.hasOwnProperty($1))
+        vars[$1] = value($2, vars);
+      else scopes.vars[$1] = value($2, vars);
+      return null;
     case "pow":
-      sum = value(target, vars);
-      return Math.pow(value(target, vars), value(line.shift(), vars));
-  }
+      sum = value($1, vars);
+      return Math.pow(value($1, vars), value($2, vars));
 
-  // logic
-  let b = line.shift();
-  if (!b && b != 0) return null;
-  let a = value(target, vars);
-  b = value(b, vars);
-
-  switch (command) {
+    // logic
     case "eq":
-      return a == b;
+      return $1 == $2;
     case "gt":
-      return a > b;
+      return $1 > $2;
     case "lt":
-      return a < b;
+      return $1 < $2;
     case "ge":
-      return a >= b;
+      return $1 >= $2;
     case "le":
-      return a <= b;
+      return $1 <= $2;
   }
 
-  error(`${command} is not a method`);
+  error(`invalid command - ${command} with arg ${[$1,$2,...line]}`);
+}
+
+function checkArg(target,command,vars,args=[]) {
+  if (typeof target == "undefined"){
+    error(`invalid command - ${command} with arg ${[target,...args]}`);
+  }
+  else return value(target, vars);
 }

@@ -5,8 +5,7 @@
     "node_modules/**/node_modules"
   ],
   "watch": [
-    "bin",
-    "test.pipescript"
+    "./"
   ],
-  "ext": "js,pipescript,json"
+  "ext": "json,js,pipescript,"
 }

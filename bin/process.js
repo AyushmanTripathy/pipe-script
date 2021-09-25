@@ -1,6 +1,6 @@
 import { createReadStream } from "fs";
 import { createInterface } from "readline";
-import { last } from "./util.js";
+import { last,error } from "./util.js";
 
 const cwd = process.cwd();
 let hash_code = 0;
@@ -19,7 +19,7 @@ export async function importFile(path) {
 export async function classifyScopes(rl) {
   let scope_stack = ["global"];
   let last_depth = 0;
-  let last_if_hash;
+  let last_if_hash = null;
   let last_comment = false;
 
   for await (let line of rl) {
@@ -75,13 +75,15 @@ export async function classifyScopes(rl) {
         }
         // else / else if
         else if (line_before.startsWith("else")) {
+          if(!last_if_hash) error(`${line_before}\ninvalid if statment`)
           scopes[last(scope_stack)].pop();
 
           const hash_name = hash();
           scope_stack.push(hash_name);
           scopes[hash_name] = [line];
-
+          
           scopes[last_if_hash].push(line_before, hash_name);
+          if(!line_before.startsWith('elseif')) last_if_hash = null
         }
 
         // while / loops

@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 
 export function value(target, variables) {
   const value = checkForVars(target, variables)
-  if(typeof value == 'undefined') error(`${target} is not defined`)
+  if(typeof value == 'undefined') return error(`${target} is not defined`)
   return checkType(value);
 }
 
@@ -36,6 +36,7 @@ export function last(arr) {
 
 export function error(msg){
   console.log('\x1b[31m',msg,"\x1b[31m")
+  process.exit()
 }
 
 export function log(string) {
