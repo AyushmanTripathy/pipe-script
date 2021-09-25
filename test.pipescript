@@ -1,1 +1,43 @@
-log add
+# pipescript diamond
+
+call diamond 10
+call lol
+log $lol
+##
+elseif true
+  log elseif
+else 
+  log false
+##
+
+function diamond $count
+  set n 0
+ 
+  # top part 
+  while | ge $count $n
+ 
+    set string ''
+    set space | call line * $n
+    set star  | call line _ | subtract $count $n
+ 
+    set n | add $n 1
+    log | add $star | add $space | add $space $star
+ 
+  set n 0
+ 
+  # bottom part
+  while | ge $count $n
+   
+    set space | call line * | subtract $count $n
+    set star  | call line _ $n
+  
+    set n | add $n 1
+    log | add $star | add $space | add $space $star
+
+# one line
+
+function line $char $n
+  set string $char
+  loop $n
+    set string | add $string $char
+  return $string

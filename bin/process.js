@@ -1,8 +1,9 @@
-import { createReadStream } from 'fs'
-import { createInterface } from 'readline';
-import { last, random } from "./util.js";
+import { createReadStream } from "fs";
+import { createInterface } from "readline";
+import { last } from "./util.js";
 
 const cwd = process.cwd();
+let hash_code = 0;
 
 export async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
@@ -19,22 +20,21 @@ export async function classifyScopes(rl) {
   let scope_stack = ["global"];
   let last_depth = 0;
   let last_if_hash;
-  let last_comment = false
+  let last_comment = false;
 
   for await (let line of rl) {
     const depth = checkDepth(line);
 
     // check for comments
     if (line.includes("#")) {
-      if (line.includes('##'))
-        last_comment = last_comment ? false : true;
+      if (line.includes("##")) last_comment = last_comment ? false : true;
       line = line.split("#")[0];
     }
 
     line = line.trim();
     if (last_comment);
-    // line not empty
     else if (line) {
+      // line not empty
       const line_before = scopes[last(scope_stack)].slice(-1).pop();
 
       if (line.startsWith("import ")) await importFile(line.slice(6));
@@ -60,13 +60,13 @@ export async function classifyScopes(rl) {
         }
         // if statments
         else if (line_before.startsWith("if")) {
-          const hash_name = "@" + Date.now() + random(1000);
+          const hash_name = hash();
 
           // remove line before
           scopes[last(scope_stack)].pop();
           scopes[last(scope_stack)].push(`${hash_name}`);
 
-          const if_hash_name = "@" + Date.now() + random(1000);
+          const if_hash_name = hash();
           scopes[if_hash_name] = [line];
           scope_stack.push(if_hash_name);
 
@@ -77,7 +77,7 @@ export async function classifyScopes(rl) {
         else if (line_before.startsWith("else")) {
           scopes[last(scope_stack)].pop();
 
-          const hash_name = "@" + Date.now() + random(1000);
+          const hash_name = hash();
           scope_stack.push(hash_name);
           scopes[hash_name] = [line];
 
@@ -86,7 +86,7 @@ export async function classifyScopes(rl) {
 
         // while / loops
         else {
-          const hash_name = "@" + Date.now() + random(1000);
+          const hash_name = hash();
 
           scopes[last(scope_stack)].pop();
           scopes[last(scope_stack)].push(`${hash_name}`);
@@ -98,6 +98,11 @@ export async function classifyScopes(rl) {
       last_depth = depth;
     }
   }
+}
+
+function hash() {
+  hash_code++;
+  return `@${hash_code}`;
 }
 
 function checkDepth(line) {

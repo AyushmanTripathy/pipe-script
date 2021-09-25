@@ -10,7 +10,7 @@ import { loadJson } from "./util.js";
 // get the arguments
 const args = process.argv.splice(2);
 
-global.config = loadJson("../config.json");
+globalThis.config = loadJson("../config.json");
 
 if (args.length) runFile();
 else runInterpreter();
@@ -22,7 +22,7 @@ async function runInterpreter() {
     terminal: true,
   });
 
-  global.scopes = {};
+  globalThis.scopes = {};
 
   let vars = {};
   rl.on("line", async (line) => {
@@ -36,22 +36,22 @@ async function runInterpreter() {
         return console.clear();
     }
 
-    global.scopes = {};
+    globalThis.scopes = {};
     scopes.global = [];
     await classifyScopes([`${line}`]);
     scopes.vars = vars;
-
+  
     runScope(scopes.global, scopes.vars);
     vars = scopes.vars;
   });
 }
 
 export default async function runFile() {
-  global.scopes = {};
+  globalThis.scopes = {};
   scopes.global = [];
   scopes.vars = {};
 
   await importFile(args.shift());
-
+  console.log(scopes)
   runScope(scopes.global, scopes.vars);
 }

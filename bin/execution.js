@@ -1,4 +1,4 @@
-import { value } from "./util.js";
+import { value, error } from "./util.js";
 
 export default function runScope(scope, vars = {}) {
   // run lines
@@ -19,9 +19,11 @@ export default function runScope(scope, vars = {}) {
   return null;
 }
 
-function runFunction(scope, args) {
+function runFunction(target, args) {
   // functions is empty
-  if (!scope) return null;
+  if (!globalThis.scopes.hasOwnProperty(target))
+    return error(`${target} is not a function`);
+  const scope = globalThis.scopes[target].slice();
 
   let line = scope.shift().split(" ").filter(Boolean);
   line = line.splice(2);
@@ -73,7 +75,7 @@ function basicLoop(lines, vars) {
   while (count) {
     runScope(scopes[lines], vars);
     count--;
-    if (!x) return console.log("stack overflow");
+    if (!x) return error("stack overflow");
     else x--;
   }
 }
@@ -87,7 +89,7 @@ function whileLoop(lines, vars) {
   let x = config.max_loop_limit;
   while (runLine(command, vars)) {
     runScope(scopes[lines], vars);
-    if (!x) return console.log("stack overflow");
+    if (!x) return error("stack overflow");
     else x--;
   }
 }
@@ -136,11 +138,21 @@ function runCommand(vars, command, target, line) {
     case "call":
       const args = [];
       for (const arg of line) args.push(value(arg, vars));
-      return runFunction(scopes[target].slice(), args);
+      return runFunction(target, args);
     case "boolean":
       return Boolean(value(target, vars));
     case "not":
       return !Boolean(value(target, vars));
+  }
+
+  // Math Methods
+  switch (command) {
+    case "random":
+      return Math.random();
+    case "round":
+      return Math.round(target);
+    case "floor":
+      return Math.floor(target);
   }
 
   // operators
@@ -189,4 +201,6 @@ function runCommand(vars, command, target, line) {
     case "le":
       return a <= b;
   }
+
+  error(`${command} is not a method`);
 }
