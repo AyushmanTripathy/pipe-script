@@ -3,18 +3,21 @@ import { readFileSync } from "fs";
 export function value(target, variables) {
   switch (typeof target) {
     case "string":
-      return checkType(checkForVars(target, variables));
+      const value = checkType(checkForVars(target, variables));
+      if (target.startsWith("-$")) 
+        return value * -1;
+      return value;
     case "undefined":
       return error(`detected undefined value`);
+    case "NaN":
+      return error(`detected NaN value`);
     default:
       return target;
   }
 }
 function checkType(value) {
   // check for type
-  if (value == 0) {
-    return 0;
-  }
+  if (value == 0) return 0;
   if (Number(value)) return Number(value);
 
   if (value == "true") return true;
@@ -25,6 +28,7 @@ function checkType(value) {
 }
 
 function checkForVars(value, variables) {
+  if (value.startsWith("-$")) value = value.substring(1);
   if (value.startsWith("$")) {
     if (variables.hasOwnProperty(value.substring(1)))
       return variables[value.substring(1)];

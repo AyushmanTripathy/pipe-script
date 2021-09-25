@@ -52,6 +52,5 @@ export default async function runFile() {
   scopes.vars = {};
 
   await importFile(args.shift());
-  console.log(scopes)
   runScope(scopes.global, scopes.vars);
 }

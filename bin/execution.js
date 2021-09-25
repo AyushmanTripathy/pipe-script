@@ -1,6 +1,8 @@
 import { value, error } from "./util.js";
 
 export default function runScope(scope, vars = {}) {
+  scope = scope.slice();
+
   // run lines
   for (let lines of scope) {
     // check for loops / if
@@ -72,8 +74,9 @@ function basicLoop(lines, vars) {
   count = value(count.slice(4, -1).trim(), vars);
 
   let x = config.max_loop_limit;
-  while (count) {
-    runScope(scopes[lines], vars);
+
+  while (count > 0) {
+    runScope(scopes[lines].slice(1), vars);
     count--;
     if (!x) return error("stack overflow");
     else x--;
@@ -88,7 +91,7 @@ function whileLoop(lines, vars) {
 
   let x = config.max_loop_limit;
   while (runLine(command, vars)) {
-    runScope(scopes[lines], vars);
+    runScope(scopes[lines].slice(1), vars);
     if (!x) return error("stack overflow");
     else x--;
   }
@@ -109,15 +112,12 @@ function runLine(lines, vars) {
     line += ` ${output}`;
     output = runStatement(line, vars);
   }
-
   return output;
 }
 
 function runStatement(line, vars) {
   line = line.split(" ").filter(Boolean);
-
   const command = line.shift();
-
   return runCommand(vars, command, line);
 }
 
@@ -131,38 +131,30 @@ function runCommand(vars, command, line) {
   }
 
   // MULTIPLE
-  let sum = 0;
   switch (command) {
     case "add":
-      for (const num of line) sum += value(num, vars);
-      return sum;
-    case "subtract":
-      for (const num of line) sum -= value(num, vars);
-      return sum;
+      let first_value = 0;
+      if (line.some((n) => typeof value(n, vars) == "string"))
+        first_value = "";
+      return line.reduce((acc, cur) => acc + value(cur, vars), first_value);
   }
 
-  sum = 1;
   switch (command) {
     case "multiply":
-      for (const num of line) sum *= value(num, vars);
-      return sum;
+      return line.reduce((acc, cur) => (acc *= value(cur, vars)), 1);
     case "divide":
-      for (const num of line) sum /= value(num, vars);
-      return sum;
-    case "reminder":
-      for (const num of line) sum = sum % value(num, vars);
-      return sum;
+      return line.reduce((acc, cur) => (acc /= value(cur, vars)), 1);
   }
 
   // 1 ARG
-  const $1 = checkArg(line.shift(), command,vars);
+  const $1 = checkArg(line.shift(), command, vars);
   switch (command) {
     case "boolean":
-      return Boolean(value($1, vars));
+      return Boolean($1);
     case "not":
-      return !Boolean(value($1, vars));
+      return !Boolean($1);
     case "log":
-      console.log(value($1, vars));
+      console.log($1);
       return null;
     case "call":
       const args = [];
@@ -175,16 +167,17 @@ function runCommand(vars, command, line) {
   }
 
   // 2 ARG
-  const $2 = checkArg(line.shift(), command,vars,[$1]);
+  const $2 = checkArg(line.shift(), command, vars, [$1]);
   switch (command) {
     case "set":
-      if (vars.hasOwnProperty($1))
-        vars[$1] = value($2, vars);
-      else scopes.vars[$1] = value($2, vars);
+      if (vars.hasOwnProperty($1)) vars[$1] = $2;
+      else scopes.vars[$1] = $2;
       return null;
     case "pow":
-      sum = value($1, vars);
-      return Math.pow(value($1, vars), value($2, vars));
+      sum = $1;
+      return Math.pow($1, $2);
+    case "reminder":
+      return $1 % $2;
 
     // logic
     case "eq":
@@ -199,12 +192,11 @@ function runCommand(vars, command, line) {
       return $1 <= $2;
   }
 
-  error(`invalid command - ${command} with arg ${[$1,$2,...line]}`);
+  error(`invalid command - ${command} with arg ${[$1, $2, ...line]}`);
 }
 
-function checkArg(target,command,vars,args=[]) {
-  if (typeof target == "undefined"){
-    error(`invalid command - ${command} with arg ${[target,...args]}`);
-  }
-  else return value(target, vars);
+function checkArg(target, command, vars, args = []) {
+  if (typeof target == "undefined") {
+    error(`invalid command - ${command} with arg ${[target, ...args]}`);
+  } else return value(target, vars);
 }
