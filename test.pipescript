@@ -1,4 +1,6 @@
-set n | Array 
-set $n 0 lol
+set n | Object 
+set index 0p
 
-log | get $n 0
+set $n $index | Object
+
+log | get [get $n 0p] lol

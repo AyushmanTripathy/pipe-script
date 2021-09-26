@@ -211,6 +211,10 @@ function runCommand(vars, command, line) {
 
 function setValue(target, key, value) {
   target = target.split("%").filter(Boolean);
+  switch (target[0]) {
+    case 'array':
+      if(!Number(key) && key != 0) error(`expected index to be a number , got ${key}`)
+  }
   scopes[target[0]][target[1]][key] = value;
 }
 
