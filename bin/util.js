@@ -38,6 +38,11 @@ function checkForVars(value, variables) {
   return value;
 }
 
+export function hash() {
+  hash_code++;
+  return `@${hash_code}`;
+}
+
 export function last(arr) {
   return arr[arr.length - 1];
 }

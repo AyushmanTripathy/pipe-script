@@ -1,6 +1,1 @@
-set n | Object 
-set index 0p
-
-set $n $index | Object
-
-log | get [get $n 0p] lol
+log  | add [add 12 24] [add lol op]

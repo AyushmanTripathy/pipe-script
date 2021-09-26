@@ -1,4 +1,4 @@
-import { value, error } from "./util.js";
+import { value, error, hash } from "./util.js";
 
 export default function runScope(scope, vars = {}) {
   scope = scope.slice();
@@ -98,6 +98,7 @@ function whileLoop(lines, vars) {
 }
 
 function runLine(lines, vars) {
+  lines = checkForBlocks(lines, vars);
   lines = lines.split(" | ").reverse();
   // piping
   let output = "";
@@ -115,6 +116,26 @@ function runLine(lines, vars) {
   return output;
 }
 
+function checkForBlocks(line, vars) {
+  let open;
+  let close;
+
+  let x = 3;
+  while (line.indexOf("[") >= 0 && line.indexOf("]") >= 0) {
+    open = line.indexOf("[");
+    close = line.indexOf("]");
+
+    line =
+      line.slice(0, open) +
+      runLine(line.slice(open + 1, close), vars) +
+      line.slice(close + 1, line.length);
+
+    x--;
+    if (!x) break;
+  }
+  return line;
+}
+
 function runStatement(line, vars) {
   line = line.split(" ").filter(Boolean);
   const command = line.shift();
@@ -129,13 +150,13 @@ function runCommand(vars, command, line) {
     case "random":
       return Math.random();
     case "Object":
-      hash_code++;
-      scopes.object[`@${hash_code}`] = {};
-      return `%object%@${hash_code}`;
+      hash_num = hash();
+      scopes.object[`@${hash_num}`] = {};
+      return `%object%@${hash_num}`;
     case "Array":
-      hash_code++;
-      scopes.array[`@${hash_code}`] = [];
-      return `%array%@${hash_code}`;
+      hash_num = hash();
+      scopes.array[`@${hash_num}`] = [];
+      return `%array%@${hash_num}`;
   }
 
   // MULTIPLE
@@ -183,6 +204,8 @@ function runCommand(vars, command, line) {
       pointer = pointer.split("%");
       return scopes[pointer[1]][pointer[2]][$2];
     case "set":
+      if (Number($1) || $1 == 0)
+        return error(`expected Chars got Number ${$1}`);
       if ($1.startsWith("%"))
         setValue($1, $2, checkArg(line.shift(), command, vars, [$1, $2]));
       else setVar($1, $2, vars);
@@ -212,8 +235,9 @@ function runCommand(vars, command, line) {
 function setValue(target, key, value) {
   target = target.split("%").filter(Boolean);
   switch (target[0]) {
-    case 'array':
-      if(!Number(key) && key != 0) error(`expected index to be a number , got ${key}`)
+    case "array":
+      if (!Number(key) && key != 0)
+        error(`expected index to be a number , got ${key}`);
   }
   scopes[target[0]][target[1]][key] = value;
 }
@@ -224,7 +248,8 @@ function setVar(target, value, vars) {
 }
 
 function checkArg(target, command, vars, args = []) {
-  if (typeof target == "undefined") {
+  if (Number(target) || target == 0) return Number(target);
+  else if (typeof target == "undefined") {
     error(`invalid command - ${command} with arg ${[target, ...args]}`);
   } else return value(target, vars);
 }

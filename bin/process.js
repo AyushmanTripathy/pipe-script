@@ -1,6 +1,6 @@
 import { createReadStream } from "fs";
 import { createInterface } from "readline";
-import { last,error } from "./util.js";
+import { last, error,hash } from "./util.js";
 
 const cwd = process.cwd();
 globalThis.hash_code = 0;
@@ -75,15 +75,15 @@ async function classifyScopes(rl) {
         }
         // else / else if
         else if (line_before.startsWith("else")) {
-          if(!last_if_hash) error(`invalid if statment - ${line_before}`)
+          if (!last_if_hash) error(`invalid if statment - ${line_before}`);
           scopes[last(scope_stack)].pop();
 
           const hash_name = hash();
           scope_stack.push(hash_name);
           scopes[hash_name] = [line];
-          
+
           scopes[last_if_hash].push(line_before, hash_name);
-          if(!line_before.startsWith('elseif')) last_if_hash = null
+          if (!line_before.startsWith("elseif")) last_if_hash = null;
         }
 
         // while / loops
@@ -100,11 +100,6 @@ async function classifyScopes(rl) {
       last_depth = depth;
     }
   }
-}
-
-function hash() {
-  hash_code++;
-  return `@${hash_code}`;
 }
 
 function checkDepth(line) {
