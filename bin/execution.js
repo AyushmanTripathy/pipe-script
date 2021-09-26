@@ -128,6 +128,14 @@ function runCommand(vars, command, line) {
       process.exit();
     case "random":
       return Math.random();
+    case "Object":
+      hash_code++;
+      scopes.object[`@${hash_code}`] = {};
+      return `%object%@${hash_code}`;
+    case "Array":
+      hash_code++;
+      scopes.array[`@${hash_code}`] = [];
+      return `%array%@${hash_code}`;
   }
 
   // MULTIPLE
@@ -169,9 +177,15 @@ function runCommand(vars, command, line) {
   // 2 ARG
   const $2 = checkArg(line.shift(), command, vars, [$1]);
   switch (command) {
+    case "get":
+      let pointer = value($1, vars);
+      if (!pointer) error(`${$1} is not defined (Array/Object)`);
+      pointer = pointer.split("%");
+      return scopes[pointer[1]][pointer[2]][$2];
     case "set":
-      if (vars.hasOwnProperty($1)) vars[$1] = $2;
-      else scopes.vars[$1] = $2;
+      if ($1.startsWith("%"))
+        setValue($1, $2, checkArg(line.shift(), command, vars, [$1, $2]));
+      else setVar($1, $2, vars);
       return null;
     case "pow":
       sum = $1;
@@ -193,6 +207,16 @@ function runCommand(vars, command, line) {
   }
 
   error(`invalid command - ${command} with arg ${[$1, $2, ...line]}`);
+}
+
+function setValue(target, key, value) {
+  target = target.split("%").filter(Boolean);
+  scopes[target[0]][target[1]][key] = value;
+}
+
+function setVar(target, value, vars) {
+  if (vars.hasOwnProperty(target)) vars[target] = value;
+  else scopes.vars[target] = value;
 }
 
 function checkArg(target, command, vars, args = []) {

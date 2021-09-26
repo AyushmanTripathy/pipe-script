@@ -3,9 +3,9 @@ import { createInterface } from "readline";
 import { last,error } from "./util.js";
 
 const cwd = process.cwd();
-let hash_code = 0;
+globalThis.hash_code = 0;
 
-export async function importFile(path) {
+export default async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
   const fileStream = createReadStream(path_to_file);
 
@@ -16,7 +16,7 @@ export async function importFile(path) {
   await classifyScopes(rl);
 }
 
-export async function classifyScopes(rl) {
+async function classifyScopes(rl) {
   let scope_stack = ["global"];
   let last_depth = 0;
   let last_if_hash = null;
