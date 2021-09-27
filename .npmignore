@@ -1,11 +1,8 @@
-node_modules
+*
 
-online_editor
-examples
+!pipescript.js
 
-todo.txt
-test.pipescript
-structure.txt
-
-.npmrc
-.gitignore
+!LICENSE
+!README.md
+!package.json
+!config.json

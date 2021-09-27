@@ -1,19 +1,22 @@
 {
   "name": "psre",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A programming language that revolves around piping",
-  "main": "bin/index.js",
+  "main": "pipescript.js",
   "type": "module",
   "scripts": {
-    "dev":"nodemon bin/index.js test.pipescript"
+    "build": "rollup --config rollup.config.js",
+    "dev": "nodemon src/pipescript.js test.pipescript"
   },
   "repository": {
     "type": "git"
-   },
-   "bin": {
-    "pipescript": "bin/index.js"
   },
-  "keywords": ["language"],
+  "bin": {
+    "pipescript": "pipescript.js"
+  },
+  "keywords": [
+    "language"
+  ],
   "author": "Ayushman Tripathy",
   "license": "MIT",
   "bugs": {

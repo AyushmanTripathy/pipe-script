@@ -4,29 +4,23 @@ call diamond 10
 
 function diamond $count
   set n 0
- 
-  # top part 
   while | ge $count $n
- 
     set string ''
-    set space | call line * $n
-    set star  | call line _ | subtract $count $n
- 
-    set n | add $n 1
-    log | add $star | add $space | add $space $star
- 
-  set n 0
- 
-  # bottom part
-  while | ge $count $n
-   
-    set space | call line * | subtract $count $n
-    set star  | call line _ $n
-  
-    set n | add $n 1
-    log | add $star | add $space | add $space $star
+    set star   | call line * $n
+    set scroll | call line _ | add -$n $count
 
-# one line
+    log   | add $scroll | add $star | add $star $scroll
+    set n | add $n 1
+
+  set n 0
+  while | ge $count $n
+    set string ''
+
+    set scroll | call line _ $n
+    set star   | call line * | add -$n $count
+
+    log   | add $scroll | add $star | add $star $scroll
+    set n | add $n 1
 
 function line $char $n
   set string $char

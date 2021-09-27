@@ -1,10 +1,10 @@
-import { createReadStream } from 'fs'
-import { createInterface } from 'readline';
-import { last, random } from "./util.js";
+import { createReadStream } from "fs";
+import { createInterface } from "readline";
+import { last, error,hash } from "./util.js";
 
 const cwd = process.cwd();
 
-export async function importFile(path) {
+async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
   const fileStream = createReadStream(path_to_file);
 
@@ -12,29 +12,30 @@ export async function importFile(path) {
     input: fileStream,
   });
 
-  await classifyScopes(rl);
+  const file = []
+  for await(const line of rl) file.push(line);
+  await classifyScopes(file);
 }
 
-export async function classifyScopes(rl) {
+export default async function classifyScopes(file) {
   let scope_stack = ["global"];
   let last_depth = 0;
-  let last_if_hash;
-  let last_comment = false
+  let last_if_hash = null;
+  let last_comment = false;
 
-  for await (let line of rl) {
+  for (let line of file) {
     const depth = checkDepth(line);
 
     // check for comments
     if (line.includes("#")) {
-      if (line.includes('##'))
-        last_comment = last_comment ? false : true;
+      if (line.includes("##")) last_comment = last_comment ? false : true;
       line = line.split("#")[0];
     }
 
     line = line.trim();
     if (last_comment);
-    // line not empty
     else if (line) {
+      // line not empty
       const line_before = scopes[last(scope_stack)].slice(-1).pop();
 
       if (line.startsWith("import ")) await importFile(line.slice(6));
@@ -60,13 +61,13 @@ export async function classifyScopes(rl) {
         }
         // if statments
         else if (line_before.startsWith("if")) {
-          const hash_name = "@" + Date.now() + random(1000);
+          const hash_name = hash();
 
           // remove line before
           scopes[last(scope_stack)].pop();
           scopes[last(scope_stack)].push(`${hash_name}`);
 
-          const if_hash_name = "@" + Date.now() + random(1000);
+          const if_hash_name = hash();
           scopes[if_hash_name] = [line];
           scope_stack.push(if_hash_name);
 
@@ -75,18 +76,20 @@ export async function classifyScopes(rl) {
         }
         // else / else if
         else if (line_before.startsWith("else")) {
+          if (!last_if_hash) error(`invalid if statment - ${line_before}`);
           scopes[last(scope_stack)].pop();
 
-          const hash_name = "@" + Date.now() + random(1000);
+          const hash_name = hash();
           scope_stack.push(hash_name);
           scopes[hash_name] = [line];
 
           scopes[last_if_hash].push(line_before, hash_name);
+          if (!line_before.startsWith("elseif")) last_if_hash = null;
         }
 
         // while / loops
         else {
-          const hash_name = "@" + Date.now() + random(1000);
+          const hash_name = hash();
 
           scopes[last(scope_stack)].pop();
           scopes[last(scope_stack)].push(`${hash_name}`);

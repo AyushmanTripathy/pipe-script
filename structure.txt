@@ -1,6 +1,0 @@
-
-# importing 
-importFile => classifyScopes => scopes
-
-# running the program
-scopes => runScope => runLine => runStatement => runCommand

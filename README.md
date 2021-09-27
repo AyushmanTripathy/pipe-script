@@ -5,7 +5,7 @@ A programming language that revolves around piping.
 #### check it out
 
 1. install pipe scipt runtime environment from npm `sudo npm install -g psre`
-2. vist pipe scipt [web editor]()
+2. vist pipe scipt [web editor](https://pipescript.netlify.app/)
 
 ### syntax
 
