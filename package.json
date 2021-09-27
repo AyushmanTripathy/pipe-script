@@ -5,8 +5,8 @@
   "main": "pipescript.js",
   "type": "module",
   "scripts": {
-    "build": "rollup bin/index.js --file psre.js",
-    "dev": "nodemon bin/index.js test.pipescript"
+    "build": "rollup src/index.js --file psre.js",
+    "dev": "nodemon pipescript.js test.pipescript"
   },
   "repository": {
     "type": "git"
