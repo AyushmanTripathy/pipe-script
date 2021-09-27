@@ -1,9 +1,28 @@
+## basic commands
+
+1.set
+
+> setting variables
+>
+> ```ruby
+> set <variable name> <value>
+> ```
+
+## pipes
+
+piping return value of one command to other command
+
+```ruby
+log | add 12 34
+```
+
 ## code blocks
-code between `[]` square brackets are executed and the return value is
+
+encapsulate code between `[ Sqaure Brackets ]`
 example -
 
 ```ruby
-log | add [add 1 1] [add 2 2]
+log [add 1 1] [add 2 2]
 ```
 
 ## Data Types
