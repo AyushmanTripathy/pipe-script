@@ -1,4 +1,4 @@
-import { value, error, hash, log, last } from "./util.js";
+import { value, error, hash } from "./util.js";
 
 export default function runScope(scope, vars = {}) {
   scope = scope.slice();
@@ -116,32 +116,32 @@ function runLine(lines, vars) {
   return output;
 }
 
-function checkForBlocks(line, vars) {
-  if (line.indexOf("[") == -1 && line.indexOf("]") == -1) return line;
-
-  let temp = "";
-  let open_stack = [];
+function checkForBlocks(line, vars, open_stack = []) {
+  if (!line.includes("[") && !line.includes("]")) return line;
 
   let pos = 0;
-  let last_close_pos = 0;
+
   for (const letter of line) {
     if (letter == "[") open_stack.push(pos);
     else if (letter == "]") {
+      console.log();
+      console.log(line, open_stack);
       const open_pos = open_stack.pop();
 
-      temp += line.slice(last_close_pos, open_pos);
-      temp += runCodeBlock(open_pos, pos, line, vars);
+      line =
+        line.slice(0, open_pos) +
+        runLine(line.slice(open_pos + 1, pos), vars) +
+        line.slice(pos + 1, line.length);
 
-      last_close_pos = pos+1;
-      console.log(temp, open_stack);
+      console.log(line);
+      if (line.includes("]")) {
+        line = checkForBlocks(line, vars, open_stack);
+        break;
+      } else break;
     }
     pos++;
   }
-  return temp;
-}
-
-function runCodeBlock(open, close, line, vars) {
-  return runLine(line.slice(open + 1, close), vars);
+  return line;
 }
 
 function runStatement(line, vars) {

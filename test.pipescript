@@ -1,1 +1,1 @@
-log | add [add 1 2]  [add 23 34]
+log [add 1 1]  [log | add 1 1] 
