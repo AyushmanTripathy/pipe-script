@@ -312,7 +312,6 @@ function checkArg(target, command, vars, args = []) {
 }
 
 const cwd = process.cwd();
-globalThis.hash_code = 0;
 
 async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
@@ -426,6 +425,7 @@ function checkDepth(line) {
 
 async function run(file) {
   globalThis.scopes = {};
+  globalThis.hash_code = 0;
   scopes.global = [];
 
   scopes.vars = {};

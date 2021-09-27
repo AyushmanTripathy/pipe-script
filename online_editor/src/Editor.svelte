@@ -1,5 +1,5 @@
 <script>
-  import execute from "./psre.min.js";
+  import execute from "./psre.js";
 
   let text = retrive()
   let running = false

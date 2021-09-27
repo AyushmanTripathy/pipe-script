@@ -22,8 +22,5 @@
   "bugs": {
     "url": "https://github.com/AyushmanTripathy/pipe-script/issues"
   },
-  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme",
-  "devDependencies": {
-    "rollup-plugin-banner": "^0.2.1"
-  }
+  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme"
 }

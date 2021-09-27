@@ -3,7 +3,6 @@ import { createInterface } from "readline";
 import { last, error,hash } from "./util.js";
 
 const cwd = process.cwd();
-globalThis.hash_code = 0;
 
 async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
