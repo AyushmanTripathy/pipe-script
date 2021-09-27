@@ -1,4 +1,4 @@
-import { value, error, hash } from "./util.js";
+import { value, error, hash, log, last } from "./util.js";
 
 export default function runScope(scope, vars = {}) {
   scope = scope.slice();
@@ -117,23 +117,31 @@ function runLine(lines, vars) {
 }
 
 function checkForBlocks(line, vars) {
-  let open;
-  let close;
+  if (line.indexOf("[") == -1 && line.indexOf("]") == -1) return line;
 
-  let x = 3;
-  while (line.indexOf("[") >= 0 && line.indexOf("]") >= 0) {
-    open = line.indexOf("[");
-    close = line.indexOf("]");
+  let temp = "";
+  let open_stack = [];
 
-    line =
-      line.slice(0, open) +
-      runLine(line.slice(open + 1, close), vars) +
-      line.slice(close + 1, line.length);
+  let pos = 0;
+  let last_close_pos = 0;
+  for (const letter of line) {
+    if (letter == "[") open_stack.push(pos);
+    else if (letter == "]") {
+      const open_pos = open_stack.pop();
 
-    x--;
-    if (!x) break;
+      temp += line.slice(last_close_pos, open_pos);
+      temp += runCodeBlock(open_pos, pos, line, vars);
+
+      last_close_pos = pos+1;
+      console.log(temp, open_stack);
+    }
+    pos++;
   }
-  return line;
+  return temp;
+}
+
+function runCodeBlock(open, close, line, vars) {
+  return runLine(line.slice(open + 1, close), vars);
 }
 
 function runStatement(line, vars) {
@@ -163,7 +171,7 @@ function runCommand(vars, command, line) {
   switch (command) {
     case "add":
       let first_value = 0;
-      if (line.some((n) => typeof value(n, vars) == "string"))
+      if (line.some((n) => typeof value(n, vars) != "number"))
         first_value = "";
       return line.reduce((acc, cur) => acc + value(cur, vars), first_value);
   }
