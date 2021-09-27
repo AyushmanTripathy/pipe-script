@@ -1,18 +1,7 @@
-#!/usr/bin/env node
-
-console.clear();
-
 import runScope from "./execution.js";
 import  importFile from "./process.js";
-import { loadJson } from "./util.js";
 
-// get the arguments
-const args = process.argv.splice(2);
-
-globalThis.config = loadJson("../config.json");
-
-runFile();
-export default async function runFile() {
+export default async function run(path) {
   globalThis.scopes = {};
   scopes.global = [];
 
@@ -20,7 +9,7 @@ export default async function runFile() {
   scopes.object = {};
   scopes.array = {};
 
-  await importFile(args.shift());
+  await importFile(path);
   runScope(scopes.global, scopes.vars);
   console.log(scopes)
 }

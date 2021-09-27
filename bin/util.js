@@ -1,5 +1,3 @@
-import { readFileSync } from "fs";
-
 export function value(target, variables) {
   switch (typeof target) {
     case "string":
@@ -58,8 +56,4 @@ export function log(string) {
 
 export function random(x) {
   return Math.floor(Math.random() * x);
-}
-export function loadJson(path) {
-  const content = readFileSync(new URL(path, import.meta.url));
-  return JSON.parse(content);
 }

@@ -2,16 +2,17 @@
   "name": "psre",
   "version": "1.0.3",
   "description": "A programming language that revolves around piping",
-  "main": "bin/index.js",
+  "main": "pipescript.js",
   "type": "module",
   "scripts": {
+    "build": "rollup bin/index.js --file psre.js",
     "dev": "nodemon bin/index.js test.pipescript"
   },
   "repository": {
     "type": "git"
   },
   "bin": {
-    "pipescript": "bin/index.js"
+    "pipescript": "pipescript.js"
   },
   "keywords": [
     "language"
