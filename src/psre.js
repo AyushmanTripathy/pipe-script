@@ -1,7 +1,7 @@
 import runScope from "./execution.js";
-import  importFile from "./process.js";
+import classifyScopes from "./process.js";
 
-export default async function run(path) {
+export default async function run(file) {
   globalThis.scopes = {};
   scopes.global = [];
 
@@ -9,7 +9,7 @@ export default async function run(path) {
   scopes.object = {};
   scopes.array = {};
 
-  await importFile(path);
+  await classifyScopes(file);
   runScope(scopes.global, scopes.vars);
-  console.log(scopes)
+  console.log(scopes);
 }

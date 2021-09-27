@@ -5,7 +5,7 @@ import { last, error,hash } from "./util.js";
 const cwd = process.cwd();
 globalThis.hash_code = 0;
 
-export default async function importFile(path) {
+async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
   const fileStream = createReadStream(path_to_file);
 
@@ -13,16 +13,18 @@ export default async function importFile(path) {
     input: fileStream,
   });
 
-  await classifyScopes(rl);
+  const file = []
+  for await(const line of rl) file.push(line);
+  await classifyScopes(file);
 }
 
-async function classifyScopes(rl) {
+export default async function classifyScopes(file) {
   let scope_stack = ["global"];
   let last_depth = 0;
   let last_if_hash = null;
   let last_comment = false;
 
-  for await (let line of rl) {
+  for (let line of file) {
     const depth = checkDepth(line);
 
     // check for comments

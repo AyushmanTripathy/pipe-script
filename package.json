@@ -5,8 +5,8 @@
   "main": "pipescript.js",
   "type": "module",
   "scripts": {
-    "build": "rollup src/index.js --file psre.js",
-    "dev": "nodemon pipescript.js test.pipescript"
+    "build": "rollup --config rollup.config.js",
+    "dev": "nodemon src/pipescript.js test.pipescript"
   },
   "repository": {
     "type": "git"
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/AyushmanTripathy/pipe-script/issues"
   },
-  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme"
+  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme",
+  "devDependencies": {
+    "rollup-plugin-banner": "^0.2.1"
+  }
 }
