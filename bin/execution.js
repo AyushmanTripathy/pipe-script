@@ -169,14 +169,15 @@ function runCommand(vars, command, line) {
 
   // MULTIPLE
   switch (command) {
+     case "log":
+      console.log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
+      return null;
+
     case "add":
       let first_value = 0;
       if (line.some((n) => typeof value(n, vars) != "number"))
         first_value = "";
       return line.reduce((acc, cur) => acc + value(cur, vars), first_value);
-  }
-
-  switch (command) {
     case "multiply":
       return line.reduce((acc, cur) => (acc *= value(cur, vars)), 1);
     case "divide":
@@ -190,9 +191,6 @@ function runCommand(vars, command, line) {
       return Boolean($1);
     case "not":
       return !Boolean($1);
-    case "log":
-      console.log($1);
-      return null;
     case "call":
       const args = [];
       for (const arg of line) args.push(value(arg, vars));
