@@ -1,1 +1,28 @@
-log [add 1 1]  [log | add 1 1] 
+# pipescript diamond
+
+call diamond 10
+
+function diamond $count
+  set n 0
+  while | ge $count $n
+
+    set star   | call line * $n
+    set scroll | call line _ | add -$n $count
+
+    log   | add $scroll | add $star | add $star $scroll
+    set n | add $n 1
+
+  set n 0
+  while | ge $count $n
+
+    set scroll | call line _ $n
+    set star   | call line * | add -$n $count
+
+    log   | add $scroll | add $star | add $star $scroll
+    set n | add $n 1
+
+function line $char $n
+  set string $char
+  loop $n
+    set string | add $string $char
+  return $string

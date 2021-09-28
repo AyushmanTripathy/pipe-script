@@ -2,17 +2,17 @@
   "name": "psre",
   "version": "1.0.4",
   "description": "A programming language that revolves around piping",
-  "main": "pipescript.js",
+  "main": "src/pipescript.js",
   "type": "module",
   "scripts": {
-    "build": "rollup --config rollup.config.js",
-    "dev": "nodemon src/pipescript.js test.pipescript"
+    "build": "rollup -c",
+    "dev": "nodemon src/index.js test.pipescript"
   },
   "repository": {
     "type": "git"
   },
   "bin": {
-    "pipescript": "pipescript.js"
+    "pipescript": "src/pipescript.js"
   },
   "keywords": [
     "language"
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/AyushmanTripathy/pipe-script/issues"
   },
-  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme"
+  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme",
+  "devDependencies": {
+    "rollup-plugin-uglify": "^6.0.4"
+  }
 }

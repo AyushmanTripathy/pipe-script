@@ -1,7 +1,12 @@
+import { uglify } from 'rollup-plugin-uglify'
+
 export default {
-  input: "src/pipescript",
-  output: {
-    file: "pipescript.js",
-    banner:"#! /usr/bin/env node"
-  },
-};
+    input: 'src/index.js',
+    output: {
+      banner:'#! /usr/bin/env node',
+        file: 'src/pipescript.js',
+    },
+  plugins:[
+    uglify()
+  ]
+}

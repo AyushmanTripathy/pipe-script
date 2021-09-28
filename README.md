@@ -11,13 +11,6 @@ A programming language that revolves around piping.
 
 read the full [docs]()
 
-- basic command
-
-```ruby
- set x | add 12 8   # setting vars
- log $x   # logging vars
-```
-
 - if / else statements
 
 ```ruby
@@ -27,12 +20,18 @@ else
     log unequal
 ```
 
-- while loops
+- loops
 
 ```ruby
+
+// while loops (loop while condition is true)
  while | ge $a 0
      set a | add $a 1
      log $a
+
+// basic loop (loop for some no of times)
+  loop 10
+    log looping
 ```
 
 ## basic commands
@@ -59,7 +58,7 @@ encapsulate code between `[ Sqaure Brackets ]`
 example -
 
 ```ruby
-log [add 1 1] [add 2 2]
+log [add 1 1]
 ```
 
 ## Data Types
