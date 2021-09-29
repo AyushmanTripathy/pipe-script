@@ -9,7 +9,12 @@ A programming language that revolves around piping.
 
 ### syntax
 
-read the full [docs]()
+- functions
+
+```ruby
+function <name> <args>
+    return <value>
+```
 
 - if / else statements
 
@@ -24,27 +29,17 @@ else
 
 ```ruby
 
-// while loops (loop while condition is true)
+# while loops (loop while condition is true)
  while | ge $a 0
      set a | add $a 1
      log $a
 
-// basic loop (loop for some no of times)
+# basic loop (loop for some no of times)
   loop 10
     log looping
 ```
 
-## basic commands
-
-1.set
-
-> setting variables
->
-> ```ruby
-> set <variable name> <value>
-> ```
-
-## pipes
+- pipes
 
 piping return value of one command to other command
 
@@ -52,7 +47,7 @@ piping return value of one command to other command
 log | add 12 34
 ```
 
-## code blocks
+- code blocks
 
 encapsulate code between `[ Sqaure Brackets ]`
 example -
