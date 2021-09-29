@@ -1,5 +1,4 @@
 TODO -
 
-write structure.md
 add cli options
 add break statements
