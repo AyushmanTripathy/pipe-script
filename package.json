@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme",
   "devDependencies": {
-    "rollup-plugin-uglify": "^6.0.4"
+    "rollup-plugin-uglify": "^5.0.2"
   }
 }

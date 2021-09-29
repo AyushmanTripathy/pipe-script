@@ -7,14 +7,14 @@
 	   // check for comment
 	   // check for depth
 	   if (last_depth < depth)
-			   if (check keywords)
-  		  // push new scope to scope stack
+           if (check keywords)
+  		 // push new scope to scope stack
 	       // replace line with pointer for this scope
 	       else
   	     // invalid scope change error
-    else if (last_depth > depth)
+.   else if (last_depth > depth)
  	      // pop last_depth - depth times from scope_stack
-    else 
+.   else 
 	      // push line to last scope from scope_stack
 	```
 2. run scopes
