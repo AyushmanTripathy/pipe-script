@@ -1,16 +1,37 @@
+import runScope from "../../src/execution.js";
+import classifyScopes from "../../src/process.js";
+
 import { logs } from "./store.js";
-import run from '../../src/psre.js'
 
 globalThis.config = {
-  tab: 1,
+  tab: 2,
   max_loop_limit: 1000,
 };
 
-function console_log(string) {
-  logs.update((log) => log + `${string}\n`);
+globalThis.error = (msg) => {
+  logs.update(log => log + `[ERROR] ${msg}\n`)
 }
 
-export default function execute(input) {
+globalThis.log = (string) => {
+  logs.update((log) => log + `${string}\n`);
+};
+
+export default async function execute(file) {
   logs.set("");
-  run(input)
+
+  globalThis.scopes = {};
+  globalThis.hash_code = 0;
+  scopes.global = [];
+
+  scopes.vars = {};
+  scopes.object = {};
+  scopes.array = {};
+
+  await classifyScopes(file, import_function);
+  runScope(scopes.global, scopes.vars);
+  console.log(scopes);
+}
+
+function import_function(path) {
+  error(`cannot import file ${path} from online editor`);
 }

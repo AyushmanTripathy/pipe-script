@@ -1,4 +1,4 @@
-import { value, error, hash } from "./util.js";
+import { value, hash } from "./util.js";
 
 export default function runScope(scope, vars = {}) {
   scope = scope.slice();
@@ -7,7 +7,7 @@ export default function runScope(scope, vars = {}) {
   for (let lines of scope) {
     // check for loops / if
     if (lines.startsWith("@")) {
-      const first_line = global.scopes[lines][0];
+      const first_line = globalThis.scopes[lines][0];
 
       if (first_line.startsWith("while")) whileLoop(lines, vars);
       else if (first_line.startsWith("loop")) basicLoop(lines, vars);
@@ -167,7 +167,7 @@ function runCommand(vars, command, line) {
   // MULTIPLE
   switch (command) {
      case "log":
-      console.log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
+      log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
       return null;
 
     case "add":

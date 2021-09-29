@@ -1,40 +1,60 @@
 <script>
   import execute from "./psre.js";
 
-  let text = retrive()
-  let running = false
+  let textarea;
+
+  let text = retrive();
+  let running = false;
+
+  window.addEventListener("keydown", (event) => {
+    switch (event.code) {
+      case "Tab":
+        event.preventDefault();
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+
+        // set textarea alue to: text before caret + tab + text after caret
+        text = text.substring(0, start) + "  " + text.substring(end);
+
+        // put caret at right position again
+        textarea.focus();
+        textarea.selectionEnd = start + 2;
+
+        break;
+    }
+  });
 
   function handleKeyPress(event) {
     if (!running) {
       running = true;
-      setTimeout(save,1000)
+      setTimeout(save, 1000);
     }
 
     switch (event.code) {
       case "Enter":
-        if (event.ctrlKey) break;
+        if (event.ctrlKey) execute(text.split("\n"));
       default:
-        return;
+        break;
     }
-
-    execute(text.split("\n"));
   }
 
   function save() {
     running = false;
-    localStorage.setItem('text',JSON.stringify(text))
+    localStorage.setItem("text", JSON.stringify(text));
   }
 
   function retrive() {
-    const saved_text = JSON.parse(localStorage.getItem('text'))
-    return saved_text ? saved_text : '';
+    const saved_text = JSON.parse(localStorage.getItem("text"));
+    return saved_text ? saved_text : "";
   }
 </script>
 
 <main>
   <textarea
+    id="editor"
     placeholder="Editor"
     bind:value={text}
+    bind:this={textarea}
     on:keypress={handleKeyPress}
     spellcheck="true"
     contenteditable

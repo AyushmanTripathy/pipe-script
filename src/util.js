@@ -2,8 +2,7 @@ export function value(target, variables) {
   switch (typeof target) {
     case "string":
       const value = checkType(checkForVars(target, variables));
-      if (target.startsWith("-$")) 
-        return value * -1;
+      if (target.startsWith("-$")) return value * -1;
       return value;
     case "undefined":
       return error(`detected undefined value`);
@@ -43,15 +42,6 @@ export function hash() {
 
 export function last(arr) {
   return arr[arr.length - 1];
-}
-
-export function error(msg) {
-  console.log("\x1b[31m", msg, "\x1b[31m");
-  process.exit();
-}
-
-export function log(string) {
-  console.log(string);
 }
 
 export function random(x) {

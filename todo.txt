@@ -3,5 +3,4 @@ TODO -
 make online editor work
 write structure.md
 add cli options
-add rollup watch
 add break statements

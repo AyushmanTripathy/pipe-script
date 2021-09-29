@@ -1,6 +1,6 @@
 
 (function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
-var app = (function (fs, readline) {
+var app = (function () {
     'use strict';
 
     function noop() { }
@@ -9,14 +9,14 @@ var app = (function (fs, readline) {
             loc: { file, line, column, char }
         };
     }
-    function run$1(fn) {
+    function run(fn) {
         return fn();
     }
     function blank_object() {
         return Object.create(null);
     }
     function run_all(fns) {
-        fns.forEach(run$1);
+        fns.forEach(run);
     }
     function is_function(thing) {
         return typeof thing === 'function';
@@ -174,7 +174,7 @@ var app = (function (fs, readline) {
         if (!customElement) {
             // onMount happens before the initial afterUpdate
             add_render_callback(() => {
-                const new_on_destroy = on_mount.map(run$1).filter(is_function);
+                const new_on_destroy = on_mount.map(run).filter(is_function);
                 if (on_destroy) {
                     on_destroy.push(...new_on_destroy);
                 }
@@ -356,62 +356,11 @@ var app = (function (fs, readline) {
         $inject_state() { }
     }
 
-    const subscriber_queue = [];
-    /**
-     * Create a `Writable` store that allows both updating and reading by subscription.
-     * @param {*=}value initial value
-     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
-     */
-    function writable(value, start = noop) {
-        let stop;
-        const subscribers = new Set();
-        function set(new_value) {
-            if (safe_not_equal(value, new_value)) {
-                value = new_value;
-                if (stop) { // store is ready
-                    const run_queue = !subscriber_queue.length;
-                    for (const subscriber of subscribers) {
-                        subscriber[1]();
-                        subscriber_queue.push(subscriber, value);
-                    }
-                    if (run_queue) {
-                        for (let i = 0; i < subscriber_queue.length; i += 2) {
-                            subscriber_queue[i][0](subscriber_queue[i + 1]);
-                        }
-                        subscriber_queue.length = 0;
-                    }
-                }
-            }
-        }
-        function update(fn) {
-            set(fn(value));
-        }
-        function subscribe(run, invalidate = noop) {
-            const subscriber = [run, invalidate];
-            subscribers.add(subscriber);
-            if (subscribers.size === 1) {
-                stop = start(set) || noop;
-            }
-            run(value);
-            return () => {
-                subscribers.delete(subscriber);
-                if (subscribers.size === 0) {
-                    stop();
-                    stop = null;
-                }
-            };
-        }
-        return { set, update, subscribe };
-    }
-
-    const logs = writable('');
-
     function value(target, variables) {
       switch (typeof target) {
         case "string":
           const value = checkType(checkForVars(target, variables));
-          if (target.startsWith("-$")) 
-            return value * -1;
+          if (target.startsWith("-$")) return value * -1;
           return value;
         case "undefined":
           return error(`detected undefined value`);
@@ -453,11 +402,6 @@ var app = (function (fs, readline) {
       return arr[arr.length - 1];
     }
 
-    function error(msg) {
-      console.log("\x1b[31m", msg, "\x1b[31m");
-      process.exit();
-    }
-
     function runScope(scope, vars = {}) {
       scope = scope.slice();
 
@@ -465,7 +409,7 @@ var app = (function (fs, readline) {
       for (let lines of scope) {
         // check for loops / if
         if (lines.startsWith("@")) {
-          const first_line = global.scopes[lines][0];
+          const first_line = globalThis.scopes[lines][0];
 
           if (first_line.startsWith("while")) whileLoop(lines, vars);
           else if (first_line.startsWith("loop")) basicLoop(lines, vars);
@@ -625,7 +569,7 @@ var app = (function (fs, readline) {
       // MULTIPLE
       switch (command) {
          case "log":
-          console.log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
+          log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
           return null;
 
         case "add":
@@ -715,22 +659,7 @@ var app = (function (fs, readline) {
       } else return value(target, vars);
     }
 
-    const cwd = process.cwd();
-
-    async function importFile(path) {
-      const path_to_file = cwd + "/" + path.trim();
-      const fileStream = fs.createReadStream(path_to_file);
-
-      const rl = readline.createInterface({
-        input: fileStream,
-      });
-
-      const file = [];
-      for await(const line of rl) file.push(line);
-      await classifyScopes(file);
-    }
-
-    async function classifyScopes(file) {
+    async function classifyScopes(file, import_function) {
       let scope_stack = ["global"];
       let last_depth = 0;
       let last_if_hash = null;
@@ -751,7 +680,10 @@ var app = (function (fs, readline) {
           // line not empty
           const line_before = scopes[last(scope_stack)].slice(-1).pop();
 
-          if (line.startsWith("import ")) await importFile(line.slice(6));
+          if (line.startsWith("import ")) {
+            console.log(import_function);
+            await import_function(line.slice(6));
+          }
           //no change
           else if (last_depth == depth) scopes[last(scope_stack)].push(line);
           // came out
@@ -827,7 +759,72 @@ var app = (function (fs, readline) {
       return Math.floor(count / config.tab);
     }
 
-    async function run(file) {
+    const subscriber_queue = [];
+    /**
+     * Create a `Writable` store that allows both updating and reading by subscription.
+     * @param {*=}value initial value
+     * @param {StartStopNotifier=}start start and stop notifications for subscriptions
+     */
+    function writable(value, start = noop) {
+        let stop;
+        const subscribers = new Set();
+        function set(new_value) {
+            if (safe_not_equal(value, new_value)) {
+                value = new_value;
+                if (stop) { // store is ready
+                    const run_queue = !subscriber_queue.length;
+                    for (const subscriber of subscribers) {
+                        subscriber[1]();
+                        subscriber_queue.push(subscriber, value);
+                    }
+                    if (run_queue) {
+                        for (let i = 0; i < subscriber_queue.length; i += 2) {
+                            subscriber_queue[i][0](subscriber_queue[i + 1]);
+                        }
+                        subscriber_queue.length = 0;
+                    }
+                }
+            }
+        }
+        function update(fn) {
+            set(fn(value));
+        }
+        function subscribe(run, invalidate = noop) {
+            const subscriber = [run, invalidate];
+            subscribers.add(subscriber);
+            if (subscribers.size === 1) {
+                stop = start(set) || noop;
+            }
+            run(value);
+            return () => {
+                subscribers.delete(subscriber);
+                if (subscribers.size === 0) {
+                    stop();
+                    stop = null;
+                }
+            };
+        }
+        return { set, update, subscribe };
+    }
+
+    const logs = writable('');
+
+    globalThis.config = {
+      tab: 2,
+      max_loop_limit: 1000,
+    };
+
+    globalThis.error = (msg) => {
+      logs.update(log => log + `[ERROR] ${msg}\n`);
+    };
+
+    globalThis.log = (string) => {
+      logs.update((log) => log + `${string}\n`);
+    };
+
+    async function execute(file) {
+      logs.set("");
+
       globalThis.scopes = {};
       globalThis.hash_code = 0;
       scopes.global = [];
@@ -836,19 +833,13 @@ var app = (function (fs, readline) {
       scopes.object = {};
       scopes.array = {};
 
-      await classifyScopes(file);
+      await classifyScopes(file, import_function);
       runScope(scopes.global, scopes.vars);
       console.log(scopes);
     }
 
-    globalThis.config = {
-      tab: 1,
-      max_loop_limit: 1000,
-    };
-
-    function execute(input) {
-      logs.set("");
-      run(input);
+    function import_function(path) {
+      error(`cannot import file ${path} from online editor`);
     }
 
     /* src/Editor.svelte generated by Svelte v3.42.5 */
@@ -856,48 +847,51 @@ var app = (function (fs, readline) {
 
     function create_fragment$2(ctx) {
     	let main;
-    	let textarea;
+    	let textarea_1;
     	let mounted;
     	let dispose;
 
     	const block = {
     		c: function create() {
     			main = element("main");
-    			textarea = element("textarea");
-    			attr_dev(textarea, "placeholder", "Editor");
-    			attr_dev(textarea, "spellcheck", "true");
-    			attr_dev(textarea, "contenteditable", "");
-    			attr_dev(textarea, "class", "svelte-1nj754i");
-    			add_location(textarea, file$2, 34, 2, 609);
+    			textarea_1 = element("textarea");
+    			attr_dev(textarea_1, "id", "editor");
+    			attr_dev(textarea_1, "placeholder", "Editor");
+    			attr_dev(textarea_1, "spellcheck", "true");
+    			attr_dev(textarea_1, "contenteditable", "");
+    			attr_dev(textarea_1, "class", "svelte-1nj754i");
+    			add_location(textarea_1, file$2, 52, 2, 1127);
     			attr_dev(main, "class", "svelte-1nj754i");
-    			add_location(main, file$2, 33, 0, 600);
+    			add_location(main, file$2, 51, 0, 1118);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
-    			append_dev(main, textarea);
-    			set_input_value(textarea, /*text*/ ctx[0]);
+    			append_dev(main, textarea_1);
+    			set_input_value(textarea_1, /*text*/ ctx[1]);
+    			/*textarea_1_binding*/ ctx[4](textarea_1);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(textarea, "input", /*textarea_input_handler*/ ctx[2]),
-    					listen_dev(textarea, "keypress", /*handleKeyPress*/ ctx[1], false, false, false)
+    					listen_dev(textarea_1, "input", /*textarea_1_input_handler*/ ctx[3]),
+    					listen_dev(textarea_1, "keypress", /*handleKeyPress*/ ctx[2], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*text*/ 1) {
-    				set_input_value(textarea, /*text*/ ctx[0]);
+    			if (dirty & /*text*/ 2) {
+    				set_input_value(textarea_1, /*text*/ ctx[1]);
     			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
+    			/*textarea_1_binding*/ ctx[4](null);
     			mounted = false;
     			run_all(dispose);
     		}
@@ -915,15 +909,31 @@ var app = (function (fs, readline) {
     }
 
     function retrive() {
-    	const saved_text = JSON.parse(localStorage.getItem('text'));
-    	return saved_text ? saved_text : '';
+    	const saved_text = JSON.parse(localStorage.getItem("text"));
+    	return saved_text ? saved_text : "";
     }
 
     function instance$2($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Editor', slots, []);
+    	let textarea;
     	let text = retrive();
     	let running = false;
+
+    	window.addEventListener("keydown", event => {
+    		switch (event.code) {
+    			case "Tab":
+    				event.preventDefault();
+    				const start = textarea.selectionStart;
+    				const end = textarea.selectionEnd;
+    				// set textarea alue to: text before caret + tab + text after caret
+    				$$invalidate(1, text = text.substring(0, start) + "  " + text.substring(end));
+    				// put caret at right position again
+    				textarea.focus();
+    				$$invalidate(0, textarea.selectionEnd = start + 2, textarea);
+    				break;
+    		}
+    	});
 
     	function handleKeyPress(event) {
     		if (!running) {
@@ -933,17 +943,13 @@ var app = (function (fs, readline) {
 
     		switch (event.code) {
     			case "Enter":
-    				if (event.ctrlKey) break;
-    			default:
-    				return;
+    				if (event.ctrlKey) execute(text.split("\n"));
     		}
-
-    		execute(text.split("\n"));
     	}
 
     	function save() {
     		running = false;
-    		localStorage.setItem('text', JSON.stringify(text));
+    		localStorage.setItem("text", JSON.stringify(text));
     	}
 
     	const writable_props = [];
@@ -952,13 +958,21 @@ var app = (function (fs, readline) {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Editor> was created with unknown prop '${key}'`);
     	});
 
-    	function textarea_input_handler() {
+    	function textarea_1_input_handler() {
     		text = this.value;
-    		$$invalidate(0, text);
+    		$$invalidate(1, text);
+    	}
+
+    	function textarea_1_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			textarea = $$value;
+    			$$invalidate(0, textarea);
+    		});
     	}
 
     	$$self.$capture_state = () => ({
     		execute,
+    		textarea,
     		text,
     		running,
     		handleKeyPress,
@@ -967,7 +981,8 @@ var app = (function (fs, readline) {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ('text' in $$props) $$invalidate(0, text = $$props.text);
+    		if ('textarea' in $$props) $$invalidate(0, textarea = $$props.textarea);
+    		if ('text' in $$props) $$invalidate(1, text = $$props.text);
     		if ('running' in $$props) running = $$props.running;
     	};
 
@@ -975,7 +990,7 @@ var app = (function (fs, readline) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [text, handleKeyPress, textarea_input_handler];
+    	return [textarea, text, handleKeyPress, textarea_1_input_handler, textarea_1_binding];
     }
 
     class Editor extends SvelteComponentDev {
@@ -1193,5 +1208,5 @@ var app = (function (fs, readline) {
 
     return app;
 
-}(fs, readline));
+}());
 //# sourceMappingURL=bundle.js.map
