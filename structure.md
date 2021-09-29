@@ -13,9 +13,9 @@
 	      else
 	      // invalid scope change error
     else if (last_depth > depth)
-	    // pop last_depth - depth times from scope_stack
+	      // pop last_depth - depth times from scope_stack
 	  else 
-		  // push line to last scope from scope_stack
+		    // push line to last scope from scope_stack
 	```
 2. run scopes
 	```js
