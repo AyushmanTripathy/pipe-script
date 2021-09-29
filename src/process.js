@@ -3,6 +3,7 @@ import { last, hash } from "./util.js";
 export default async function classifyScopes(file, import_function) {
   let scope_stack = ["global"];
   let last_depth = 0;
+  let line_before;
   let last_if_hash = null;
   let last_comment = false;
 
@@ -19,12 +20,7 @@ export default async function classifyScopes(file, import_function) {
     if (last_comment);
     else if (line) {
       // line not empty
-      const line_before = scopes[last(scope_stack)].slice(-1).pop();
-
-      if (line.startsWith("import ")) {
-        console.log(import_function);
-        await import_function(line.slice(6));
-      }
+      if (line.startsWith("import ")) await import_function(line.slice(6));
       //no change
       else if (last_depth == depth) scopes[last(scope_stack)].push(line);
       // came out
@@ -74,7 +70,10 @@ export default async function classifyScopes(file, import_function) {
         }
 
         // while / loops
-        else {
+        else if (
+          line_before.startsWith("while") ||
+          line_before.startsWith("loop")
+        ) {
           const hash_name = hash();
 
           scopes[last(scope_stack)].pop();
@@ -82,9 +81,12 @@ export default async function classifyScopes(file, import_function) {
 
           scopes[hash_name] = [line_before, line];
           scope_stack.push(hash_name);
+        } else {
+          error(`invalid scope change\n${line_before}\n  ${line}`);
         }
       }
       last_depth = depth;
+      line_before = line
     }
   }
 }

@@ -1,7 +1,7 @@
 *
 
-!src/pipescript.js
-!src/config.json
+!build/pipescript.js
+!config.json
 
 !LICENSE
 !README.md

@@ -1,9 +1,10 @@
 # pipescript diamond
 
-call diamond 10
+call diamond [add 5 5]
 
 function diamond $count
   set n 0
+  
   while | ge $count $n
 
     set star   | call line * $n

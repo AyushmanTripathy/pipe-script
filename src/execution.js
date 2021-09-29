@@ -4,17 +4,17 @@ export default function runScope(scope, vars = {}) {
   scope = scope.slice();
 
   // run lines
-  for (let lines of scope) {
+  for (let line of scope) {
     // check for loops / if
-    if (lines.startsWith("@")) {
-      const first_line = globalThis.scopes[lines][0];
+    if (line.startsWith("@")) {
+      const first_line = globalThis.scopes[line][0];
 
-      if (first_line.startsWith("while")) whileLoop(lines, vars);
-      else if (first_line.startsWith("loop")) basicLoop(lines, vars);
-      else if (first_line.startsWith("if")) if_statement(lines, vars);
+      if (first_line.startsWith("while")) whileLoop(line, vars);
+      else if (first_line.startsWith("loop")) basicLoop(line, vars);
+      else if (first_line.startsWith("if")) if_statement(line, vars);
     } else {
-      const output = runLine(lines, vars);
-      if (lines.startsWith("return")) return value(output, vars);
+      const output = runLine(line, vars);
+      if (line.startsWith("return")) return value(output, vars);
     }
   }
 
@@ -97,21 +97,21 @@ function whileLoop(lines, vars) {
   }
 }
 
-function runLine(lines, vars) {
-  lines = checkForBlocks(lines, vars);
-  lines = lines.split(" | ").reverse();
+function runLine(line, vars) {
+  line = checkForBlocks(line, vars);
+  line = line.split(" | ").reverse();
   // piping
   let output = "";
-  for (let line of lines) {
-    line = line.trim();
+  for (let statment of line) {
+    statment = statment.trim();
 
-    if (line.startsWith("return")) {
+    if (statment.startsWith("return")) {
       if (output != "") return output;
-      else return line.split(" ").pop();
+      else return statment.split(" ").pop();
     }
 
-    line += ` ${output}`;
-    output = runStatement(line, vars);
+    statment += ` ${output}`;
+    output = runStatement(statment, vars);
   }
   return output;
 }
@@ -131,10 +131,11 @@ function checkForBlocks(line, vars, open_stack = []) {
         runLine(line.slice(open_pos + 1, pos), vars) +
         line.slice(pos + 1, line.length);
 
-      if (line.includes("]")) {
+      if (!line.includes("]")) break;
+      else {
         line = checkForBlocks(line, vars, open_stack);
         break;
-      } else break;
+      }
     }
     pos++;
   }
@@ -166,8 +167,8 @@ function runCommand(vars, command, line) {
 
   // MULTIPLE
   switch (command) {
-     case "log":
-      log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
+    case "log":
+      log(line.reduce((acc, cur) => (acc += value(cur, vars)), ""));
       return null;
 
     case "add":

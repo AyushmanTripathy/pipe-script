@@ -1,6 +1,5 @@
 TODO -
 
-make online editor work
 write structure.md
 add cli options
 add break statements
