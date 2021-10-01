@@ -8,7 +8,6 @@ export default function runScope(scope, vars = {}) {
     // check for loops / if
     if (line.startsWith("@")) {
       const return_value = checkForKeyWords(line, vars);
-      log(return_value);
       if (return_value.returned || return_value.breaked) return return_value;
     } else {
       if (line.startsWith("break")) return { breaked: true };
@@ -74,7 +73,7 @@ function if_statement(hash_name, vars) {
   }
 
   if (hash) return runScope(scopes[hash], vars);
-  else return { value: null };
+  else return {};
 }
 
 function basicLoop(lines, vars) {
@@ -111,8 +110,7 @@ function whileLoop(lines, vars) {
       scopes[lines].slice(1),
       vars
     );
-    if (breaked) {
-    }
+    if (breaked) break;
     if (returned) return { returned, value };
 
     if (!x) return error("stack overflow");
@@ -173,7 +171,7 @@ function runCommand(vars, command, line) {
     case "break":
       return "break";
     case "return":
-      return line;
+      return line[0];
   }
 
   // NO ARG
@@ -219,7 +217,7 @@ function runCommand(vars, command, line) {
     case "call":
       const args = [];
       for (const arg of line) args.push(value(arg, vars));
-      return runFunction($1, args);
+      return runFunction($1, args).value;
     case "round":
       return Math.round($1);
     case "floor":

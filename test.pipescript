@@ -1,8 +1,4 @@
-set a 10
+log | call lol 10
 
-loop 10
-  log | add loop- $a
-  set a | add $a -1
-  
-  if | eq $a 5
-    break
+function lol $a
+  return $a
