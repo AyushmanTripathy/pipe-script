@@ -1,5 +1,5 @@
-import runScope from "../../src/execution.js";
-import classifyScopes from "../../src/process.js";
+import runScope from "../../interpreter/execution.js";
+import classifyScopes from "../../interpreter/process.js";
 
 import { logs } from "./store.js";
 
@@ -26,6 +26,7 @@ export default async function execute(file) {
   scopes.vars = {};
   scopes.object = {};
   scopes.array = {};
+  scopes.string = {}
 
   await classifyScopes(file, import_function);
   runScope(scopes.global, scopes.vars);
