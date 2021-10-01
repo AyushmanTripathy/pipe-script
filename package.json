@@ -1,6 +1,6 @@
 {
   "name": "psre",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
   "type": "module",
