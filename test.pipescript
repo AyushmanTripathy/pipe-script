@@ -1,1 +1,0 @@
-log [add 1 1]  [log | add 1 1] 

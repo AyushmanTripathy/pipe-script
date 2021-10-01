@@ -9,13 +9,11 @@ A programming language that revolves around piping.
 
 ### syntax
 
-read the full [docs]()
-
-- basic command
+- functions
 
 ```ruby
- set x | add 12 8   # setting vars
- log $x   # logging vars
+function <name> <args>
+    return <value>
 ```
 
 - if / else statements
@@ -27,10 +25,52 @@ else
     log unequal
 ```
 
-- while loops
+- loops
 
 ```ruby
+
+# while loops (loop while condition is true)
  while | ge $a 0
      set a | add $a 1
      log $a
+
+# basic loop (loop for some no of times)
+  loop 10
+    log looping
 ```
+
+- pipes
+
+piping return value of one command to other command
+
+```ruby
+log | add 12 34
+```
+
+- code blocks
+
+encapsulate code between `[ Sqaure Brackets ]`
+example -
+
+```ruby
+log [add 1 1]
+```
+
+## Data Types
+
+1.primitive types
+2.reference types
+
+#### primitive types
+
+1.number
+2.boolean
+3.chars
+4.null
+5.NaN
+
+#### reference types
+
+1.Arrays
+2.Objects
+3.String

@@ -1,25 +1,9 @@
-import { createReadStream } from "fs";
-import { createInterface } from "readline";
-import { last, error,hash } from "./util.js";
+import { last, hash } from "./util.js";
 
-const cwd = process.cwd();
-
-async function importFile(path) {
-  const path_to_file = cwd + "/" + path.trim();
-  const fileStream = createReadStream(path_to_file);
-
-  const rl = createInterface({
-    input: fileStream,
-  });
-
-  const file = []
-  for await(const line of rl) file.push(line);
-  await classifyScopes(file);
-}
-
-export default async function classifyScopes(file) {
+export default async function classifyScopes(file, import_function) {
   let scope_stack = ["global"];
   let last_depth = 0;
+  let line_before;
   let last_if_hash = null;
   let last_comment = false;
 
@@ -28,17 +12,15 @@ export default async function classifyScopes(file) {
 
     // check for comments
     if (line.includes("#")) {
-      if (line.includes("##")) last_comment = last_comment ? false : true;
+      if (line.includes("##")) last_comment = last_comment ? false :true;
       line = line.split("#")[0];
     }
-
+    
     line = line.trim();
     if (last_comment);
     else if (line) {
       // line not empty
-      const line_before = scopes[last(scope_stack)].slice(-1).pop();
-
-      if (line.startsWith("import ")) await importFile(line.slice(6));
+      if (line.startsWith("import ")) await import_function(line.slice(6));
       //no change
       else if (last_depth == depth) scopes[last(scope_stack)].push(line);
       // came out
@@ -88,7 +70,10 @@ export default async function classifyScopes(file) {
         }
 
         // while / loops
-        else {
+        else if (
+          line_before.startsWith("while") ||
+          line_before.startsWith("loop")
+        ) {
           const hash_name = hash();
 
           scopes[last(scope_stack)].pop();
@@ -96,9 +81,12 @@ export default async function classifyScopes(file) {
 
           scopes[hash_name] = [line_before, line];
           scope_stack.push(hash_name);
+        } else {
+          error(`invalid scope change\n${line_before}\n  ${line}`);
         }
       }
       last_depth = depth;
+      line_before = line;
     }
   }
 }

@@ -1,7 +1,13 @@
+import { uglify } from 'rollup-plugin-uglify'
+
 export default {
-  input: "src/pipescript",
-  output: {
-    file: "pipescript.js",
-    banner:"#! /usr/bin/env node"
-  },
-};
+    input: 'src/cli_build.js',
+    output: {
+      format:'esm',
+      banner:'#! /usr/bin/env node \n globalThis.release_mode = true',
+        file: 'build/pipescript.js',
+    },
+  plugins:[
+    uglify()
+  ]
+}

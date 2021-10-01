@@ -1,24 +1,36 @@
-import { value, error, hash } from "./util.js";
+import { value, hash } from "./util.js";
 
-export default function runScope(scope, vars = {}) {
+export default function runGlobalScope() {
+  const {breaked} = runScope(scopes.global,scopes.vars)
+  if(breaked) error(`invalid break statment in global scope`)
+}
+
+function runScope(scope, vars = {}) {
   scope = scope.slice();
 
   // run lines
-  for (let lines of scope) {
+  for (let line of scope) {
     // check for loops / if
-    if (lines.startsWith("@")) {
-      const first_line = global.scopes[lines][0];
-
-      if (first_line.startsWith("while")) whileLoop(lines, vars);
-      else if (first_line.startsWith("loop")) basicLoop(lines, vars);
-      else if (first_line.startsWith("if")) if_statement(lines, vars);
+    if (line.startsWith("@")) {
+      const return_value = checkForKeyWords(line, vars);
+      if (return_value.returned || return_value.breaked) return return_value;
     } else {
-      const output = runLine(lines, vars);
-      if (lines.startsWith("return")) return value(output, vars);
+      if (line.startsWith("break")) return { breaked: true };
+      const output = runLine(line, vars);
+      if (line.startsWith("return"))
+        return { returned: true, value: value(output, vars) };
     }
   }
+  return { value: null };
+}
 
-  return null;
+function checkForKeyWords(line, vars) {
+  const first_line = globalThis.scopes[line][0];
+
+  if (first_line.startsWith("while")) return whileLoop(line, vars);
+  else if (first_line.startsWith("loop")) return basicLoop(line, vars);
+  else if (first_line.startsWith("if")) return if_statement(line, vars);
+  return { value: null };
 }
 
 function runFunction(target, args) {
@@ -33,7 +45,10 @@ function runFunction(target, args) {
   // aruments for function
   const vars = {};
   for (const keyword of line) vars[keyword.substring(1)] = args.shift();
-  return runScope(scope, vars);
+  const return_value = runScope(scope, vars);
+
+  if(return_value.breaked) error(`invalid break statment in function ${target}`)
+  return return_value
 }
 
 function if_statement(hash_name, vars) {
@@ -65,7 +80,8 @@ function if_statement(hash_name, vars) {
     statment.shift();
   }
 
-  if (hash) runScope(scopes[hash], vars);
+  if (hash) return runScope(scopes[hash], vars);
+  else return {};
 }
 
 function basicLoop(lines, vars) {
@@ -76,11 +92,18 @@ function basicLoop(lines, vars) {
   let x = config.max_loop_limit;
 
   while (count > 0) {
-    runScope(scopes[lines].slice(1), vars);
+    const { breaked, returned, value } = runScope(
+      scopes[lines].slice(1),
+      vars
+    );
+    if (breaked) break;
+    if (returned) return { returned, value };
+
     count--;
     if (!x) return error("stack overflow");
     else x--;
   }
+  return {};
 }
 
 function whileLoop(lines, vars) {
@@ -91,27 +114,29 @@ function whileLoop(lines, vars) {
 
   let x = config.max_loop_limit;
   while (runLine(command, vars)) {
-    runScope(scopes[lines].slice(1), vars);
+    const { breaked, returned, value } = runScope(
+      scopes[lines].slice(1),
+      vars
+    );
+    if (breaked) break;
+    if (returned) return { returned, value };
+
     if (!x) return error("stack overflow");
     else x--;
   }
+  return {};
 }
 
-function runLine(lines, vars) {
-  lines = checkForBlocks(lines, vars);
-  lines = lines.split(" | ").reverse();
+function runLine(line, vars) {
+  line = checkForBlocks(line, vars);
+  line = line.split(" | ").reverse();
   // piping
   let output = "";
-  for (let line of lines) {
-    line = line.trim();
+  for (let statment of line) {
+    statment = statment.trim();
 
-    if (line.startsWith("return")) {
-      if (output != "") return output;
-      else return line.split(" ").pop();
-    }
-
-    line += ` ${output}`;
-    output = runStatement(line, vars);
+    statment += ` ${output}`;
+    output = runStatement(statment, vars);
   }
   return output;
 }
@@ -131,10 +156,11 @@ function checkForBlocks(line, vars, open_stack = []) {
         runLine(line.slice(open_pos + 1, pos), vars) +
         line.slice(pos + 1, line.length);
 
-      if (line.includes("]")) {
+      if (!line.includes("]")) break;
+      else {
         line = checkForBlocks(line, vars, open_stack);
         break;
-      } else break;
+      }
     }
     pos++;
   }
@@ -148,6 +174,14 @@ function runStatement(line, vars) {
 }
 
 function runCommand(vars, command, line) {
+  // key words
+  switch (command) {
+    case "break":
+      return "break";
+    case "return":
+      return line[0];
+  }
+
   // NO ARG
   switch (command) {
     case "exit":
@@ -166,8 +200,8 @@ function runCommand(vars, command, line) {
 
   // MULTIPLE
   switch (command) {
-     case "log":
-      console.log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
+    case "log":
+      log(line.reduce((acc, cur) => (acc += value(cur, vars)), ""));
       return null;
 
     case "add":
@@ -191,7 +225,7 @@ function runCommand(vars, command, line) {
     case "call":
       const args = [];
       for (const arg of line) args.push(value(arg, vars));
-      return runFunction($1, args);
+      return runFunction($1, args).value;
     case "round":
       return Math.round($1);
     case "floor":
