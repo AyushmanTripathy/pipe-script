@@ -1,4 +1,0 @@
-log | call lol 10
-
-function lol $a
-  return $a

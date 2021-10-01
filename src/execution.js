@@ -1,6 +1,11 @@
 import { value, hash } from "./util.js";
 
-export default function runScope(scope, vars = {}) {
+export default function runGlobalScope() {
+  const {breaked} = runScope(scopes.global,scopes.vars)
+  if(breaked) error(`invalid break statment in global scope`)
+}
+
+function runScope(scope, vars = {}) {
   scope = scope.slice();
 
   // run lines
@@ -40,7 +45,10 @@ function runFunction(target, args) {
   // aruments for function
   const vars = {};
   for (const keyword of line) vars[keyword.substring(1)] = args.shift();
-  return runScope(scope, vars);
+  const return_value = runScope(scope, vars);
+
+  if(return_value.breaked) error(`invalid break statment in function ${target}`)
+  return return_value
 }
 
 function if_statement(hash_name, vars) {

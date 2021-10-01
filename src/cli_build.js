@@ -1,4 +1,4 @@
-import runScope from "./execution.js";
+import runGlobalScope from "./execution.js";
 import classifyScopes from "./process.js";
 
 import { createInterface } from "readline";
@@ -38,7 +38,7 @@ async function run(file) {
   scopes.array = {};
   
   await classifyScopes(file, importFile);
-  runScope(scopes.global, scopes.vars);
+  runGlobalScope();
   if (typeof release_mode == "undefined") console.log(scopes);
 }
 
