@@ -7,18 +7,26 @@ export default function runScope(scope, vars = {}) {
   for (let line of scope) {
     // check for loops / if
     if (line.startsWith("@")) {
-      const first_line = globalThis.scopes[line][0];
-
-      if (first_line.startsWith("while")) whileLoop(line, vars);
-      else if (first_line.startsWith("loop")) basicLoop(line, vars);
-      else if (first_line.startsWith("if")) if_statement(line, vars);
+      const return_value = checkForKeyWords(line, vars);
+      log(return_value);
+      if (return_value.returned || return_value.breaked) return return_value;
     } else {
+      if (line.startsWith("break")) return { breaked: true };
       const output = runLine(line, vars);
-      if (line.startsWith("return")) return value(output, vars);
+      if (line.startsWith("return"))
+        return { returned: true, value: value(output, vars) };
     }
   }
+  return { value: null };
+}
 
-  return null;
+function checkForKeyWords(line, vars) {
+  const first_line = globalThis.scopes[line][0];
+
+  if (first_line.startsWith("while")) return whileLoop(line, vars);
+  else if (first_line.startsWith("loop")) return basicLoop(line, vars);
+  else if (first_line.startsWith("if")) return if_statement(line, vars);
+  return { value: null };
 }
 
 function runFunction(target, args) {
@@ -65,7 +73,8 @@ function if_statement(hash_name, vars) {
     statment.shift();
   }
 
-  if (hash) runScope(scopes[hash], vars);
+  if (hash) return runScope(scopes[hash], vars);
+  else return { value: null };
 }
 
 function basicLoop(lines, vars) {
@@ -76,11 +85,18 @@ function basicLoop(lines, vars) {
   let x = config.max_loop_limit;
 
   while (count > 0) {
-    runScope(scopes[lines].slice(1), vars);
+    const { breaked, returned, value } = runScope(
+      scopes[lines].slice(1),
+      vars
+    );
+    if (breaked) break;
+    if (returned) return { returned, value };
+
     count--;
     if (!x) return error("stack overflow");
     else x--;
   }
+  return {};
 }
 
 function whileLoop(lines, vars) {
@@ -91,10 +107,18 @@ function whileLoop(lines, vars) {
 
   let x = config.max_loop_limit;
   while (runLine(command, vars)) {
-    runScope(scopes[lines].slice(1), vars);
+    const { breaked, returned, value } = runScope(
+      scopes[lines].slice(1),
+      vars
+    );
+    if (breaked) {
+    }
+    if (returned) return { returned, value };
+
     if (!x) return error("stack overflow");
     else x--;
   }
+  return {};
 }
 
 function runLine(line, vars) {
@@ -104,11 +128,6 @@ function runLine(line, vars) {
   let output = "";
   for (let statment of line) {
     statment = statment.trim();
-
-    if (statment.startsWith("return")) {
-      if (output != "") return output;
-      else return statment.split(" ").pop();
-    }
 
     statment += ` ${output}`;
     output = runStatement(statment, vars);
@@ -149,6 +168,14 @@ function runStatement(line, vars) {
 }
 
 function runCommand(vars, command, line) {
+  // key words
+  switch (command) {
+    case "break":
+      return "break";
+    case "return":
+      return line;
+  }
+
   // NO ARG
   switch (command) {
     case "exit":

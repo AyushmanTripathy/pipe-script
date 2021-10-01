@@ -1,13 +1,8 @@
 set a 10
-call parent $a
 
-function parent $b
-  set b 0
-  log | add parent- $b
-  call child $b
-
-function child $b
-  set a 9
-  log | add child- $b
-
-log | add global- $a
+loop 10
+  log | add loop- $a
+  set a | add $a -1
+  
+  if | eq $a 5
+    break
