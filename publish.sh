@@ -22,8 +22,8 @@ echo "merging master --> release"
 curl \
   -X POST \
   -H "Accept: application/vnd.github.v3+json" \
-  "https://git+pushing:$(cat ~/pat)@api.github.com/repos/AyushmanTripathy/pipe-script/merges" \
-  -d '{"base":"release","head":"master"}'
+  "https://api.github.com/repos/AyushmanTripathy/pipe-script/merges" \
+  -d "$(cat publish_options.json)" 
 echo "merge complete"
 
 git commit -am "published $(npm view psre version)"
