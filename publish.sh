@@ -21,7 +21,7 @@ git push origin master
 echo "merging master --> release"
 curl \
   -X POST \
-  -u "AyushmanTripathy":$(cat ~/.pat)
+  -u "AyushmanTripathy":$(cat ~/.pat) \
   -H "Accept: application/vnd.github.v3+json" \
   "https://api.github.com/repos/AyushmanTripathy/pipe-script/merges" \
   -d "$(cat publish_options.json)" 
