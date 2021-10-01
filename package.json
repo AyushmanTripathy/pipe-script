@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "rollup -c",
-    "dev": "nodemon src/cli_build.js test.pipescript"
+    "dev": "nodemon src/cli_build.js test.pipescript",
+    "publish":"bash publish.sh"
   },
   "repository": {
     "type": "git"
