@@ -12,10 +12,10 @@ export default async function classifyScopes(file, import_function) {
 
     // check for comments
     if (line.includes("#")) {
-      if (line.includes("##")) last_comment = last_comment ? false : true;
+      if (line.includes("##")) last_comment = last_comment ? false :true;
       line = line.split("#")[0];
     }
-
+    
     line = line.trim();
     if (last_comment);
     else if (line) {
@@ -86,7 +86,7 @@ export default async function classifyScopes(file, import_function) {
         }
       }
       last_depth = depth;
-      line_before = line
+      line_before = line;
     }
   }
 }

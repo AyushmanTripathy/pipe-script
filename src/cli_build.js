@@ -28,7 +28,7 @@ function init() {
   run([`import ${args.shift()}`]);
 }
 
-export default async function run(file) {
+async function run(file) {
   globalThis.scopes = {};
   globalThis.hash_code = 0;
   scopes.global = [];
@@ -36,7 +36,7 @@ export default async function run(file) {
   scopes.vars = {};
   scopes.object = {};
   scopes.array = {};
-
+  
   await classifyScopes(file, importFile);
   runScope(scopes.global, scopes.vars);
   if (typeof release_mode == "undefined") console.log(scopes);

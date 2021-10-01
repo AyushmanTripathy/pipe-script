@@ -1,29 +1,13 @@
-# pipescript diamond
+set a 10
+call parent $a
 
-call diamond [add 5 5]
+function parent $b
+  set b 0
+  log | add parent- $b
+  call child $b
 
-function diamond $count
-  set n 0
- 
-  while | ge $count $n
+function child $b
+  set a 9
+  log | add child- $b
 
-    set star   | call line * $n
-    set scroll | call line _ | add -$n $count
-
-    log   | add $scroll | add $star | add $star $scroll
-    set n | add $n 1
-
-  set n 0
-  while | ge $count $n
-
-    set scroll | call line _ $n
-    set star   | call line * | add -$n $count
-
-    log   | add $scroll | add $star | add $star $scroll
-    set n | add $n 1
-
-function line $char $n
-  set string $char
-  loop $n
-    set string | add $string $char
-  return $string
+log | add global- $a

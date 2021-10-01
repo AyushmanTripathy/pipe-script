@@ -406,17 +406,17 @@ var app = (function () {
       scope = scope.slice();
 
       // run lines
-      for (let lines of scope) {
+      for (let line of scope) {
         // check for loops / if
-        if (lines.startsWith("@")) {
-          const first_line = globalThis.scopes[lines][0];
+        if (line.startsWith("@")) {
+          const first_line = globalThis.scopes[line][0];
 
-          if (first_line.startsWith("while")) whileLoop(lines, vars);
-          else if (first_line.startsWith("loop")) basicLoop(lines, vars);
-          else if (first_line.startsWith("if")) if_statement(lines, vars);
+          if (first_line.startsWith("while")) whileLoop(line, vars);
+          else if (first_line.startsWith("loop")) basicLoop(line, vars);
+          else if (first_line.startsWith("if")) if_statement(line, vars);
         } else {
-          const output = runLine(lines, vars);
-          if (lines.startsWith("return")) return value(output, vars);
+          const output = runLine(line, vars);
+          if (line.startsWith("return")) return value(output, vars);
         }
       }
 
@@ -499,21 +499,21 @@ var app = (function () {
       }
     }
 
-    function runLine(lines, vars) {
-      lines = checkForBlocks(lines, vars);
-      lines = lines.split(" | ").reverse();
+    function runLine(line, vars) {
+      line = checkForBlocks(line, vars);
+      line = line.split(" | ").reverse();
       // piping
       let output = "";
-      for (let line of lines) {
-        line = line.trim();
+      for (let statment of line) {
+        statment = statment.trim();
 
-        if (line.startsWith("return")) {
+        if (statment.startsWith("return")) {
           if (output != "") return output;
-          else return line.split(" ").pop();
+          else return statment.split(" ").pop();
         }
 
-        line += ` ${output}`;
-        output = runStatement(line, vars);
+        statment += ` ${output}`;
+        output = runStatement(statment, vars);
       }
       return output;
     }
@@ -533,10 +533,11 @@ var app = (function () {
             runLine(line.slice(open_pos + 1, pos), vars) +
             line.slice(pos + 1, line.length);
 
-          if (line.includes("]")) {
+          if (!line.includes("]")) break;
+          else {
             line = checkForBlocks(line, vars, open_stack);
             break;
-          } else break;
+          }
         }
         pos++;
       }
@@ -568,8 +569,8 @@ var app = (function () {
 
       // MULTIPLE
       switch (command) {
-         case "log":
-          log(line.reduce((acc, cur) => (acc += value(cur, vars)), ''));
+        case "log":
+          log(line.reduce((acc, cur) => (acc += value(cur, vars)), ""));
           return null;
 
         case "add":
@@ -662,6 +663,7 @@ var app = (function () {
     async function classifyScopes(file, import_function) {
       let scope_stack = ["global"];
       let last_depth = 0;
+      let line_before;
       let last_if_hash = null;
       let last_comment = false;
 
@@ -678,12 +680,7 @@ var app = (function () {
         if (last_comment);
         else if (line) {
           // line not empty
-          const line_before = scopes[last(scope_stack)].slice(-1).pop();
-
-          if (line.startsWith("import ")) {
-            console.log(import_function);
-            await import_function(line.slice(6));
-          }
+          if (line.startsWith("import ")) await import_function(line.slice(6));
           //no change
           else if (last_depth == depth) scopes[last(scope_stack)].push(line);
           // came out
@@ -733,7 +730,10 @@ var app = (function () {
             }
 
             // while / loops
-            else {
+            else if (
+              line_before.startsWith("while") ||
+              line_before.startsWith("loop")
+            ) {
               const hash_name = hash();
 
               scopes[last(scope_stack)].pop();
@@ -741,9 +741,12 @@ var app = (function () {
 
               scopes[hash_name] = [line_before, line];
               scope_stack.push(hash_name);
+            } else {
+              error(`invalid scope change\n${line_before}\n  ${line}`);
             }
           }
           last_depth = depth;
+          line_before = line;
         }
       }
     }

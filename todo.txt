@@ -1,4 +1,5 @@
 TODO -
 
+check inheritance
 add cli options
 add break statements
