@@ -9,7 +9,21 @@ cd online_editor
 npm run build
 cd ..
 
-npm version patch
+npm version minor
 
 echo "publishing"
 npm publish
+
+# pushing to master
+git push origin master
+
+# merging release branch
+echo "merging master --> release"
+curl \
+  -X POST \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/AyushmanTripathy/pipe-script/merges \
+  -d '{"base":"release","head":"master"}'
+echo "merge complete"
+
+git commit -am "published ${npm view psre version}"
