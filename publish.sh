@@ -24,8 +24,7 @@ curl \
   -u "AyushmanTripathy":$(cat ~/.pat) \
   -H "Accept: application/vnd.github.v3+json" \
   "https://api.github.com/repos/AyushmanTripathy/pipe-script/merges" \
-  -d '{"base": "release","head":"master"}'
-
+  -d "$(cat publish_options.json)" >> /dev/null 
 echo "merge complete"
 
 git commit -am "published $(npm view psre version)"
