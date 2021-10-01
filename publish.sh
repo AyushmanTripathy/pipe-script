@@ -1,3 +1,4 @@
+git commit -am 'publishing'
 
 echo "build pipescript.js"
 cd ~/pipe-script
@@ -9,8 +10,6 @@ npm run build
 cd ..
 
 npm version patch
+
 echo "publishing"
 npm publish
-
-echo "pushing to github"
-g
