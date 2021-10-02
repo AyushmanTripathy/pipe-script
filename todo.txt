@@ -6,6 +6,4 @@ pipescript - 7.064s
 
 TODO -
 
-execute comppiled json
-compile scopes to a json
 strings
