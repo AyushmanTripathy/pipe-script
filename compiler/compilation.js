@@ -1,6 +1,8 @@
+import { hash } from './util.js'
+
 export default function compileGlobalScope() {
   globalThis.file = "";
-  globalThis.var_list = []
+  globalThis.var_list = [];
 
   compileScope(scopes.global);
   log(file);
@@ -13,7 +15,7 @@ function compileScope(scope) {
   for (let line of scope) {
     // check for loops / if
     if (line.startsWith("@")) checkForKeyWords(line);
-    else write(compileLine(line))
+    else write(compileLine(line));
   }
 }
 
@@ -26,18 +28,30 @@ function checkForKeyWords(line) {
 }
 
 function write(string) {
-  file += string + "\n"
+  file += string + "\n";
 }
 
 function if_statement(hash_code) {}
-function basicLoop(hash_code) {}
+function basicLoop(hash_code) {
+  const scope = globalThis.scopes[hash_code];
+
+  let line = compileLine(scope.shift().slice(4));
+  hash_code = 'var' + hash().substring(1)
+
+  write(`let ${hash_code} = ${line}`)
+  write(`while(${hash_code} != 0) {`);
+  write(`${hash_code} -= 1`)
+
+  compileScope(scope);
+  write("}");
+}
 
 function whileLoop(hash_code) {
-  const scope = globalThis.scopes[hash_code]
-  let line = compileLine(scope.shift().slice(5))
-  write(`while(${line}) {`)
-  compileScope(scope)
-  write('}')
+  const scope = globalThis.scopes[hash_code];
+  let line = compileLine(scope.shift().slice(5));
+  write(`while(${line}) {`);
+  compileScope(scope);
+  write("}");
 }
 
 function compileLine(line) {
@@ -72,27 +86,27 @@ function compileCommand(line) {
   const $2 = checkToken(line.shift());
   switch (command) {
     case "set":
-      return setVar($1,$2);
+      return setVar($1, $2);
 
     // logic
     case "eq":
-      return `${$1} == ${$2}`
+      return `${$1} == ${$2}`;
     case "gt":
-      return `${$1} > ${$2}`
+      return `${$1} > ${$2}`;
     case "lt":
-      return `${$1} < ${$2}`
+      return `${$1} < ${$2}`;
     case "ge":
-      return `${$1} >= ${$2}`
+      return `${$1} >= ${$2}`;
     case "le":
-      return `${$1} <= ${$2}`
+      return `${$1} <= ${$2}`;
   }
 }
 
-function setVar ($1,$2){
-  if(var_list.includes($1)) return `${$1} = ${$2}`
+function setVar($1, $2) {
+  if (var_list.includes($1)) return `${$1} = ${$2}`;
 
   var_list.push($1);
-  return `let ${$1} = ${$2}`
+  return `let ${$1} = ${$2}`;
 }
 
 function checkToken(token) {

@@ -2,8 +2,11 @@ git commit -am 'publishing'
 
 cd ~/pipe-script
 
-echo "building pipescript.js"
-npm run build
+echo "building interpreter"
+npm run int-build
+
+echo 'building compiler'
+npm run com-build
 
 echo "build online_editor"
 cd online_editor

@@ -1,7 +1,5 @@
 
 set n 0 
-log $n
-
-while | le $n 10
-  log $n
+loop | add 0 10
   set n | add $n 1
+log $n

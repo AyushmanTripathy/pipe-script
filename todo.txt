@@ -2,7 +2,9 @@
 
 javascript - 0.097s
 python - 0.289s
-pipescript - 7.064s
+
+pipescript (interpreted)- 6.064s
+pipescript (compiled to js) - 0.086s
 
 TODO -
 

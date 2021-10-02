@@ -1,4 +1,4 @@
-import classifyScopes from "./process.js";
+import classifyScopes from "../interpreter/process.js";
 import compileScope from './compilation.js'
 
 import { createInterface } from "readline";

@@ -5,15 +5,17 @@
   "main": "build/pipescript.js",
   "type": "module",
   "scripts": {
-    "build": "rollup -c",
-    "devi": "nodemon src/interpreter.js test.pipescript",
+    "com-build": "rollup -c compiler/rollup.config.js",
+    "int-build": "rollup -c interpreter/rollup.config.js",
+    "devi": "nodemon interpreter/interpreter.js test.pipescript",
     "devc":"nodemon compiler/compiler.js test.pipescript"
   },
   "repository": {
     "type": "git"
   },
   "bin": {
-    "pipescript": "build/pipescript.js"
+    "pipescript": "build/pipescript.js",
+    "psc":"build/psc.js"
   },
   "keywords": [
     "language"
