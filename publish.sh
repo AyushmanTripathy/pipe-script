@@ -1,4 +1,5 @@
-git commit -am 'publishing'
+git add .
+git commit -m 'publishing'
 
 cd ~/pipe-script
 
