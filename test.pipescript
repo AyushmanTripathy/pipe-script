@@ -1,8 +1,6 @@
-set a 1000
-set b 0
 
-loop $a
-  loop $a
-    set b | add $b 1 
+set n 0
 
-log $b
+while | le $n 10
+  log $n
+  set n | add $n 1
