@@ -32,10 +32,11 @@ function write(string) {
 }
 
 function if_statement(hash_code) {}
+
 function basicLoop(hash_code) {
   const scope = globalThis.scopes[hash_code];
 
-  let line = compileLine(scope.shift().slice(4));
+  let line = compileLine('number '+ scope.shift().slice(4));
   hash_code = 'var' + hash().substring(1)
 
   write(`let ${hash_code} = ${line}`)
@@ -83,6 +84,13 @@ function compileCommand(line) {
   }
 
   const $1 = checkToken(line.shift());
+  switch (command) {
+    case 'number':
+      return `Number(${$1})`
+    case 'boolean':
+      return `Boolean(${$1})`
+  }
+
   const $2 = checkToken(line.shift());
   switch (command) {
     case "set":
