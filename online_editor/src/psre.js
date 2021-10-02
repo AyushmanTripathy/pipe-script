@@ -1,5 +1,5 @@
-import runScope from "../../src/execution.js";
-import classifyScopes from "../../src/process.js";
+import runScope from "../../interpreter/execution.js";
+import classifyScopes from "../../interpreter/process.js";
 
 import { logs } from "./store.js";
 

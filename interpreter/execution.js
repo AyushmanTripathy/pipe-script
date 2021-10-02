@@ -88,7 +88,7 @@ function if_statement(hash_name, vars) {
 function basicLoop(lines, vars) {
   let count = scopes[lines].slice();
   count = count.shift() + " ";
-  count = value(count.slice(4, -1).trim(), vars);
+  count = runLine("number " + count.slice(4, -1).trim(), vars);
 
   let x = config.max_loop_limit;
 
@@ -130,7 +130,7 @@ function whileLoop(lines, vars) {
 
 function runLine(line, vars) {
   line = checkForBlocks(line, vars);
-  line = line.split(" | ").reverse();
+  line = line.split(" | ").filter(Boolean).reverse();
   // piping
   let output = "";
   for (let statment of line) {
@@ -212,6 +212,8 @@ function runCommand(vars, command, line) {
   switch (command) {
     case "boolean":
       return Boolean($1);
+    case "number":
+      return Number($1)
     case "not":
       return !Boolean($1);
     case "call":
