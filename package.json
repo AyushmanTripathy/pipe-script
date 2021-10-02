@@ -1,5 +1,5 @@
 {
-  "name": "psre",
+  "name": "pipescript-dev-kit",
   "version": "1.14.0",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
