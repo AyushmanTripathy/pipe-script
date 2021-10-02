@@ -1,1 +1,6 @@
-break
+
+set n 0
+
+while | le $n 10
+  log $n
+  set n | add $n 1

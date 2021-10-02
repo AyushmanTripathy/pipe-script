@@ -19,7 +19,7 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg) => {
-  console.log("\x1b[31m", msg, "\x1b[31m");
+  console.log(`[ERROR] ${msg}`);
   process.exit();
 };
 
@@ -36,6 +36,7 @@ async function run(file) {
   scopes.vars = {};
   scopes.object = {};
   scopes.array = {};
+  scopes.string = {}
   
   await classifyScopes(file, importFile);
   runGlobalScope();

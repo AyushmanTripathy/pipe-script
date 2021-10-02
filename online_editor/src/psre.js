@@ -26,6 +26,7 @@ export default async function execute(file) {
   scopes.vars = {};
   scopes.object = {};
   scopes.array = {};
+  scopes.string = {}
 
   await classifyScopes(file, import_function);
   runScope(scopes.global, scopes.vars);

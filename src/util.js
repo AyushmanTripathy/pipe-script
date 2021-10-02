@@ -20,8 +20,8 @@ function checkType(value) {
   if (value == "true") return true;
   if (value == "false") return false;
   if (value == "null") return null;
-
-  return value;
+  // string
+  return value
 }
 
 function checkForVars(value, variables) {

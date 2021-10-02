@@ -1,8 +1,8 @@
 import { value, hash } from "./util.js";
 
 export default function runGlobalScope() {
-  const {breaked} = runScope(scopes.global,scopes.vars)
-  if(breaked) error(`invalid break statment in global scope`)
+  const { breaked } = runScope(scopes.global, scopes.vars);
+  if (breaked) error(`invalid break statment in global scope`);
 }
 
 function runScope(scope, vars = {}) {
@@ -47,8 +47,9 @@ function runFunction(target, args) {
   for (const keyword of line) vars[keyword.substring(1)] = args.shift();
   const return_value = runScope(scope, vars);
 
-  if(return_value.breaked) error(`invalid break statment in function ${target}`)
-  return return_value
+  if (return_value.breaked)
+    error(`invalid break statment in function ${target}`);
+  return return_value;
 }
 
 function if_statement(hash_name, vars) {
@@ -188,14 +189,6 @@ function runCommand(vars, command, line) {
       process.exit();
     case "random":
       return Math.random();
-    case "Object":
-      hash_num = hash();
-      scopes.object[`@${hash_num}`] = {};
-      return `%object%@${hash_num}`;
-    case "Array":
-      hash_num = hash();
-      scopes.array[`@${hash_num}`] = [];
-      return `%array%@${hash_num}`;
   }
 
   // MULTIPLE
@@ -203,7 +196,6 @@ function runCommand(vars, command, line) {
     case "log":
       log(line.reduce((acc, cur) => (acc += value(cur, vars)), ""));
       return null;
-
     case "add":
       let first_value = 0;
       if (line.some((n) => typeof value(n, vars) != "number"))
@@ -230,8 +222,9 @@ function runCommand(vars, command, line) {
       return Math.round($1);
     case "floor":
       return Math.floor($1);
+    case "new":
+      return new_constructor($1, line);
   }
-
   // 2 ARG
   const $2 = checkArg(line.shift(), command, vars, [$1]);
   switch (command) {
@@ -266,7 +259,21 @@ function runCommand(vars, command, line) {
       return $1 <= $2;
   }
 
-  error(`invalid command - ${command} with arg ${[$1, $2, ...line]}`);
+  error(`invalid command or arg - ${command} with arg ${[$1, $2, ...line]}`);
+}
+
+function new_constructor(type, value) {
+  const hash_num = hash();
+  switch (type) {
+    case "Object":
+      scopes.object[hash_num] = {};
+      return `%object%${hash_num}`;
+    case "Array":
+      scopes.array[hash_num] = [];
+      return `%array%${hash_num}`;
+    default:
+      return error(`${type} is not a constructor`);
+  }
 }
 
 function setValue(target, key, value) {
@@ -275,6 +282,7 @@ function setValue(target, key, value) {
     case "array":
       if (!Number(key) && key != 0)
         error(`expected index to be a number , got ${key}`);
+      break;
   }
   scopes[target[0]][target[1]][key] = value;
 }

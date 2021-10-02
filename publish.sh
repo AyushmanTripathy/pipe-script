@@ -1,7 +1,8 @@
 git commit -am 'publishing'
 
-echo "build pipescript.js"
 cd ~/pipe-script
+
+echo "building pipescript.js"
 npm run build
 
 echo "build online_editor"

@@ -1,4 +1,9 @@
+1 million loop
+
+javascript - 0.097s
+python - 0.289s
+pipescript - 7.064s
+
 TODO -
 
-add cli options
-add break statements
+strings
