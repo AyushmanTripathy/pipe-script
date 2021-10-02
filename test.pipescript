@@ -1,5 +1,6 @@
 
-set n 0
+set n 0 
+log $n
 
 while | le $n 10
   log $n
