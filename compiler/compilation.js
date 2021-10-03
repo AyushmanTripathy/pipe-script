@@ -1,4 +1,4 @@
-import { hash } from "../interpreter/util.js";
+import { hash, str } from "../interpreter/util.js";
 
 export default function compileGlobalScope() {
   globalThis.file = "";
@@ -30,7 +30,7 @@ function checkForKeyWords(line) {
 }
 
 function write(string) {
-  file += string + "\n";
+  file += str(string) + "\n";
 }
 
 function if_statement(hash_code) {
@@ -39,7 +39,7 @@ function if_statement(hash_code) {
   for (let i = 0; i < statments.length; i++) {
     write(check_if_block(statments[i]));
     i++;
-    compileScope(scopes[statments[i]])
+    compileScope(scopes[statments[i]]);
     write("}");
   }
 }
@@ -49,8 +49,7 @@ function check_if_block(statment) {
     return "if(" + compileLine(statment.slice(2)) + "){";
   if (statment.startsWith("elseif"))
     return "else if(" + compileLine(statment.slice(6)) + "){";
-  if (statment.startsWith("else"))
-    return "else{";
+  if (statment.startsWith("else")) return "else{";
 }
 
 function basicLoop(hash_code) {
@@ -88,14 +87,13 @@ function call_function(function_name, inputs) {
   write(`}`);
 
   inputs = inputs.map(checkToken);
-  return `${function_name}(${inputs})`
+  return `${function_name}(${inputs})`;
 }
 
 function compileLine(line) {
   line = line.split(" | ").filter(Boolean).reverse();
   let temp = "";
-  for (const statment of line) 
-    temp = compileStatments(statment + " " + temp);
+  for (const statment of line) temp = compileStatments(statment + " " + temp);
   return temp;
 }
 
@@ -116,7 +114,7 @@ function compileCommand(line) {
   //MULTIPLE
   switch (command) {
     case "log":
-      line = line.reduce((acc, cur) => acc + checkToken(cur,true) + ",", "");
+      line = line.reduce((acc, cur) => acc + checkToken(cur, true) + ",", "");
       return `console.log(${line})`;
     case "add":
       return line
@@ -158,21 +156,16 @@ function compileCommand(line) {
 function setVar($1, $2) {
   if (var_list.includes($1)) return `${$1} = ${$2}`;
 
-  $2 = checkString($2)
-    var_list.push($1);
+  var_list.push($1);
   return `let ${$1} = ${$2}`;
 }
 
-function checkString (x) {
-  if (Number(x) || x == 0) return x
-  else if (x == "null") return 'null'
-  
-  return `"${x}"`
-}
-
-function checkToken(token,string) {
+function checkToken(token) {
   if (typeof token == "undefined") return error("undefined token found");
   if (token.startsWith("$")) return token.substring(1);
-  if(string) return checkString(token)
+  if (token.startsWith("%")) {
+    token = token.split("%");
+    return `"${scopes[token[1]][token[2]]}"`;
+  }
   return token;
 }

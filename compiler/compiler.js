@@ -32,7 +32,8 @@ async function run(file) {
   globalThis.scopes = {};
   globalThis.hash_code = 0;
   scopes.global = [];
-  
+  scopes.string = {}
+
   await classifyScopes(file, importFile);
   compileScope(scopes.global)
   if (typeof release_mode == "undefined") console.log(scopes);
