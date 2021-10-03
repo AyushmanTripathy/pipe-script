@@ -14,4 +14,4 @@ function fibonacci $n
     set a | add $a $b
     set b $temp
 
-    set n | subtract $n 1
+    set n | add $n -1

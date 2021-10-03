@@ -8,6 +8,6 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-var_list inheritance
+review return in compiler (return nothing)
 switch case statments
 try catch block

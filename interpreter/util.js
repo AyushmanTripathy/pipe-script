@@ -43,6 +43,7 @@ function checkForVars(value, variables) {
   return value;
 }
 export function str (str) {
+  if (typeof str != 'string') return str;
   str = str.split('[s]').join(' ')
   return str
 }
