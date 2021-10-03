@@ -19,11 +19,14 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg) => {
-  console.log(`[ERROR] ${msg}`);
-  process.exit();
+  if(globalThis.enable_catch) {
+    globalThis.currentError = msg;
+    return !undefined_var
+  }
+  throw `[ERROR] ${msg}`;
 };
 
-init()
+init();
 function init() {
   run([`import ${args.shift()}`]);
 }
@@ -36,8 +39,8 @@ async function run(file) {
   scopes.vars = {};
   scopes.object = {};
   scopes.array = {};
-  scopes.string = {}
-  
+  scopes.string = {};
+
   await classifyScopes(file, importFile);
   runGlobalScope();
   if (typeof release_mode == "undefined") console.log(scopes);

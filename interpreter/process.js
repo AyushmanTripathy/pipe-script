@@ -6,6 +6,7 @@ export default async function classifyScopes(file, import_function) {
   let line_before;
   let last_if_hash = null;
   let last_comment = false;
+  let try_hash_code = false;
 
   for (let line of file) {
     const depth = checkDepth(line);
@@ -79,12 +80,37 @@ export default async function classifyScopes(file, import_function) {
           const hash_name = hash();
 
           scopes[last(scope_stack)].pop();
-          scopes[last(scope_stack)].push(`${hash_name}`);
+          scopes[last(scope_stack)].push(hash_name);
 
           scopes[hash_name] = [line_before, line];
           scope_stack.push(hash_name);
-        } else {
-          error(`invalid scope change\n${line_before}\n  ${line}`);
+        } 
+        else if (line_before.startsWith('try')) {
+          try_hash_code = hash();
+          const hash_code = hash();
+          
+          scopes[last(scope_stack)].pop()
+          scopes[last(scope_stack)].push(try_hash_code)
+
+          scopes[hash_code] = [line]
+          scopes[try_hash_code] = [line_before,hash_code]
+          scope_stack.push(hash_code)
+        }
+        else if (line_before.startsWith('catch')) {
+          if(!try_hash_code) error(`try block not found for ${line_before}`);
+
+          const hash_code = hash();
+          scopes[try_hash_code].push(line_before,hash_code)
+
+          scopes[last(scope_stack)].pop()
+          scopes[hash_code] = [line]
+
+          scope_stack.pop()
+          scope_stack.push(hash_code);
+          try_hash_code = null;
+        }
+        else {
+          error(`invalid scope change\n${line_before}\n${line}`);
         }
       }
       last_depth = depth;

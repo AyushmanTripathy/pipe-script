@@ -1,4 +1,4 @@
-import { value , str , hash } from "./util.js";
+import { value, str, hash } from "./util.js";
 
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);
@@ -6,6 +6,7 @@ export default function runGlobalScope() {
 }
 
 function runScope(scope, vars = {}) {
+  if (!scope) return error(`invalid scope`);
   scope = scope.slice();
 
   // run lines
@@ -30,6 +31,7 @@ function checkForKeyWords(line, vars) {
   if (first_line.startsWith("while")) return whileLoop(line, vars);
   else if (first_line.startsWith("loop")) return basicLoop(line, vars);
   else if (first_line.startsWith("if")) return if_statement(line, vars);
+  else if (first_line.startsWith("try")) return try_block(line, vars);
   return { value: null };
 }
 
@@ -49,6 +51,23 @@ function runFunction(target, args) {
 
   if (return_value.breaked)
     error(`invalid break statment in function ${target}`);
+  return return_value;
+}
+
+function try_block(hash_name, vars) {
+  const statment = scopes[hash_name].slice();
+  let return_value;
+  globalThis.enable_catch = true;
+  try {
+    return_value = runScope(scopes[statment[1]], vars);
+  } catch (e) {
+    let error_var = statment[2].split(" ")[1];
+    if (error_var)
+      setVar(error_var.substring(1), globalThis.currentError, vars);
+    return_value = runScope(scopes[statment[3]], vars);
+  }
+  globalThis.enable_catch = false;
+
   return return_value;
 }
 
