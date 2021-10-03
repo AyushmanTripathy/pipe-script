@@ -31,10 +31,10 @@ function compileScope(scope, var_list) {
 function checkForKeyWords(line, var_list) {
   const first_line = globalThis.scopes[line][0];
 
-  if (first_line.startsWith("while")) return whileLoop(line, var_list.slice());
-  else if (first_line.startsWith("loop"))
-    return basicLoop(line, var_list.slice());
-  else if (first_line.startsWith("if")) return if_statement(line, var_list);
+  if (first_line.startsWith("while")) whileLoop(line, var_list.slice());
+  else if (first_line.startsWith("loop")) basicLoop(line, var_list.slice());
+  else if (first_line.startsWith("if")) if_statement(line, var_list);
+  else if (first_line.startsWith("try")) try_block(line, var_list);
 }
 
 function write(string) {
@@ -82,6 +82,22 @@ function whileLoop(hash_code, var_list) {
   write("}");
 }
 
+function try_block(hash_code, var_list) {
+  const statment = scopes[hash_code].slice();
+
+  write("try{");
+  compileScope(scopes[statment[1]], var_list);
+
+  let error_var = statment[2].split(" ")[1];
+  if (error_var) error_var = error_var.substring(1);
+  else error_var = `var${hash().substring(1)}`;
+
+  var_list.push(error_var);
+  write(`} catch (${error_var}){`);
+  compileScope(scopes[statment[3]], var_list);
+  write("}");
+}
+
 function compileFunction(function_name) {
   const scope = globalThis.scopes[function_name];
 
@@ -107,7 +123,7 @@ function compileLine(line, var_list) {
   line = line.split(" | ").filter(Boolean).reverse();
   let temp = "";
 
-  for (const statment of line) 
+  for (const statment of line)
     temp = compileStatments(statment + " " + temp, var_list);
   return temp;
 }

@@ -1,1 +1,8 @@
 # factorial
+
+try 
+  log 'tried'
+  log 'completed'
+catch $error 
+  log 'catched'
+  log $error

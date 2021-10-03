@@ -8,5 +8,9 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
+add error types
+1. runtime error
+2. syntax error
+
 switch case statments
 try catch block
