@@ -1,5 +1,6 @@
+# pipescript diamond
 
-set n 0 
-loop | add 0 10
-  set n | add $n 1
-log $n
+set n 'string 1'
+set b 'string 2'
+
+log | add $n ' ' $b

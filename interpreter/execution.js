@@ -1,4 +1,4 @@
-import { value, hash } from "./util.js";
+import { value , str , hash } from "./util.js";
 
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);
@@ -194,7 +194,7 @@ function runCommand(vars, command, line) {
   // MULTIPLE
   switch (command) {
     case "log":
-      log(line.reduce((acc, cur) => (acc += value(cur, vars)), ""));
+      log(line.reduce((acc, cur) => (acc += str(value(cur, vars))), ""));
       return null;
     case "add":
       let first_value = 0;
@@ -213,7 +213,7 @@ function runCommand(vars, command, line) {
     case "boolean":
       return Boolean($1);
     case "number":
-      return Number($1)
+      return Number($1);
     case "not":
       return !Boolean($1);
     case "call":

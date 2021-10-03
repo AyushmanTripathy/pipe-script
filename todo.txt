@@ -8,4 +8,8 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-strings
+strings (com ,int)
+
+# more features
+switch case statments
+try catch block
