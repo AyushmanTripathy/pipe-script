@@ -8,6 +8,5 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-review return in compiler (return nothing)
 switch case statments
 try catch block
