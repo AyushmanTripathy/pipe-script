@@ -8,8 +8,6 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-strings (com ,int)
-
-# more features
+var_list inheritance
 switch case statments
 try catch block

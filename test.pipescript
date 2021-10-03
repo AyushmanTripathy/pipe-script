@@ -1,11 +1,12 @@
 # pipescript diamond
 
-call parent
+call diamond 10
 
-function parent
-  call child
+function diamond $count
+  set n 0
+  while | le $n 10
+    set n | add $n 1
+    log | call line $n
 
-function child
-  log 'child'
-
-call child
+function line $n
+  return $n
