@@ -1,5 +1,4 @@
-git add .
-git commit -m 'publishing'
+# building files
 
 cd ~/pipe-script
 
@@ -14,6 +13,12 @@ cd online_editor
 npm run build
 cd ..
 
+# commit to git
+
+git add .
+git commit -m 'publishing'
+
+# publishing
 npm version minor
 
 echo "publishing"
