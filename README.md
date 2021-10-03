@@ -2,19 +2,54 @@
 
 A programming language that revolves around piping.
 
+Pipescript is multi paradigm, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.
+
+Pipescript can be interpreted directly or be compiled into javascript.
+
+##### core concepts
+
+1. piping
+2. command for every thing (call,set,log)
+3. code blocks
+
 #### check it out
 
-1. install pipe scipt runtime environment from npm `sudo npm install -g psre`
-2. vist pipe scipt [web editor](https://pipescript.netlify.app/) <br/>
-status of webeditor - [![Netlify Status](https://api.netlify.com/api/v1/badges/a22b7a82-8fd8-4f28-9ee8-af363696dc29/deploy-status)](https://app.netlify.com/sites/pipescript/deploys)
+1. install pipe scipt development kit from npm `sudo npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
+2. or vist pipe scipt's [web editor](https://pipescript.netlify.app/) <br/>
+   status of webeditor - [![Netlify Status](https://api.netlify.com/api/v1/badges/a22b7a82-8fd8-4f28-9ee8-af363696dc29/deploy-status)](https://app.netlify.com/sites/pipescript/deploys)
 
 ### syntax
+
+see some examples to understand the syntax
+
+- setting variable
+
+```ruby
+set x 'this is a var'
+log $x
+```
+
+- pipes
+
+piping means returning value of one command to other command
+
+```ruby
+log | add 12 34
+```
+
+- code blocks
+
+code blocks are used to encapsulate code
+
+```ruby
+log [add 1 1]
+```
 
 - functions
 
 ```ruby
-function <name> <args>
-    return <value>
+function add $a
+    return | add $a 10
 ```
 
 - if / else statements
@@ -28,50 +63,17 @@ else
 
 - loops
 
-```ruby
-
-# while loops (loop while condition is true)
- while | ge $a 0
-     set a | add $a 1
-     log $a
-
-# basic loop (loop for some no of times)
-  loop 10
-    log looping
-```
-
-- pipes
-
-piping return value of one command to other command
+1. while loop
 
 ```ruby
-log | add 12 34
+while | ge $a 0
+   set a | add $a 1
+   log $a
 ```
 
-- code blocks
-
-encapsulate code between `[ Sqaure Brackets ]`
-example -
+2. loop for certain times
 
 ```ruby
-log [add 1 1]
+loop 10
+  log looping
 ```
-
-## Data Types
-
-1.primitive types
-2.reference types
-
-#### primitive types
-
-1.number
-2.boolean
-3.chars
-4.null
-5.NaN
-
-#### reference types
-
-1.Arrays
-2.Objects
-3.String

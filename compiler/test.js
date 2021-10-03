@@ -1,1 +1,0 @@
-let n = 10+20+20;console.log(n,);
