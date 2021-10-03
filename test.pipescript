@@ -2,8 +2,7 @@
 
 try 
   log 'tried'
-  lol
   log 'completed'
-catch $error
+catch $error 
   log 'catched'
   log $error

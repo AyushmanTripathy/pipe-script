@@ -14,8 +14,3 @@ add error types
 
 switch case statments
 try catch block
-
-try
-  log 'tried'
-catch $e
-  log $e

@@ -1,5 +1,5 @@
 import classifyScopes from "../interpreter/process.js";
-import compileScope from './compilation.js'
+import compileScope from "./compilation.js";
 
 import { createInterface } from "readline";
 import { readFileSync, existsSync, createReadStream, writeFileSync } from "fs";
@@ -19,11 +19,14 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg) => {
-  console.log(`[ERROR] ${msg}`);
-  process.exit();
+  if (globalThis.enable_catch) {
+    globalThis.currentError = msg;
+    return !undefined_var;
+  }
+  throw `[ERROR] ${msg}`;
 };
 
-init()
+init();
 function init() {
   run([`import ${args.shift()}`]);
 }
@@ -32,13 +35,13 @@ async function run(file) {
   globalThis.scopes = {};
   globalThis.hash_code = 0;
   scopes.global = [];
-  scopes.string = {}
+  scopes.string = {};
 
   await classifyScopes(file, importFile);
-  compileScope(scopes.global)
+  compileScope(scopes.global);
   if (typeof release_mode == "undefined") console.log(scopes);
-  
-  writeFileSync('test.js', globalThis.file)
+
+  writeFileSync("test.js", globalThis.file);
 }
 
 async function importFile(path) {
