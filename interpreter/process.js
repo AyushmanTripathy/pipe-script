@@ -12,10 +12,12 @@ export default async function classifyScopes(file, import_function) {
 
     // check for comments
     if (line.includes("#")) {
-      if (line.includes("##")) last_comment = last_comment ? false :true;
+      if (line.includes("##")) last_comment = last_comment ? false : true;
       line = line.split("#")[0];
     }
-    
+
+    line = checkQuotes(line);
+
     line = line.trim();
     if (last_comment);
     else if (line) {
@@ -89,6 +91,31 @@ export default async function classifyScopes(file, import_function) {
       line_before = line;
     }
   }
+}
+
+function checkQuotes(line) {
+  let last_index = 0;
+  let pair = false;
+
+  let index = 0;
+  for (const letter of line) {
+    if (letter == "'") {
+      if (pair) {
+        const hash_code = hash()
+
+        let temp =  line.slice(0, last_index)
+        temp += `%string%${hash_code}` 
+        temp += line.slice(index + 1, line.length);
+        scopes.string[hash_code] = line.slice(last_index + 1, index).split(" ").join('[s]');
+
+        return checkQuotes(temp)
+      } else last_index = index
+      pair = pair ? false : true;
+    }
+    index++;
+  }
+
+  return line;
 }
 
 function checkDepth(line) {

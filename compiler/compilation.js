@@ -1,81 +1,132 @@
-import { hash } from './util.js'
+import { hash, str } from "../interpreter/util.js";
 
 export default function compileGlobalScope() {
   globalThis.file = "";
-  globalThis.var_list = [];
+  globalThis.global_var_list = [];
+  globalThis.function_list = [];
 
-  compileScope(scopes.global);
+  compileScope(scopes.global,global_var_list);
+
+  for (const function_name of function_list) compileFunction(function_name);
+
+  if (typeof release_mode != "undefined") return;
+
+  log("---");
   log(file);
+  log("---");
 }
 
-function compileScope(scope) {
+function compileScope(scope,var_list) {
   scope = scope.slice();
 
   // compile lines
   for (let line of scope) {
     // check for loops / if
-    if (line.startsWith("@")) checkForKeyWords(line);
-    else write(compileLine(line));
+
+    if (line.startsWith("@")) checkForKeyWords(line,var_list);
+    else write(compileLine(line,var_list));
   }
 }
 
-function checkForKeyWords(line) {
+function checkForKeyWords(line,var_list) {
   const first_line = globalThis.scopes[line][0];
 
-  if (first_line.startsWith("while")) return whileLoop(line);
-  else if (first_line.startsWith("loop")) return basicLoop(line);
-  else if (first_line.startsWith("if")) return if_statement(line);
+  if (first_line.startsWith("while")) return whileLoop(line,var_list.slice());
+  else if (first_line.startsWith("loop")) return basicLoop(line,var_list.slice());
+  else if (first_line.startsWith("if")) return if_statement(line,var_list);
 }
 
 function write(string) {
-  file += string + "\n";
+  file += str(string) + "\n";
 }
 
-function if_statement(hash_code) {}
+function if_statement(hash_code,var_list) {
+  const statments = scopes[hash_code];
 
-function basicLoop(hash_code) {
+  for (let i = 0; i < statments.length; i++) {
+    write(check_if_block(statments[i]),var_list);
+    i++;
+    compileScope(scopes[statments[i]],var_list);
+    write("}");
+  }
+}
+
+function check_if_block(statment,var_list) {
+  if (statment.startsWith("if"))
+    return "if(" + compileLine(statment.slice(2),var_list) + "){";
+  if (statment.startsWith("elseif"))
+    return "else if(" + compileLine(statment.slice(6),var_list) + "){";
+  if (statment.startsWith("else")) return "else{";
+}
+
+function basicLoop(hash_code,var_list) {
   const scope = globalThis.scopes[hash_code];
 
-  let line = compileLine('number '+ scope.shift().slice(4));
-  hash_code = 'var' + hash().substring(1)
+  let line = compileLine("number " + scope.shift().slice(4),var_list);
+  hash_code = "var" + hash().substring(1);
 
-  write(`let ${hash_code} = ${line}`)
+  write(`let ${hash_code} = ${line}`);
   write(`while(${hash_code} != 0) {`);
-  write(`${hash_code} -= 1`)
+  write(`${hash_code} -= 1`);
 
-  compileScope(scope);
+  compileScope(scope,var_list);
   write("}");
 }
 
-function whileLoop(hash_code) {
+function whileLoop(hash_code,var_list) {
   const scope = globalThis.scopes[hash_code];
   let line = compileLine(scope.shift().slice(5));
   write(`while(${line}) {`);
-  compileScope(scope);
+  compileScope(scope,var_list);
   write("}");
 }
 
-function compileLine(line) {
+function compileFunction(function_name) {
+  const scope = globalThis.scopes[function_name];
+
+  let args = scope.shift().split(" ");
+  args = args.splice(2).map(checkToken);
+
+  write(`function ${function_name} (${args.toString()}){`);
+  compileScope(scope,args);
+  write(`}`);
+}
+
+function call_function(function_name, inputs) {
+  if (!globalThis.scopes[function_name])
+    return error(`${function_name} is not a function`);
+  if (!function_list.includes(function_name))
+    function_list.push(function_name);
+  inputs = inputs.map(checkToken);
+  return `${function_name}(${inputs})`;
+}
+
+function compileLine(line,var_list) {
   line = line.split(" | ").filter(Boolean).reverse();
   let temp = "";
-  for (const statment of line) {
-    temp = compileStatments(statment + " " + temp);
-  }
+
+  for (const statment of line) temp = compileStatments(statment + " " + temp,var_list);
   return temp;
 }
 
-function compileStatments(line) {
+function compileStatments(line,var_list) {
   line = line.split(" ").filter(Boolean);
-  return compileCommand(line);
+  return compileCommand(line,var_list);
 }
 
-function compileCommand(line) {
+function compileCommand(line,var_list) {
   const command = checkToken(line.shift());
+
+  //break
+  switch (command) {
+    case "break":
+      return "break";
+  }
 
   //MULTIPLE
   switch (command) {
     case "log":
-      line = line.reduce((acc, cur) => acc + checkToken(cur) + ",", "");
+      line = line.reduce((acc, cur) => acc + checkToken(cur, true) + ",", "");
       return `console.log(${line})`;
     case "add":
       return line
@@ -85,16 +136,20 @@ function compileCommand(line) {
 
   const $1 = checkToken(line.shift());
   switch (command) {
-    case 'number':
-      return `Number(${$1})`
-    case 'boolean':
-      return `Boolean(${$1})`
+    case "number":
+      return `Number(${$1})`;
+    case "boolean":
+      return `Boolean(${$1})`;
+    case "call":
+      return call_function($1, line);
+    case "return":
+      return `return ${$1}`;
   }
 
   const $2 = checkToken(line.shift());
   switch (command) {
     case "set":
-      return setVar($1, $2);
+      return setVar($1, $2,var_list);
 
     // logic
     case "eq":
@@ -110,15 +165,19 @@ function compileCommand(line) {
   }
 }
 
-function setVar($1, $2) {
-  if (var_list.includes($1)) return `${$1} = ${$2}`;
-
+function setVar($1, $2,var_list) {
+  if (var_list.includes($1) || global_var_list.includes($1)) return `${$1} = ${$2}`;
   var_list.push($1);
   return `let ${$1} = ${$2}`;
 }
 
 function checkToken(token) {
   if (typeof token == "undefined") return error("undefined token found");
+  if (token.startsWith('-$')) return `(-1*${token.substring(2)})`
   if (token.startsWith("$")) return token.substring(1);
+  if (token.startsWith("%")) {
+    token = token.split("%");
+    return `"${scopes[token[1]][token[2]]}"`;
+  }
   return token;
 }

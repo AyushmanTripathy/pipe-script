@@ -20,7 +20,15 @@ function checkType(value) {
   if (value == "true") return true;
   if (value == "false") return false;
   if (value == "null") return null;
+
+  if(typeof value != 'string') return value
+
   // string
+  if(value.startsWith('%')) {
+    value = value.split('%')
+    value = scopes[value[1]][value[2]]
+  }
+
   return value
 }
 
@@ -34,6 +42,11 @@ function checkForVars(value, variables) {
 
   return value;
 }
+export function str (str) {
+  str = str.split('[s]').join(' ')
+  return str
+}
+
 
 export function hash() {
   hash_code++;

@@ -5,19 +5,16 @@ call diamond 10
 function diamond $count
   set n 0
   while | ge $count $n
-    set string ''
-    set star   | call line * $n
-    set scroll | call line _ | add -$n $count
+    set star   | call line '*' $n
+    set scroll | call line '_' | add -$n $count
 
     log   | add $scroll | add $star | add $star $scroll
     set n | add $n 1
 
   set n 0
   while | ge $count $n
-    set string ''
-
-    set scroll | call line _ $n
-    set star   | call line * | add -$n $count
+    set scroll | call line '_' $n
+    set star   | call line '*' | add -$n $count
 
     log   | add $scroll | add $star | add $star $scroll
     set n | add $n 1
