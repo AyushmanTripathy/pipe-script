@@ -31,8 +31,8 @@ function compileScope(scope,var_list) {
 function checkForKeyWords(line,var_list) {
   const first_line = globalThis.scopes[line][0];
 
-  if (first_line.startsWith("while")) return whileLoop(line,var_list);
-  else if (first_line.startsWith("loop")) return basicLoop(line,var_list);
+  if (first_line.startsWith("while")) return whileLoop(line,var_list.slice());
+  else if (first_line.startsWith("loop")) return basicLoop(line,var_list.slice());
   else if (first_line.startsWith("if")) return if_statement(line,var_list);
 }
 
@@ -173,6 +173,7 @@ function setVar($1, $2,var_list) {
 
 function checkToken(token) {
   if (typeof token == "undefined") return error("undefined token found");
+  if (token.startsWith('-$')) return `(-1*${token.substring(2)})`
   if (token.startsWith("$")) return token.substring(1);
   if (token.startsWith("%")) {
     token = token.split("%");

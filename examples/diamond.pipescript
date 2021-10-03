@@ -5,7 +5,6 @@ call diamond 10
 function diamond $count
   set n 0
   while | ge $count $n
-    set string ''
     set star   | call line '*' $n
     set scroll | call line '_' | add -$n $count
 
@@ -14,8 +13,6 @@ function diamond $count
 
   set n 0
   while | ge $count $n
-    set string ''
-
     set scroll | call line '_' $n
     set star   | call line '*' | add -$n $count
 
