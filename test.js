@@ -1,3 +1,8 @@
-let n = "string 1"
-let b = "string 2"
-console.log(n+" "+b,)
+parent()
+child()
+function parent (){
+child()
+}
+function child (){
+console.log("child",)
+}

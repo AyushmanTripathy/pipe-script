@@ -1,6 +1,11 @@
 # pipescript diamond
 
-set n 'string 1'
-set b 'string 2'
+call parent
 
-log | add $n ' ' $b
+function parent
+  call child
+
+function child
+  log 'child'
+
+call child

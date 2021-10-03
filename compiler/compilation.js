@@ -3,8 +3,11 @@ import { hash, str } from "../interpreter/util.js";
 export default function compileGlobalScope() {
   globalThis.file = "";
   globalThis.var_list = [];
+  globalThis.function_list = [];
 
   compileScope(scopes.global);
+
+  for (const function_name of function_list) compileFunction(function_name);
   log("---");
   log(file);
   log("---");
@@ -74,9 +77,7 @@ function whileLoop(hash_code) {
   write("}");
 }
 
-function call_function(function_name, inputs) {
-  if (!globalThis.scopes[function_name])
-    error(`${function_name} is not a function`);
+function compileFunction(function_name) {
   const scope = globalThis.scopes[function_name];
 
   let args = scope.shift().split(" ");
@@ -85,7 +86,13 @@ function call_function(function_name, inputs) {
   write(`function ${function_name} (${args.toString()}){`);
   compileScope(scope);
   write(`}`);
+}
 
+function call_function(function_name, inputs) {
+  if (!globalThis.scopes[function_name])
+    return error(`${function_name} is not a function`);
+  if (!function_list.includes(function_name))
+    function_list.push(function_name);
   inputs = inputs.map(checkToken);
   return `${function_name}(${inputs})`;
 }
