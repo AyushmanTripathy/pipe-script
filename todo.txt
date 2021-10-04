@@ -12,5 +12,7 @@ add error types
 1. runtime error
 2. syntax error
 
-switch case statments
-try catch block
+switch block (com)
+add objects and array in js compiler
+
+if(over) version major

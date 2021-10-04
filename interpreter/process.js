@@ -4,9 +4,11 @@ export default async function classifyScopes(file, import_function) {
   let scope_stack = ["global"];
   let last_depth = 0;
   let line_before;
-  let last_if_hash = null;
   let last_comment = false;
+
+  let if_hash_code = [];
   let try_hash_code = false;
+  let switch_hash_code = [];
 
   for (let line of file) {
     const depth = checkDepth(line);
@@ -50,26 +52,26 @@ export default async function classifyScopes(file, import_function) {
 
           // remove line before
           scopes[last(scope_stack)].pop();
-          scopes[last(scope_stack)].push(`${hash_name}`);
+          scopes[last(scope_stack)].push(hash_name);
 
           const if_hash_name = hash();
           scopes[if_hash_name] = [line];
           scope_stack.push(if_hash_name);
 
-          last_if_hash = hash_name;
+          if_hash_code.push(hash_name);
           scopes[hash_name] = [line_before, if_hash_name];
         }
         // else / else if
         else if (line_before.startsWith("else")) {
-          if (!last_if_hash) error(`invalid if statment - ${line_before}`);
+          if (!if_hash_code.length) error(`invalid if block\n${line_before}`);
           scopes[last(scope_stack)].pop();
 
           const hash_name = hash();
           scope_stack.push(hash_name);
           scopes[hash_name] = [line];
 
-          scopes[last_if_hash].push(line_before, hash_name);
-          if (!line_before.startsWith("elseif")) last_if_hash = null;
+          scopes[last(if_hash_code)].push(line_before, hash_name);
+          if (!line_before.startsWith("elseif")) if_hash_code.pop();
         }
 
         // while / loops
@@ -84,32 +86,50 @@ export default async function classifyScopes(file, import_function) {
 
           scopes[hash_name] = [line_before, line];
           scope_stack.push(hash_name);
-        } 
-        else if (line_before.startsWith('try')) {
+        }
+
+        // try block
+        else if (line_before.startsWith("try")) {
           try_hash_code = hash();
           const hash_code = hash();
-          
-          scopes[last(scope_stack)].pop()
-          scopes[last(scope_stack)].push(try_hash_code)
 
-          scopes[hash_code] = [line]
-          scopes[try_hash_code] = [line_before,hash_code]
-          scope_stack.push(hash_code)
+          scopes[last(scope_stack)].pop();
+          scopes[last(scope_stack)].push(try_hash_code);
+
+          scopes[hash_code] = [line];
+          scopes[try_hash_code] = [line_before, hash_code];
+          scope_stack.push(hash_code);
         }
-        else if (line_before.startsWith('catch')) {
-          if(!try_hash_code) error(`try block not found for ${line_before}`);
+
+        // catch block
+        else if (line_before.startsWith("catch")) {
+          if (!try_hash_code) error(`try block not found for ${line_before}`);
 
           const hash_code = hash();
-          scopes[try_hash_code].push(line_before,hash_code)
+          scopes[try_hash_code].push(line_before, hash_code);
 
-          scopes[last(scope_stack)].pop()
-          scopes[hash_code] = [line]
+          scopes[last(scope_stack)].pop();
+          scopes[hash_code] = [line];
 
-          scope_stack.pop()
+          scope_stack.pop();
           scope_stack.push(hash_code);
           try_hash_code = null;
-        }
-        else {
+        } else if (line_before.startsWith("switch")) {
+          const hash_code = hash();
+          scopes[last(scope_stack)].pop();
+          scopes[last(scope_stack)].push(hash_code);
+
+          scopes[hash_code] = [line_before, line];
+          scope_stack.push(hash_code);
+        } else if (
+          line_before.startsWith("default") ||
+          line_before.startsWith("case")
+        ) {
+          const hash_code = hash();
+          scopes[hash_code] = [line];
+          scopes[last(scope_stack)].push(hash_code);
+          scope_stack.push(hash_code);
+        } else {
           error(`invalid scope change\n${line_before}\n${line}`);
         }
       }
@@ -127,15 +147,18 @@ function checkQuotes(line) {
   for (const letter of line) {
     if (letter == "'") {
       if (pair) {
-        const hash_code = hash()
+        const hash_code = hash();
 
-        let temp =  line.slice(0, last_index)
-        temp += `%string%${hash_code}` 
+        let temp = line.slice(0, last_index);
+        temp += `%string%${hash_code}`;
         temp += line.slice(index + 1, line.length);
-        scopes.string[hash_code] = line.slice(last_index + 1, index).split(" ").join('[s]');
+        scopes.string[hash_code] = line
+          .slice(last_index + 1, index)
+          .split(" ")
+          .join("[s]");
 
-        return checkQuotes(temp)
-      } else last_index = index
+        return checkQuotes(temp);
+      } else last_index = index;
       pair = pair ? false : true;
     }
     index++;

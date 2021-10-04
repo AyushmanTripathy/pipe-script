@@ -22,7 +22,7 @@ function runScope(scope, vars = {}) {
         return { returned: true, value: value(output, vars) };
     }
   }
-  return { value: null };
+  return { };
 }
 
 function checkForKeyWords(line, vars) {
@@ -32,7 +32,9 @@ function checkForKeyWords(line, vars) {
   else if (first_line.startsWith("loop")) return basicLoop(line, vars);
   else if (first_line.startsWith("if")) return if_statement(line, vars);
   else if (first_line.startsWith("try")) return try_block(line, vars);
-  return { value: null };
+  else if (first_line.startsWith("switch")) return switch_block(line, vars);
+  error(`invalid block ${first_line}`);
+  return { };
 }
 
 function runFunction(target, args) {
@@ -52,6 +54,29 @@ function runFunction(target, args) {
   if (return_value.breaked)
     error(`invalid break statment in function ${target}`);
   return return_value;
+}
+
+function switch_block(hash_code, vars) {
+  const statments = scopes[hash_code];
+  const input = runLine("pass_input " + statments.shift().slice(6), vars);
+
+  let return_value = {};
+  for (let i = 0; i < statments.length; i++) {
+    if (statments[i].startsWith("default")) {
+      i++;
+      return_value = runScope(scopes[statments[i]], vars);
+    } else if (statments[i].startsWith("case")) {
+      const condition = runLine("pass_input " + statments[i].slice(4), vars);
+      i++;
+      if (value(input, vars) == value(condition, vars))
+        return_value = runScope(scopes[statments[i]], vars);
+    } else error(`invalid keyword ${statments[i]} in switch block`);
+
+    if (return_value.breaked) return { value: null };
+    if (return_value.returned) return return_value;
+  }
+
+  return { };
 }
 
 function try_block(hash_name, vars) {
@@ -200,6 +225,8 @@ function runCommand(vars, command, line) {
       return "break";
     case "return":
       return line[0];
+    case "pass_input":
+      return line[0];
   }
 
   // NO ARG
@@ -283,7 +310,7 @@ function runCommand(vars, command, line) {
   error(`invalid command or arg - ${command} with arg ${[$1, $2, ...line]}`);
 }
 
-function new_constructor(type, value) {
+function new_constructor(type) {
   const hash_num = hash();
   switch (type) {
     case "Object":
