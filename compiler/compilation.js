@@ -22,7 +22,6 @@ function compileScope(scope, var_list) {
   // compile lines
   for (let line of scope) {
     // check for loops / if
-
     if (line.startsWith("@")) checkForKeyWords(line, var_list);
     else write(compileLine(line, var_list));
   }
@@ -188,6 +187,13 @@ function compileStatments(line, var_list) {
 
 function compileCommand(line, var_list) {
   const command = checkToken(line.shift());
+
+  //special keyword
+  switch (command) {
+    case 'true': return true
+    case 'false':return false
+    case 'null': return null
+  }
 
   //break
   switch (command) {

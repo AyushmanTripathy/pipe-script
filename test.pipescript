@@ -11,6 +11,7 @@ function witch $a
       log 'equal 10'
       return $a
     default
-      log 'default' 
-    default
-      log 'default'
+      if true
+        log 'default'
+      else
+        log 'else'
