@@ -1,15 +1,16 @@
 # factorial
 set n 10
 
-if true
-  log 'equal'
-  if | ge $n 20
-    log 'less'
-  elseif true
-    log 'else'
-  else 
-    log 'not less'
-elseif true
-  log 'else'
-else
-  log 'not equal'
+log | call switch $n
+function switch $a
+  switch $a
+    case 10
+      log 'equal 1'
+      break
+    case 10
+      log 'equal 10'
+      return $a
+    default
+      log 'default' 
+    default
+      log 'default'

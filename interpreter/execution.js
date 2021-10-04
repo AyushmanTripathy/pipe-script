@@ -32,6 +32,8 @@ function checkForKeyWords(line, vars) {
   else if (first_line.startsWith("loop")) return basicLoop(line, vars);
   else if (first_line.startsWith("if")) return if_statement(line, vars);
   else if (first_line.startsWith("try")) return try_block(line, vars);
+  else if (first_line.startsWith("switch")) return switch_block(line, vars);
+  error(`invalid block ${first_line}`);
   return { value: null };
 }
 
@@ -52,6 +54,29 @@ function runFunction(target, args) {
   if (return_value.breaked)
     error(`invalid break statment in function ${target}`);
   return return_value;
+}
+
+function switch_block(hash_code, vars) {
+  const statments = scopes[hash_code];
+  const input = runLine("pass_input " + statments.shift().slice(6), vars);
+
+  let return_value = {};
+  for (let i = 0; i < statments.length; i++) {
+    if (statments[i].startsWith("default")) {
+      i++;
+      return_value = runScope(scopes[statments[i]], vars);
+    } else if (statments[i].startsWith("case")) {
+      const condition = runLine("pass_input " + statments[i].slice(4), vars);
+      i++;
+      if (value(input, vars) == value(condition, vars))
+        return_value = runScope(scopes[statments[i]], vars);
+    } else error(`invalid keyword ${statments[i]} in switch block`);
+
+    if (return_value.breaked) return { value: null };
+    if (return_value.returned) return return_value;
+  }
+
+  return { value: null };
 }
 
 function try_block(hash_name, vars) {
@@ -199,6 +224,8 @@ function runCommand(vars, command, line) {
     case "break":
       return "break";
     case "return":
+      return line[0];
+    case "pass_input":
       return line[0];
   }
 

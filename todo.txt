@@ -8,13 +8,11 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-add stack system for nested if/else
-
 add error types
 1. runtime error
 2. syntax error
 
-switch case statments
+switch block (com)
 add objects and array in js compiler
 
 if(over) version major
