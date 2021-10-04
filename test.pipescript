@@ -1,8 +1,8 @@
 # factorial
 set n 10
 
-log | call switch $n
-function switch $a
+log | call witch $n
+function witch $a
   switch $a
     case 10
       log 'equal 1'

@@ -22,7 +22,7 @@ function runScope(scope, vars = {}) {
         return { returned: true, value: value(output, vars) };
     }
   }
-  return { value: null };
+  return { };
 }
 
 function checkForKeyWords(line, vars) {
@@ -34,7 +34,7 @@ function checkForKeyWords(line, vars) {
   else if (first_line.startsWith("try")) return try_block(line, vars);
   else if (first_line.startsWith("switch")) return switch_block(line, vars);
   error(`invalid block ${first_line}`);
-  return { value: null };
+  return { };
 }
 
 function runFunction(target, args) {
@@ -76,7 +76,7 @@ function switch_block(hash_code, vars) {
     if (return_value.returned) return return_value;
   }
 
-  return { value: null };
+  return { };
 }
 
 function try_block(hash_name, vars) {
@@ -310,7 +310,7 @@ function runCommand(vars, command, line) {
   error(`invalid command or arg - ${command} with arg ${[$1, $2, ...line]}`);
 }
 
-function new_constructor(type, value) {
+function new_constructor(type) {
   const hash_num = hash();
   switch (type) {
     case "Object":

@@ -33,15 +33,42 @@ function checkForKeyWords(line, var_list) {
 
   if (first_line.startsWith("while")) whileLoop(line, var_list.slice());
   else if (first_line.startsWith("loop")) basicLoop(line, var_list.slice());
-  else if (first_line.startsWith("if")) if_statement(line, var_list);
+  else if (first_line.startsWith("if")) if_block(line, var_list);
   else if (first_line.startsWith("try")) try_block(line, var_list);
+  else if (first_line.startsWith("switch")) switch_block(line, var_list);
+  else error(`invalid block ${first_line}`);
 }
 
 function write(string) {
   file += str(string) + "\n";
 }
 
-function if_statement(hash_code, var_list) {
+function switch_block(hash_code, var_list) {
+  const statments = scopes[hash_code]
+  const input = 'pass_input'+statments.shift().slice(6)
+  const defaults = []
+
+  write(`switch(${compileLine(input, var_list)}){`)
+  for(let i =0;i<statments.length;i++) {
+    if (statments[i].startsWith("default")) {
+      i++;
+      defaults.push(statments[i]);
+    } else if (statments[i].startsWith("case")) {
+      const condition = compileLine("pass_input " + statments[i].slice(4), var_list);
+      i++;
+      write(`case ${condition}:`)
+      compileScope(scopes[statments[i]], var_list);
+    } else error(`invalid keyword ${statments[i]} in switch block`);
+  }
+  write('default:')
+  for (const scope of defaults)
+    compileScope(scopes[scope], var_list);
+
+  write('}')
+  log(input)
+}
+
+function if_block(hash_code, var_list) {
   const statments = scopes[hash_code];
 
   for (let i = 0; i < statments.length; i++) {
@@ -172,6 +199,8 @@ function compileCommand(line, var_list) {
       return "Math.random()";
     case "return":
       return `return ${checkReturn(line.shift())}`;
+    case 'pass_input':
+      return checkToken(line.shift())
   }
 
   //MULTIPLE
