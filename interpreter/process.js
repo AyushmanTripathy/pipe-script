@@ -4,9 +4,11 @@ export default async function classifyScopes(file, import_function) {
   let scope_stack = ["global"];
   let last_depth = 0;
   let line_before;
-  let last_if_hash = null;
   let last_comment = false;
+
+  let if_hash_code = [];
   let try_hash_code = false;
+  let switch_hash_code = false;
 
   for (let line of file) {
     const depth = checkDepth(line);
@@ -50,26 +52,26 @@ export default async function classifyScopes(file, import_function) {
 
           // remove line before
           scopes[last(scope_stack)].pop();
-          scopes[last(scope_stack)].push(`${hash_name}`);
+          scopes[last(scope_stack)].push(hash_name);
 
           const if_hash_name = hash();
           scopes[if_hash_name] = [line];
           scope_stack.push(if_hash_name);
 
-          last_if_hash = hash_name;
+          if_hash_code.push(hash_name);
           scopes[hash_name] = [line_before, if_hash_name];
         }
         // else / else if
         else if (line_before.startsWith("else")) {
-          if (!last_if_hash) error(`invalid if statment - ${line_before}`);
+          if (!if_hash_code.length) error(`invalid if block\n${line_before}`);
           scopes[last(scope_stack)].pop();
 
           const hash_name = hash();
           scope_stack.push(hash_name);
           scopes[hash_name] = [line];
 
-          scopes[last_if_hash].push(line_before, hash_name);
-          if (!line_before.startsWith("elseif")) last_if_hash = null;
+          scopes[last(if_hash_code)].push(line_before, hash_name);
+          if (!line_before.startsWith("elseif")) if_hash_code.pop();
         }
 
         // while / loops

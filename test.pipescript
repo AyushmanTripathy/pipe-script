@@ -1,8 +1,15 @@
 # factorial
+set n 10
 
-try 
-  log 'tried'
-  log 'completed'
-catch $error 
-  log 'catched'
-  log $error
+if true
+  log 'equal'
+  if | ge $n 20
+    log 'less'
+  elseif true
+    log 'else'
+  else 
+    log 'not less'
+elseif true
+  log 'else'
+else
+  log 'not equal'
