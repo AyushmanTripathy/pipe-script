@@ -18,12 +18,13 @@ globalThis.log = (string) => {
   console.log(string);
 };
 
-globalThis.error = (msg) => {
+globalThis.error = (msg, type) => {
   if (globalThis.enable_catch) {
     globalThis.currentError = msg;
     return !undefined_var;
   }
-  throw `[ERROR] ${msg}`;
+  if (type) throw `[SYNTAX ERROR] ${msg}`;
+  throw `[COMPILATION ERROR] ${msg}`;
 };
 
 init();
@@ -35,13 +36,21 @@ async function run(file) {
   globalThis.scopes = {};
   globalThis.hash_code = 0;
   scopes.global = [];
+
   scopes.string = {};
+  scopes.object = {};
+  scopes.array = {};
 
   await classifyScopes(file, importFile);
   compileScope(scopes.global);
   if (typeof release_mode == "undefined") console.log(scopes);
-
-  writeFileSync("test.js", globalThis.file);
+  const output = args.shift();
+  log(`writing to ${output}`);
+  writeFileSync(
+    output ? output : error(`invalid output file name ${output}`),
+    globalThis.file
+  );
+  log("compiled successfully!");
 }
 
 async function importFile(path) {

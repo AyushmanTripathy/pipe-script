@@ -63,7 +63,7 @@ export default async function classifyScopes(file, import_function) {
         }
         // else / else if
         else if (line_before.startsWith("else")) {
-          if (!if_hash_code.length) error(`invalid if block\n${line_before}`);
+          if (!if_hash_code.length) error(`invalid if block\n${line_before}\n${line}`,true);
           scopes[last(scope_stack)].pop();
 
           const hash_name = hash();
@@ -103,7 +103,7 @@ export default async function classifyScopes(file, import_function) {
 
         // catch block
         else if (line_before.startsWith("catch")) {
-          if (!try_hash_code) error(`try block not found for ${line_before}`);
+          if (!try_hash_code) error(`try block not found \n ${line_before}\n${line}`,true);
 
           const hash_code = hash();
           scopes[try_hash_code].push(line_before, hash_code);
@@ -130,7 +130,7 @@ export default async function classifyScopes(file, import_function) {
           scopes[last(scope_stack)].push(hash_code);
           scope_stack.push(hash_code);
         } else {
-          error(`invalid scope change\n${line_before}\n${line}`);
+          error(`invalid scope change\n${line_before}\n${line}`,true);
         }
       }
       last_depth = depth;

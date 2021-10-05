@@ -18,12 +18,13 @@ globalThis.log = (string) => {
   console.log(string);
 };
 
-globalThis.error = (msg) => {
+globalThis.error = (msg,type) => {
   if(globalThis.enable_catch) {
     globalThis.currentError = msg;
     return !undefined_var
   }
-  throw `[ERROR] ${msg}`;
+  if(!type) throw `[RUNTIME ERROR] ${msg}`
+  throw `[SYNTAX ERROR] ${msg}`;
 };
 
 init();

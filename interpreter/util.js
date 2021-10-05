@@ -24,7 +24,7 @@ function checkType(value) {
   if(typeof value != 'string') return value
 
   // string
-  if(value.startsWith('%')) {
+  if(value.startsWith('%string')) {
     value = value.split('%')
     value = scopes[value[1]][value[2]]
   }

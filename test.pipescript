@@ -1,17 +1,4 @@
-# factorial
-set n 10
-
-log | call witch $n
-function witch $a
-  switch $a
-    case 10
-      log 'equal 1'
-      break
-    case 10
-      log 'equal 10'
-      return $a
-    default
-      if true
-        log 'default'
-      else
-        log 'else'
+if false
+  log lol
+else
+  ldf
