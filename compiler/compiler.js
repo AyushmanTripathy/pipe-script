@@ -40,8 +40,10 @@ async function run(file) {
   await classifyScopes(file, importFile);
   compileScope(scopes.global);
   if (typeof release_mode == "undefined") console.log(scopes);
-
-  writeFileSync("test.js", globalThis.file);
+  const output = args.shift()
+  log(`writing to ${output}`)
+  writeFileSync(output ? output: error(`invalid output file name ${output}`), globalThis.file);
+  log('compiled successfully!')
 }
 
 async function importFile(path) {

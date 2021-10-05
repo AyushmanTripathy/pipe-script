@@ -38,6 +38,8 @@ function checkForKeyWords(line, vars) {
 }
 
 function runFunction(target, args) {
+  config.maximum_call_stack--;
+  if(!config.maximum_call_stack) return error('maximum call stack exceded')
   // functions is empty
   if (!globalThis.scopes.hasOwnProperty(target))
     return error(`${target} is not a function`);
@@ -145,7 +147,7 @@ function basicLoop(lines, vars) {
     if (returned) return { returned, value };
 
     count--;
-    if (!x) return error("stack overflow");
+    if (!x) return error("Maximum loop limit reached");
     else x--;
   }
   return {};
@@ -166,7 +168,7 @@ function whileLoop(lines, vars) {
     if (breaked) break;
     if (returned) return { returned, value };
 
-    if (!x) return error("stack overflow");
+    if (!x) return error("Maximum loop limit reached");
     else x--;
   }
   return {};

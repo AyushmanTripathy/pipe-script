@@ -3,10 +3,10 @@
 cd ~/pipe-script
 
 echo "building interpreter"
-npm run int-build
+npm run buildi
 
 echo 'building compiler'
-npm run com-build
+npm run buildc
 
 echo "build online_editor"
 cd online_editor

@@ -5,8 +5,8 @@
   "main": "build/pipescript.js",
   "type": "module",
   "scripts": {
-    "com-build": "rollup -c compiler/rollup.config.js",
-    "int-build": "rollup -c interpreter/rollup.config.js",
+    "buildc": "rollup -c compiler/rollup.config.js",
+    "buildi": "rollup -c interpreter/rollup.config.js",
     "devi": "nodemon interpreter/interpreter.js test.pipescript",
     "devc": "nodemon compiler/compiler.js test.pipescript"
   },

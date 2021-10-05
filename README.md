@@ -2,14 +2,14 @@
 
 A programming language that revolves around piping.
 
-Pipescript is multi paradigm, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.
+Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.
 
 Pipescript can be interpreted directly or be compiled into javascript.
 
 ##### core concepts
 
 1. piping
-2. command for every thing (call,set,log)
+2. command for every thing (call,set,log,etc..)
 3. code blocks
 
 #### check it out

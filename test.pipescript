@@ -1,18 +1,6 @@
 # factorial
-set n 10
+call loop 
 
-log | call witch $n
-function witch $a
-  switch $a
-    lol
-    case 10
-      log 'equal 1'
-      break
-    case 10
-      log 'equal 10'
-      return $a
-    default
-      if true
-        log 'default'
-      else
-        log 'else'
+function loop 
+  log 'looped'
+  call loop
