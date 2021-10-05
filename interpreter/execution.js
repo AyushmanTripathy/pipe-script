@@ -216,6 +216,7 @@ function checkForBlocks(line, vars, open_stack = []) {
 
 function runStatement(line, vars) {
   line = line.split(" ").filter(Boolean);
+
   const command = line.shift();
   return runCommand(vars, command, line);
 }
@@ -280,13 +281,14 @@ function runCommand(vars, command, line) {
   switch (command) {
     case "get":
       let pointer = value($1, vars);
-      if (!pointer) error(`${$1} is not defined (Array/Object)`);
+      if (!pointer) return error(`${$1} is not a Array/Object`);
+      if (!pointer.startsWith('%')) return error(`${$1} is not a Array/Object`)
       pointer = pointer.split("%");
       return scopes[pointer[1]][pointer[2]][$2];
     case "set":
       if (Number($1) || $1 == 0)
         return error(`expected Chars got Number ${$1}`);
-      if ($1.startsWith("%"))
+      else if ($1.startsWith("%"))
         setValue($1, $2, checkArg(line.shift(), command, vars, [$1, $2]));
       else setVar($1, $2, vars);
       return null;

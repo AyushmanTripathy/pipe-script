@@ -1,6 +1,4 @@
 # factorial
-call loop 
-
-function loop 
-  log 'looped'
-  call loop
+set n | new Object
+set $n op 'prop'
+log | get n op
