@@ -1,6 +1,4 @@
-# factorial
-set a 'prop'
-set n | new Array 
-set key 'op'
-set $n  $key 'prop'
-log | get n $key
+if false
+  log lol
+else
+  ldf
