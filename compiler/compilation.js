@@ -187,7 +187,6 @@ function compileStatments(line, var_list) {
 }
 
 function compileCommand(line, var_list) {
-  log(line);
   const command = checkToken(line.shift());
   //special keyword
   switch (command) {
