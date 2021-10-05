@@ -1,5 +1,5 @@
 <script>
-  import { logs } from './store.js'
+  import { logs } from '../store.js'
 
   let text = ''
   logs.subscribe(log =>{
@@ -11,7 +11,7 @@
   <textarea placeholder="Console" readonly bind:value={text}></textarea>
 </main>
 
-<style>
+<style lang='scss'>
   main {
     display: flex;
     justify-content: center;

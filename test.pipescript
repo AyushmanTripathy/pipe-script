@@ -4,6 +4,7 @@ set n 10
 log | call witch $n
 function witch $a
   switch $a
+    lol
     case 10
       log 'equal 1'
       break

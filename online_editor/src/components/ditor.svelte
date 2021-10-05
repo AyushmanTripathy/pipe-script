@@ -24,30 +24,8 @@
     }
   });
 
-  function handleKeyPress(event) {
-    if (!running) {
-      running = true;
-      setTimeout(save, 1000);
-    }
-
-    switch (event.code) {
-      case "Enter":
-        if (event.ctrlKey) execute(text.split("\n"));
-      default:
-        break;
-    }
-  }
-
-  function save() {
-    running = false;
-    localStorage.setItem("text", JSON.stringify(text));
-  }
-
-  function retrive() {
-    const saved_text = JSON.parse(localStorage.getItem("text"));
-    return saved_text ? saved_text : "";
-  }
-</script>
+  
+  </script>
 
 <main>
   <textarea

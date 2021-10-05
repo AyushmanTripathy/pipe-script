@@ -64,7 +64,6 @@ function switch_block(hash_code, var_list) {
     compileScope(scopes[scope], var_list);
 
   write('}')
-  log(input)
 }
 
 function if_block(hash_code, var_list) {
