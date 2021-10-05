@@ -1,4 +1,6 @@
 # factorial
+set a 'prop'
 set n | new Object
-set $n op 'prop'
-log | get n op
+set key 'op'
+set $n  $key 'prop'
+log | get n $key

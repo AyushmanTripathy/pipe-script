@@ -43,27 +43,29 @@ function write(string) {
 }
 
 function switch_block(hash_code, var_list) {
-  const statments = scopes[hash_code]
-  const input = 'pass_input'+statments.shift().slice(6)
-  const defaults = []
+  const statments = scopes[hash_code];
+  const input = "pass_input" + statments.shift().slice(6);
+  const defaults = [];
 
-  write(`switch(${compileLine(input, var_list)}){`)
-  for(let i =0;i<statments.length;i++) {
+  write(`switch(${compileLine(input, var_list)}){`);
+  for (let i = 0; i < statments.length; i++) {
     if (statments[i].startsWith("default")) {
       i++;
       defaults.push(statments[i]);
     } else if (statments[i].startsWith("case")) {
-      const condition = compileLine("pass_input " + statments[i].slice(4), var_list);
+      const condition = compileLine(
+        "pass_input " + statments[i].slice(4),
+        var_list
+      );
       i++;
-      write(`case ${condition}:`)
+      write(`case ${condition}:`);
       compileScope(scopes[statments[i]], var_list);
     } else error(`invalid keyword ${statments[i]} in switch block`);
   }
-  write('default:')
-  for (const scope of defaults)
-    compileScope(scopes[scope], var_list);
+  write("default:");
+  for (const scope of defaults) compileScope(scopes[scope], var_list);
 
-  write('}')
+  write("}");
 }
 
 function if_block(hash_code, var_list) {
@@ -185,17 +187,22 @@ function compileStatments(line, var_list) {
 }
 
 function compileCommand(line, var_list) {
+  log(line);
   const command = checkToken(line.shift());
-
   //special keyword
   switch (command) {
-    case 'true': return true
-    case 'false':return false
-    case 'null': return null
+    case "true":
+      return true;
+    case "false":
+      return false;
+    case "null":
+      return null;
   }
 
-  //break
+  //no arg
   switch (command) {
+    case "set":
+      return set(line, var_list);
     case "exit":
       return "process.exit()";
     case "break":
@@ -204,8 +211,6 @@ function compileCommand(line, var_list) {
       return "Math.random()";
     case "return":
       return `return ${checkReturn(line.shift())}`;
-    case 'pass_input':
-      return checkToken(line.shift())
   }
 
   //MULTIPLE
@@ -238,6 +243,10 @@ function compileCommand(line, var_list) {
       return `!Boolean(${$1})`;
     case "call":
       return call_function($1, line);
+    case "new":
+      return `new ${$1}()`;
+    case "pass_input":
+      return checkToken(line.shift());
 
     //Math
     case "round":
@@ -249,8 +258,8 @@ function compileCommand(line, var_list) {
   // 2 arg
   const $2 = checkToken(line.shift());
   switch (command) {
-    case "set":
-      return setVar($1, $2, var_list);
+    case "get":
+      return `${$1}[${$2}]`;
 
     //Math
     case "reminder":
@@ -277,6 +286,25 @@ function compileCommand(line, var_list) {
 function checkReturn(value) {
   if (typeof value == "undefined") return "";
   return checkToken(value);
+}
+
+function set(line, var_list) {
+  let $1 = line.shift();
+  if (Number($1) || $1 == 0)
+    return error(`cannot set ${line.shift()} to ${$1}`);
+  if ($1.startsWith("-$"))
+    return error(`cannot set ${line.shift()} to neg ${$1}`);
+  if ($1.startsWith("$")) return setValue($1.substring(1), line);
+
+  return setVar(
+    $1,
+    line.reduce((acc, cur) => acc + checkToken(cur) + " ", ""),
+    var_list
+  );
+}
+
+function setValue($1, line) {
+  return `${$1}[${checkToken(line.shift())}] = ${checkToken(line.shift())}`;
 }
 
 function setVar($1, $2, var_list) {
