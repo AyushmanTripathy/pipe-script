@@ -41,16 +41,24 @@ async function run(file) {
   scopes.object = {};
   scopes.array = {};
 
-  await classifyScopes(file, importFile);
-  compileScope(scopes.global);
-  if (typeof release_mode == "undefined") console.log(scopes);
-  const output = args.shift();
-  log(`writing to ${output}`);
-  writeFileSync(
-    output ? output : error(`invalid output file name ${output}`),
-    globalThis.file
-  );
-  log("compiled successfully!");
+  try {
+    await classifyScopes(file, importFile);
+    compileScope(scopes.global);
+    if (typeof release_mode == "undefined") console.log(scopes);
+
+    // writing 
+    const output = args.shift();
+    log(`writing to ${output}`);
+    writeFileSync(
+      output ? output : error(`invalid output file name ${output}`),
+      globalThis.file
+    );
+    log("compiled successfully!");
+
+  } catch (error) {
+    log(error);
+    log("FATAL ERROR - terminating program...");
+  }
 }
 
 async function importFile(path) {

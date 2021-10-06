@@ -1,5 +1,10 @@
-let a = "prop" 
-let n = new Array() 
-let key = "op" 
-n[key] = "prop"
-console.log(n[key],)
+try{
+if(false){
+console.log("lol",)
+}
+else{
+console.log("else",)
+}
+} catch (e){
+console.log(eoo+" "+e,)
+}

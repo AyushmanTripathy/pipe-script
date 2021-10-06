@@ -1,4 +1,7 @@
-if false
-  log lol
-else
-  ldf
+try
+  if false
+    log 'lol'
+  else
+    log 'else'
+catch $e 
+  log | add eoo ' ' $e

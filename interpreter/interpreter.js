@@ -18,12 +18,8 @@ globalThis.log = (string) => {
   console.log(string);
 };
 
-globalThis.error = (msg,type) => {
-  if(globalThis.enable_catch) {
-    globalThis.currentError = msg;
-    return !undefined_var
-  }
-  if(!type) throw `[RUNTIME ERROR] ${msg}`
+globalThis.error = (msg, type) => {
+  if (!type) throw `[RUNTIME ERROR] ${msg}`;
   throw `[SYNTAX ERROR] ${msg}`;
 };
 
@@ -42,8 +38,13 @@ async function run(file) {
   scopes.array = {};
   scopes.string = {};
 
-  await classifyScopes(file, importFile);
-  runGlobalScope();
+  try {
+    await classifyScopes(file, importFile);
+    runGlobalScope();
+  } catch (error) {
+    console.log(error)
+    console.log("FATAL ERROR - terminating program...");
+  }
   if (typeof release_mode == "undefined") console.log(scopes);
 }
 
