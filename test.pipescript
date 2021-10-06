@@ -1,7 +1,4 @@
-try
-  if false
-    log 'lol'
-  else
-    log 'else'
-catch $e 
-  log | add eoo ' ' $e
+call lol
+
+function lol
+   log $a

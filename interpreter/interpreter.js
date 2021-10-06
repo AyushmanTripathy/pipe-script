@@ -1,5 +1,5 @@
 import runGlobalScope from "./execution.js";
-import classifyScopes from "./process.js";
+import classifyScopes from "../common/process.js";
 
 import { createInterface } from "readline";
 import { readFileSync, existsSync, createReadStream } from "fs";
