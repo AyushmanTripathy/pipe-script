@@ -1,12 +1,11 @@
 <script>
   import Editor from "./Editor.svelte";
   import Console from "./Console.svelte";
-  let code = "";
 </script>
 
 <main>
   <section>
-    <Editor {code} tab="\t" />
+    <Editor />
     <Console />
   </section>
 </main>

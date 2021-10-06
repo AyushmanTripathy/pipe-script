@@ -1,4 +1,4 @@
-import { value, str, hash } from "./util.js";
+import { value, str, hash, stringify } from "./util.js";
 
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);
@@ -84,16 +84,15 @@ function switch_block(hash_code, vars) {
 function try_block(hash_name, vars) {
   const statment = scopes[hash_name].slice();
   let return_value;
-  globalThis.enable_catch = true;
+
   try {
     return_value = runScope(scopes[statment[1]], vars);
   } catch (e) {
     let error_var = statment[2].split(" ")[1];
     if (error_var)
-      setVar(error_var.substring(1), globalThis.currentError, vars);
+      setVar(error_var.substring(1),stringify(e), vars);
     return_value = runScope(scopes[statment[3]], vars);
   }
-  globalThis.enable_catch = false;
 
   return return_value;
 }
@@ -347,6 +346,6 @@ function setVar(target, value, vars) {
 function checkArg(target, command, vars, args = []) {
   if (Number(target) || target == 0) return Number(target);
   else if (typeof target == "undefined") {
-    error(`invalid command - ${command} with arg ${[target, ...args]}`);
+    error(`unknown command - ${command} with arg [${[target, ...args]}]`);
   } else return value(target, vars);
 }

@@ -21,15 +21,15 @@ function checkType(value) {
   if (value == "false") return false;
   if (value == "null") return null;
 
-  if(typeof value != 'string') return value
+  if (typeof value != "string") return value;
 
   // string
-  if(value.startsWith('%string')) {
-    value = value.split('%')
-    value = scopes[value[1]][value[2]]
+  if (value.startsWith("%string")) {
+    value = value.split("%");
+    value = scopes[value[1]][value[2]];
   }
 
-  return value
+  return value;
 }
 
 function checkForVars(value, variables) {
@@ -42,12 +42,16 @@ function checkForVars(value, variables) {
 
   return value;
 }
-export function str (str) {
-  if (typeof str != 'string') return str;
-  str = str.split('[s]').join(' ')
-  return str
+
+export function stringify(str) {
+  return str.split(" ").join("[s]");
 }
 
+export function str(str) {
+  if (typeof str != "string") return str;
+  str = str.split("[s]").join(" ");
+  return str;
+}
 
 export function hash() {
   hash_code++;
