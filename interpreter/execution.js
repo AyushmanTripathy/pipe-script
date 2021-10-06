@@ -1,4 +1,4 @@
-import { value, str, hash, stringify } from "./util.js";
+import { value, str, hash, stringify } from "../common/util.js";
 
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);

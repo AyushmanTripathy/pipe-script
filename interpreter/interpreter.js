@@ -1,10 +1,11 @@
 import runGlobalScope from "./execution.js";
-import classifyScopes from "./process.js";
+import classifyScopes from "../common/process.js";
+import { checkArgs } from "../common/util.js";
 
 import { createInterface } from "readline";
-import { readFileSync, existsSync, createReadStream } from "fs";
+import { readFileSync, existsSync, createReadStream, watchFile } from "fs";
 
-const args = process.argv.splice(2);
+const { options, words } = checkArgs(process.argv.splice(2));
 const cwd = process.cwd();
 
 globalThis.config = loadJson("../config.json");
@@ -25,7 +26,25 @@ globalThis.error = (msg, type) => {
 
 init();
 function init() {
-  run([`import ${args.shift()}`]);
+  for (const option of options)
+    switch (option) {
+      case "w":
+        return watchPath(words.shift());
+      case "c":
+        break;
+    }
+  run([`import ${words.shift()}`]);
+}
+
+async function watchPath(file_name) {
+  log(`WATCHING ${file_name}...`);
+  const config_swap = { ...config }
+
+  watchFile(file_name, {}, async () => {
+    log(`detected change on ${file_name}`);
+    await run([`import ${file_name}`]);
+    config = config_swap
+  });
 }
 
 async function run(file) {
@@ -42,7 +61,7 @@ async function run(file) {
     await classifyScopes(file, importFile);
     runGlobalScope();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     console.log("FATAL ERROR - terminating program...");
   }
   if (typeof release_mode == "undefined") console.log(scopes);

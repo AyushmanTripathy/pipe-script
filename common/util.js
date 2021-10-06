@@ -43,6 +43,21 @@ function checkForVars(value, variables) {
   return value;
 }
 
+export function checkArgs (args) {
+  const options = [] 
+  const words = [];
+
+  for (const arg of args) {
+    if (arg.startsWith('-')) {
+      options.push(arg.substring(1))
+    } else {
+      words.push(arg)
+    }
+  }
+
+  return { options ,words }
+}
+
 export function stringify(str) {
   return str.split(" ").join("[s]");
 }

@@ -1,4 +1,4 @@
-import { hash, str } from "../interpreter/util.js";
+import { hash, str } from "../common/util.js";
 
 export default function compileGlobalScope() {
   globalThis.file = "";
