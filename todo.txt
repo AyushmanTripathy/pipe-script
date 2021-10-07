@@ -7,3 +7,5 @@ pipescript (interpreted)- 6.064s
 pipescript (compiled to js) - 0.086s
 
 TODO -
+
+fixing set error
