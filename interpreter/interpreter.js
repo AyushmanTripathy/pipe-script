@@ -38,12 +38,14 @@ function init() {
 
 async function watchPath(file_name) {
   log(`WATCHING ${file_name}...`);
-  const config_swap = { ...config }
+  const config_swap = { ...config };
+  const watch_options = config_swap.watch_options;
 
   watchFile(file_name, {}, async () => {
+    if (watch_options.clear_screen) console.clear();
     log(`detected change on ${file_name}`);
     await run([`import ${file_name}`]);
-    config = config_swap
+    config = config_swap;
   });
 }
 
@@ -70,7 +72,7 @@ async function run(file) {
 async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
   if (!existsSync(path_to_file))
-    return error(`path: ${path_to_file} doesnot exist`);
+    return error(`no such file: ${path_to_file}`);
 
   const fileStream = createReadStream(path_to_file);
 

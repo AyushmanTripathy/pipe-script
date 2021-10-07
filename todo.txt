@@ -7,5 +7,3 @@ pipescript (interpreted)- 6.064s
 pipescript (compiled to js) - 0.086s
 
 TODO -
-
-cli option to watch dir for change

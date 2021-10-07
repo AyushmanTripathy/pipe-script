@@ -46,7 +46,7 @@ async function run(file) {
     compileScope(scopes.global);
     if (typeof release_mode == "undefined") console.log(scopes);
 
-    // writing 
+    // writing
     const output = args.shift();
     log(`writing to ${output}`);
     writeFileSync(
@@ -54,7 +54,6 @@ async function run(file) {
       globalThis.file
     );
     log("compiled successfully!");
-
   } catch (error) {
     log(error);
     log("FATAL ERROR - terminating program...");

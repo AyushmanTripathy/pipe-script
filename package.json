@@ -1,13 +1,13 @@
 {
   "name": "pipescript-dev-kit",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
   "type": "module",
   "scripts": {
     "buildc": "rollup -c compiler/rollup.config.js",
     "buildi": "rollup -c interpreter/rollup.config.js",
-    "devi": "nodemon interpreter/interpreter.js -w test.pipescript",
+    "devi": "nodemon interpreter/interpreter.js test.pipescript",
     "devc": "nodemon compiler/compiler.js test.pipescript test.js"
   },
   "repository": {

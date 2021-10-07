@@ -1,5 +1,9 @@
 {
   "tab":2,
   "max_loop_limit":1000,
-  "maximum_call_stack":100
+  "maximum_call_stack":100,
+  "watch_options":{
+    "clear_screen":false
+  },
+  "run_after_compilation":true
 }
