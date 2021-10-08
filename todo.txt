@@ -8,6 +8,7 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-fixing set error
+get muti level error
 
+get and set (coms)
 array functions (coms)

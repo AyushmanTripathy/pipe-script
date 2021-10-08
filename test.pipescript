@@ -1,6 +1,5 @@
 set n | new Array
 set $n 0 | new Array
-log '----'
 
 set $n 0 0 lol
 log | get $n 0 0

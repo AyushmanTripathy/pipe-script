@@ -353,22 +353,26 @@ function clone(pointer, value) {
   return `%${pointer[1]}%${hash_code}`;
 }
 
-function get(target, line, vars) {
-  if (isNumber(target))
-    return error(`${target} - expected Array/Object got number`);
-  if (!target.startsWith("%") && target.startsWith("%s"))
-    return error(`${target} is not a Array/Object`);
+function get(target,line, vars) {
+  if (isNumber(target) || !target.startsWith("%"))
+    return error(`expected refrence type got primitive ${target}`);
 
-  target = target.split("%");
-  let val = scopes[target[1]][target[2]];
+  target = target.split('%')
+  let val = scopes[target[1]];
+  line = line.map((n) => value(n, vars));
 
-  return getValue(val, line, vars);
-}
+  let key = target[2];
+  for (let i = 0; i < line.length; i++) {
+    if (typeof val[key] == "string" && val[key].startsWith("%")) {
+      return get(val[key], line.slice(i + 1), vars);
+    }
 
-function getValue(val, line, vars) {
-  if (line.length > 0)
-    return getValue(val[value(line.shift(), vars)], line, vars);
-  return val;
+    val = val[key];
+    if (typeof val == "undefined")
+      return error(`cannot get proprety ${line[i]} of ${val}`);
+    key = line[i];
+  }
+  return val[key]
 }
 
 function new_constructor(type) {
@@ -397,25 +401,22 @@ function setValue(target, key, proprety, line, vars) {
         return error(`expected key to be string , got ${key}`);
       break;
     case "string":
-      return error(`cannot change ${key} as string are read only`);
+      return error(`cannot change ${key} of read only strings`);
   }
   let val = scopes[target[1]];
   line = [key, ...line].map((n) => value(n, vars));
-  log(line);
 
   key = target[2];
   for (let i = 0; i < line.length; i++) {
-    log(`${val}[${key}] --> [${val[key]}]`);
-
-    if (typeof val[key] == "string" && val[key].startsWith("%")){
-      return setValue(val[key], line[i],proprety, line.slice(i+1), vars);
+    if (typeof val[key] == "string" && val[key].startsWith("%")) {
+      return setValue(val[key], line[i], proprety, line.slice(i + 1), vars);
     }
 
     val = val[key];
+    if (typeof val == "undefined")
+      return error(`cannot set proprety ${line[i]} of ${val}`);
     key = line[i];
   }
-
-  log(key);
   val[key] = proprety;
 }
 
