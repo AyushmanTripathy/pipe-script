@@ -2,4 +2,6 @@ set n | new Array
 set $n 0 | new Array
 
 set $n 0 0 lol
-log | get $n 0 0
+set $n 0 1 lo
+
+log | get $n 0 

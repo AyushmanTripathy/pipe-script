@@ -372,6 +372,9 @@ function get(target,line, vars) {
       return error(`cannot get proprety ${line[i]} of ${val}`);
     key = line[i];
   }
+
+  if (typeof val[key] == "string" && val[key].startsWith("%"))
+    return pointer(val[key])
   return val[key]
 }
 
