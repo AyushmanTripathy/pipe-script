@@ -7,3 +7,8 @@ pipescript (interpreted)- 6.064s
 pipescript (compiled to js) - 0.086s
 
 TODO -
+
+change runLine from string to array
+
+get and set (coms)
+array functions (coms)

@@ -1,26 +1,7 @@
-# pipescript diamond
+set n | new Array
+set $n 0 | new Array
 
-call diamond 10
+set $n 0 0 lol
+set $n 0 1 lo
 
-function diamond $count
-  set n 0
-  while | ge $count $n
-    set star   | call line '*' $n
-    set scroll | call line '_' | add -$n $count
-
-    log   | add $scroll | add $star | add $star $scroll
-    set n | add $n 1
-
-  set n 0
-  while | ge $count $n
-    set scroll | call line '_' $n
-    set star   | call line '*' | add -$n $count
-
-    log   | add $scroll | add $star | add $star $scroll
-    set n | add $n 1
-
-function line $char $n
-  set string $char
-  loop $n
-    set string | add $string $char
-  return $string
+log | shift | get $n 0 

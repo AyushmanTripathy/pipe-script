@@ -68,6 +68,15 @@ export function str(str) {
   return str;
 }
 
+export function pointer(pointer) {
+  pointer = pointer.split('%')
+  return scopes[pointer[1]][pointer[2]]
+}
+
+export function isNumber(num){
+  return (Number(num) || num == 0)
+}
+
 export function hash() {
   hash_code++;
   return `@${hash_code}`;

@@ -1,4 +1,12 @@
-import { value, str, hash, stringify } from "../common/util.js";
+import {
+  value,
+  str,
+  stringify,
+  pointer,
+  isNumber,
+  hash,
+  last,
+} from "../common/util.js";
 
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);
@@ -22,7 +30,7 @@ function runScope(scope, vars = {}) {
         return { returned: true, value: value(output, vars) };
     }
   }
-  return { };
+  return {};
 }
 
 function checkForKeyWords(line, vars) {
@@ -34,12 +42,12 @@ function checkForKeyWords(line, vars) {
   else if (first_line.startsWith("try")) return try_block(line, vars);
   else if (first_line.startsWith("switch")) return switch_block(line, vars);
   error(`invalid block ${first_line}`);
-  return { };
+  return {};
 }
 
 function runFunction(target, args) {
   config.maximum_call_stack--;
-  if(!config.maximum_call_stack) return error('maximum call stack exceded')
+  if (!config.maximum_call_stack) return error("maximum call stack exceded");
   // functions is empty
   if (!globalThis.scopes.hasOwnProperty(target))
     return error(`${target} is not a function`);
@@ -78,7 +86,7 @@ function switch_block(hash_code, vars) {
     if (return_value.returned) return return_value;
   }
 
-  return { };
+  return {};
 }
 
 function try_block(hash_name, vars) {
@@ -89,8 +97,7 @@ function try_block(hash_name, vars) {
     return_value = runScope(scopes[statment[1]], vars);
   } catch (e) {
     let error_var = statment[2].split(" ")[1];
-    if (error_var)
-      setVar(error_var.substring(1),stringify(e), vars);
+    if (error_var) setVar(error_var.substring(1), stringify(e), vars);
     return_value = runScope(scopes[statment[3]], vars);
   }
 
@@ -221,6 +228,8 @@ function runStatement(line, vars) {
 }
 
 function runCommand(vars, command, line) {
+  const line_clone = line.slice();
+
   // key words
   switch (command) {
     case "break":
@@ -256,8 +265,10 @@ function runCommand(vars, command, line) {
   }
 
   // 1 ARG
-  const $1 = checkArg(line.shift(), command, vars);
+  const $1 = checkArg(line.shift(), command, vars, line_clone);
   switch (command) {
+    case "get":
+      return get($1, line, vars);
     case "boolean":
       return Boolean($1);
     case "number":
@@ -274,21 +285,27 @@ function runCommand(vars, command, line) {
       return Math.floor($1);
     case "new":
       return new_constructor($1, line);
+
+    // array functions
+    case "pop":
+      return arr($1, line_clone[0]).pop();
+    case "shift":
+      return arr($1, line_clone[0]).shift();
+    case "length":
+      return arr($1, line_clone[0]).length;
+    case "reverse":
+      return clone($1, [...arr($1, line_clone[0]).reverse()]);
+    case "last":
+      return last(arr($1, line_clone[0]));
   }
   // 2 ARG
-  const $2 = checkArg(line.shift(), command, vars, [$1]);
+  const $2 = checkArg(line.shift(), command, vars, line_clone);
   switch (command) {
-    case "get":
-      let pointer = value($1, vars);
-      if (!pointer) return error(`${$1} is not a Array/Object`);
-      if (!pointer.startsWith('%')) return error(`${$1} is not a Array/Object`)
-      pointer = pointer.split("%");
-      return scopes[pointer[1]][pointer[2]][$2];
     case "set":
-      if (Number($1) || $1 == 0)
-        return error(`expected Chars got Number ${$1}`);
+      if (isNumber($1))
+        return error(`cannot set value to Number ${line_clone[0]}`);
       else if ($1.startsWith("%"))
-        setValue($1, $2, checkArg(line.shift(), command, vars, [$1, $2]));
+        setValue($1, $2, value(line.pop()), line, vars);
       else setVar($1, $2, vars);
       return null;
     case "pow":
@@ -296,6 +313,16 @@ function runCommand(vars, command, line) {
       return Math.pow($1, $2);
     case "reminder":
       return $1 % $2;
+
+    // array functions
+    case "push":
+      arr($1, line_clone[0]).push($2);
+      return null;
+    case "unshift":
+      arr($1, line_clone[0]).unshift($2);
+      return null;
+    case "includes":
+      return arr($1, line_clone[0]).includes($2);
 
     // logic
     case "eq":
@@ -310,7 +337,45 @@ function runCommand(vars, command, line) {
       return $1 <= $2;
   }
 
-  error(`invalid command or arg - ${command} with arg ${[$1, $2, ...line]}`);
+  error(`invalid command or arg - ${command} with arg ${[...line_clone]}`);
+}
+
+function arr(value, var_name) {
+  if (isNumber(value)) return error(`${var_name} is not a array`);
+  if (!value.startsWith("%array")) return error(`${var_name} is not a array`);
+  return pointer(value);
+}
+
+function clone(pointer, value) {
+  const hash_code = hash();
+  pointer = pointer.split("%");
+  scopes[pointer[1]][hash_code] = value;
+  return `%${pointer[1]}%${hash_code}`;
+}
+
+function get(target,line, vars) {
+  if (isNumber(target) || !target.startsWith("%"))
+    return error(`expected refrence type got primitive ${target}`);
+
+  target = target.split('%')
+  let val = scopes[target[1]];
+  line = line.map((n) => value(n, vars));
+
+  let key = target[2];
+  for (let i = 0; i < line.length; i++) {
+    if (typeof val[key] == "string" && val[key].startsWith("%")) {
+      return get(val[key], line.slice(i + 1), vars);
+    }
+
+    val = val[key];
+    if (typeof val == "undefined")
+      return error(`cannot get proprety ${line[i]} of ${val}`);
+    key = line[i];
+  }
+
+  if (typeof val[key] == "string" && val[key].startsWith("%"))
+    return pointer(val[key])
+  return val[key]
 }
 
 function new_constructor(type) {
@@ -327,15 +392,35 @@ function new_constructor(type) {
   }
 }
 
-function setValue(target, key, value) {
-  target = target.split("%").filter(Boolean);
-  switch (target[0]) {
+function setValue(target, key, proprety, line, vars) {
+  target = target.split("%");
+  switch (target[1]) {
     case "array":
-      if (!Number(key) && key != 0)
-        error(`expected index to be a number , got ${key}`);
+      if (!isNumber(key))
+        return error(`expected index to be a number , got ${key}`);
       break;
+    case "object":
+      if (isNumber(key))
+        return error(`expected key to be string , got ${key}`);
+      break;
+    case "string":
+      return error(`cannot change ${key} of read only strings`);
   }
-  scopes[target[0]][target[1]][key] = value;
+  let val = scopes[target[1]];
+  line = [key, ...line].map((n) => value(n, vars));
+
+  key = target[2];
+  for (let i = 0; i < line.length; i++) {
+    if (typeof val[key] == "string" && val[key].startsWith("%")) {
+      return setValue(val[key], line[i], proprety, line.slice(i + 1), vars);
+    }
+
+    val = val[key];
+    if (typeof val == "undefined")
+      return error(`cannot set proprety ${line[i]} of ${val}`);
+    key = line[i];
+  }
+  val[key] = proprety;
 }
 
 function setVar(target, value, vars) {
@@ -343,9 +428,9 @@ function setVar(target, value, vars) {
   else scopes.vars[target] = value;
 }
 
-function checkArg(target, command, vars, args = []) {
-  if (Number(target) || target == 0) return Number(target);
+function checkArg(target, command, vars, line) {
+  if (isNumber(target)) return Number(target);
   else if (typeof target == "undefined") {
-    error(`unknown command - ${command} with arg [${[target, ...args]}]`);
+    error(`invalid command - ${command} with arg ${line}`);
   } else return value(target, vars);
 }
