@@ -9,3 +9,5 @@ pipescript (compiled to js) - 0.086s
 TODO -
 
 fixing set error
+
+array functions (coms)

@@ -5,7 +5,7 @@ import {
   pointer,
   isNumber,
   hash,
-  last
+  last,
 } from "../common/util.js";
 
 export default function runGlobalScope() {
@@ -295,8 +295,8 @@ function runCommand(vars, command, line) {
       return arr($1, line_clone[0]).length;
     case "reverse":
       return clone($1, [...arr($1, line_clone[0]).reverse()]);
-    case 'last':
-      return last(arr($1,line_clone[0]))
+    case "last":
+      return last(arr($1, line_clone[0]));
   }
   // 2 ARG
   const $2 = checkArg(line.shift(), command, vars, line_clone);
@@ -304,7 +304,8 @@ function runCommand(vars, command, line) {
     case "set":
       if (isNumber($1))
         return error(`cannot set value to Number ${line_clone[0]}`);
-      else if ($1.startsWith("%")) setValue($1, $2, line, vars);
+      else if ($1.startsWith("%"))
+        setValue($1, $2, value(line.pop()), line, vars);
       else setVar($1, $2, vars);
       return null;
     case "pow":
@@ -353,7 +354,8 @@ function clone(pointer, value) {
 }
 
 function get(target, line, vars) {
-  if (isNumber(target)) return error(`${target} is not a Array/Object`);
+  if (isNumber(target))
+    return error(`${target} - expected Array/Object got number`);
   if (!target.startsWith("%") && target.startsWith("%s"))
     return error(`${target} is not a Array/Object`);
 
@@ -383,16 +385,38 @@ function new_constructor(type) {
   }
 }
 
-function setValue(target, key, line, vars) {
+function setValue(target, key, proprety, line, vars) {
   target = target.split("%");
   switch (target[1]) {
     case "array":
       if (!isNumber(key))
         return error(`expected index to be a number , got ${key}`);
       break;
+    case "object":
+      if (isNumber(key))
+        return error(`expected key to be string , got ${key}`);
+      break;
+    case "string":
+      return error(`cannot change ${key} as string are read only`);
   }
-  let val = scopes[target[1]][target[2]]
-  log(val)
+  let val = scopes[target[1]];
+  line = [key, ...line].map((n) => value(n, vars));
+  log(line);
+
+  key = target[2];
+  for (let i = 0; i < line.length; i++) {
+    log(`${val}[${key}] --> [${val[key]}]`);
+
+    if (typeof val[key] == "string" && val[key].startsWith("%")){
+      return setValue(val[key], line[i],proprety, line.slice(i+1), vars);
+    }
+
+    val = val[key];
+    key = line[i];
+  }
+
+  log(key);
+  val[key] = proprety;
 }
 
 function setVar(target, value, vars) {
