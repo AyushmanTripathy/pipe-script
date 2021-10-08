@@ -8,7 +8,7 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-get muti level error
+change runLine from string to array
 
 get and set (coms)
 array functions (coms)

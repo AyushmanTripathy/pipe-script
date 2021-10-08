@@ -4,4 +4,4 @@ set $n 0 | new Array
 set $n 0 0 lol
 set $n 0 1 lo
 
-log | get $n 0 
+log | shift | get $n 0 
