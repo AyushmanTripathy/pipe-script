@@ -3,6 +3,7 @@ import {
   str,
   stringify,
   pointer,
+  isPointer,
   isNumber,
   hash,
   last,
@@ -182,26 +183,26 @@ function whileLoop(lines, vars) {
 
 function runLine(line, vars) {
   line = checkForBlocks(line, vars);
-  line = line.split(" | ").filter(Boolean).reverse();
-  // piping
-  let output = "";
-  for (let statment of line) {
-    statment = statment.trim();
+  line = line.split("|").filter(Boolean).reverse();
 
-    statment += ` ${output}`;
-    output = runStatement(statment, vars);
+  // piping
+  let output = null;
+  for (let statment of line) {
+    statment = statment.split(" ").filter(Boolean);
+    if (output != null) statment.push(output);
+    output = runCommand(vars, statment);
   }
   return output;
 }
 
 function checkForBlocks(line, vars, open_stack = []) {
-  if (!line.includes("[") && !line.includes("]")) return line;
+  if (!line.includes("<") && !line.includes(">")) return line;
 
   let pos = 0;
 
   for (const letter of line) {
-    if (letter == "[") open_stack.push(pos);
-    else if (letter == "]") {
+    if (letter == "<") open_stack.push(pos);
+    else if (letter == ">") {
       const open_pos = open_stack.pop();
 
       line =
@@ -209,7 +210,7 @@ function checkForBlocks(line, vars, open_stack = []) {
         runLine(line.slice(open_pos + 1, pos), vars) +
         line.slice(pos + 1, line.length);
 
-      if (!line.includes("]")) break;
+      if (!line.includes(">")) break;
       else {
         line = checkForBlocks(line, vars, open_stack);
         break;
@@ -220,14 +221,8 @@ function checkForBlocks(line, vars, open_stack = []) {
   return line;
 }
 
-function runStatement(line, vars) {
-  line = line.split(" ").filter(Boolean);
-
+function runCommand(vars, line) {
   const command = line.shift();
-  return runCommand(vars, command, line);
-}
-
-function runCommand(vars, command, line) {
   const line_clone = line.slice();
 
   // key words
@@ -251,7 +246,7 @@ function runCommand(vars, command, line) {
   // MULTIPLE
   switch (command) {
     case "log":
-      log(line.reduce((acc, cur) => (acc += str(value(cur, vars))), ""));
+      log(line.reduce((acc, cur) => (acc += checkLog(cur, vars)), ""));
       return null;
     case "add":
       let first_value = 0;
@@ -304,8 +299,7 @@ function runCommand(vars, command, line) {
     case "set":
       if (isNumber($1))
         return error(`cannot set value to Number ${line_clone[0]}`);
-      else if ($1.startsWith("%"))
-        setValue($1, $2, value(line.pop()), line, vars);
+      else if (isPointer($1)) setValue($1, $2, value(line.pop()), line, vars);
       else setVar($1, $2, vars);
       return null;
     case "pow":
@@ -346,6 +340,13 @@ function arr(value, var_name) {
   return pointer(value);
 }
 
+function checkLog(target, vars) {
+  target = value(target, vars);
+
+  if (isPointer(target)) target = pointer(target);
+  return str(target);
+}
+
 function clone(pointer, value) {
   const hash_code = hash();
   pointer = pointer.split("%");
@@ -353,19 +354,18 @@ function clone(pointer, value) {
   return `%${pointer[1]}%${hash_code}`;
 }
 
-function get(target,line, vars) {
+function get(target, line, vars) {
   if (isNumber(target) || !target.startsWith("%"))
     return error(`expected refrence type got primitive ${target}`);
 
-  target = target.split('%')
+  target = target.split("%");
   let val = scopes[target[1]];
   line = line.map((n) => value(n, vars));
 
   let key = target[2];
   for (let i = 0; i < line.length; i++) {
-    if (typeof val[key] == "string" && val[key].startsWith("%")) {
-      return get(val[key], line.slice(i + 1), vars);
-    }
+    if (typeof val[key] == "string" && val[key].startsWith("%"))
+      return get(val[key], line.slice(i), vars);
 
     val = val[key];
     if (typeof val == "undefined")
@@ -373,9 +373,7 @@ function get(target,line, vars) {
     key = line[i];
   }
 
-  if (typeof val[key] == "string" && val[key].startsWith("%"))
-    return pointer(val[key])
-  return val[key]
+  return val[key];
 }
 
 function new_constructor(type) {

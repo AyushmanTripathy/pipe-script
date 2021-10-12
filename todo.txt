@@ -8,7 +8,13 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-change runLine from string to array
+foreach loop
+{
 
-get and set (coms)
-array functions (coms)
+foreach $index $array
+  log $index
+
+foreach $key $object
+  log | get $object $key
+
+}

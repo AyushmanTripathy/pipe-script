@@ -38,8 +38,6 @@ async function run(file) {
   scopes.global = [];
 
   scopes.string = {};
-  scopes.object = {};
-  scopes.array = {};
 
   try {
     await classifyScopes(file, importFile);
@@ -57,6 +55,8 @@ async function run(file) {
   } catch (error) {
     log(error);
     log("FATAL ERROR - terminating program...");
+
+    if (typeof release_mode == "undefined") console.log(scopes);
   }
 }
 

@@ -73,6 +73,10 @@ export function pointer(pointer) {
   return scopes[pointer[1]][pointer[2]]
 }
 
+export function isPointer(input) {
+  return (typeof input == 'string' && input.startsWith('%'))
+}
+
 export function isNumber(num){
   return (Number(num) || num == 0)
 }

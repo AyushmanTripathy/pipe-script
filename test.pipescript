@@ -1,7 +1,7 @@
-set n | new Array
-set $n 0 | new Array
+set n | new Object 
+set $n 'lol' | new Array
 
-set $n 0 0 lol
-set $n 0 1 lo
+set $n 'lol' 0 'first element'
+push [get $n 'lol'] 'secound element'
 
-log | shift | get $n 0 
+log  | get $n 'lol' 0

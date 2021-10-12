@@ -19,6 +19,7 @@ export default async function classifyScopes(file, import_function) {
     }
 
     line = checkQuotes(line);
+    line = line.replace('[','<').replace(']','>');
 
     line = line.trim();
     if (last_comment);
@@ -185,6 +186,5 @@ function checkTab (line) {
     count++;
     line = line.substring(1)
   }
-  console.log(count)
   return count
 }
