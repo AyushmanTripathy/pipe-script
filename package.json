@@ -1,6 +1,6 @@
 {
   "name": "pipescript-dev-kit",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
   "type": "module",

@@ -1,7 +1,6 @@
-set n | new Array
-set $n 0 | new Array
+set n | new Object 
+set $n 'op' 0
+set $n 'lol' 1
 
-set $n 0 0 lol
-set $n 0 1 lo
-
-log | shift | get $n 0 
+foreach $index $n 
+  log $index

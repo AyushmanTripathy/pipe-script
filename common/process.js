@@ -1,4 +1,4 @@
-import { last, hash,stringify } from "./util.js";
+import { last, hash, stringify } from "./util.js";
 
 export default async function classifyScopes(file, import_function) {
   let scope_stack = ["global"];
@@ -19,6 +19,7 @@ export default async function classifyScopes(file, import_function) {
     }
 
     line = checkQuotes(line);
+    line = line.replace("[", "<").replace("]", ">");
 
     line = line.trim();
     if (last_comment);
@@ -77,7 +78,8 @@ export default async function classifyScopes(file, import_function) {
         // while / loops
         else if (
           line_before.startsWith("while") ||
-          line_before.startsWith("loop")
+          line_before.startsWith("loop") ||
+          line_before.startsWith("foreach")
         ) {
           const hash_name = hash();
 
@@ -153,7 +155,9 @@ function checkQuotes(line) {
         let temp = line.slice(0, last_index);
         temp += `%string%${hash_code}`;
         temp += line.slice(index + 1, line.length);
-        scopes.string[hash_code] = stringify(line.slice(last_index + 1, index))
+        scopes.string[hash_code] = stringify(
+          line.slice(last_index + 1, index)
+        );
         return checkQuotes(temp);
       } else last_index = index;
       pair = pair ? false : true;
@@ -165,12 +169,12 @@ function checkQuotes(line) {
 }
 
 function checkDepth(line) {
-  return config.tab == '\t' ? checkTab(line) : checkSpace(line);
+  return config.tab == "\t" ? checkTab(line) : checkSpace(line);
 }
 
-function checkSpace (line) {
+function checkSpace(line) {
   let count = 0;
-  while (line.startsWith(' ')) {
+  while (line.startsWith(" ")) {
     count++;
     line = line.substring(1);
   }
@@ -178,13 +182,12 @@ function checkSpace (line) {
   return Math.floor(count / config.tab);
 }
 
-function checkTab (line) {
-  let count = 0
+function checkTab(line) {
+  let count = 0;
 
-  while(line.startsWith('\t')) {
+  while (line.startsWith("\t")) {
     count++;
-    line = line.substring(1)
+    line = line.substring(1);
   }
-  console.log(count)
-  return count
+  return count;
 }

@@ -1,4 +1,4 @@
-import { hash, str } from "../common/util.js";
+import { hash, stringify, str } from "../common/util.js";
 
 export default function compileGlobalScope() {
   globalThis.file = "";
@@ -35,11 +35,31 @@ function checkForKeyWords(line, var_list) {
   else if (first_line.startsWith("if")) if_block(line, var_list);
   else if (first_line.startsWith("try")) try_block(line, var_list);
   else if (first_line.startsWith("switch")) switch_block(line, var_list);
+  else if (first_line.startsWith("foreach")) foreach_block(line, var_list);
   else error(`invalid block ${first_line}`);
 }
 
 function write(string) {
   file += str(string) + "\n";
+}
+
+function foreach_block(hash_code, var_list) {
+  const scope = scopes[hash_code].slice();
+  let statment = scope.shift().split(" ");
+  let var_name = statment[1].slice(1);
+
+  statment = compileLine(
+    "pass_input " + statment.splice(2).join(" "),
+    var_list
+  );
+
+  if (var_list.includes(var_name)) write(`for(${var_name} in ${statment}) {`);
+  else write(`for(let ${var_name} in ${statment}) {`);
+
+  write(`${var_name} = ${statment}[${var_name}]`);
+  var_list.push(var_name);
+  compileScope(scope, var_list);
+  write("}");
 }
 
 function switch_block(hash_code, var_list) {
@@ -151,18 +171,18 @@ function compileLine(line, var_list) {
   let temp = "";
 
   for (const statment of line)
-    temp = compileStatments(statment + " " + temp, var_list);
+    temp = compileStatments(statment + " " + stringify(temp), var_list);
   return temp;
 }
 
 function checkForBlocks(line, var_list, open_stack = []) {
-  if (!line.includes("[") && !line.includes("]")) return line;
+  if (!line.includes("<") && !line.includes(">")) return line;
 
   let pos = 0;
 
   for (const letter of line) {
-    if (letter == "[") open_stack.push(pos);
-    else if (letter == "]") {
+    if (letter == "<") open_stack.push(pos);
+    else if (letter == ">") {
       const open_pos = open_stack.pop();
 
       line =
@@ -170,7 +190,7 @@ function checkForBlocks(line, var_list, open_stack = []) {
         compileLine(line.slice(open_pos + 1, pos), var_list) +
         line.slice(pos + 1, line.length);
 
-      if (!line.includes("]")) break;
+      if (!line.includes(">")) break;
       else {
         line = checkForBlocks(line, var_list, open_stack);
         break;
@@ -245,21 +265,35 @@ function compileCommand(line, var_list) {
     case "new":
       return `new ${$1}()`;
     case "pass_input":
-      return checkToken(line.shift());
+      return checkToken($1);
+
+    case "get":
+      line = line.map((n) => checkToken(n));
+      line = line.join("][");
+      return `${$1}[${line}]`;
 
     //Math
     case "round":
       return `Math.round(${$1})`;
     case "floor":
       return `Math.floor(${$1})`;
+
+    // array functions
+    case "pop":
+      return `${$1}.pop()`;
+    case "shift":
+      return `${$1}.shift()`;
+    case "reverse":
+      return `${$1}.reverse()`;
+    case "length":
+      return `${$1}.length`;
+    case "last":
+      return `${$1}[${$1}.length-1]`;
   }
 
   // 2 arg
   const $2 = checkToken(line.shift());
   switch (command) {
-    case "get":
-      return `${$1}[${$2}]`;
-
     //Math
     case "reminder":
       return `${$1}%${$2}`;
@@ -277,6 +311,14 @@ function compileCommand(line, var_list) {
       return `${$1}>=${$2}`;
     case "le":
       return `${$1}<=${$2}`;
+
+    // array functions
+    case "push":
+      return `${$1}.push(${$2})`;
+    case "includes":
+      return `${$1}.includes(${$2})`;
+    case "unshift":
+      return `${$1}.unshift(${$2})`;
   }
 
   error(`invalid command ${command}`);
@@ -290,7 +332,7 @@ function checkReturn(value) {
 function set(line, var_list) {
   let $1 = line.shift();
   if (Number($1) || $1 == 0)
-    return error(`cannot set ${line.shift()} to ${$1}`);
+    return error(`cannot set ${line.shift()} to Number ${$1}`);
   if ($1.startsWith("-$"))
     return error(`cannot set ${line.shift()} to neg ${$1}`);
   if ($1.startsWith("$")) return setValue($1.substring(1), line);
@@ -303,7 +345,10 @@ function set(line, var_list) {
 }
 
 function setValue($1, line) {
-  return `${$1}[${checkToken(line.shift())}] = ${checkToken(line.shift())}`;
+  line = line.map((n) => checkToken(n));
+  const output = line.pop();
+  line = line.join("][");
+  return `${$1}[${line}] = ${output}`;
 }
 
 function setVar($1, $2, var_list) {
