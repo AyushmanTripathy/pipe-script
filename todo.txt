@@ -8,13 +8,14 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-foreach loop
-{
+foreach  (compiler)
 
-foreach $index $array
-  log $index
+imporve error
+  undefined value error
 
-foreach $key $object
-  log | get $object $key
+improve runFunction
+  passing first_line insted of line (hash code)
+  to reduce no of reads
 
-}
+improve classifyScopes
+  collect all loops and functions into one if statment

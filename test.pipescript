@@ -1,7 +1,8 @@
 set n | new Object 
-set $n 'lol' | new Array
+set $n 'op' | new Array
+set $n 'op' 0 10
+set $n 'op' 10 1
 
-set $n 'lol' 0 'first element'
-push [get $n 'lol'] 'secound element'
-
-log  | get $n 'lol' 0
+log | get $n 'op'
+foreach $index | get $n 'op' 
+  log $index

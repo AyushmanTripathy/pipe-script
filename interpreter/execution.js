@@ -42,6 +42,7 @@ function checkForKeyWords(line, vars) {
   else if (first_line.startsWith("if")) return if_statement(line, vars);
   else if (first_line.startsWith("try")) return try_block(line, vars);
   else if (first_line.startsWith("switch")) return switch_block(line, vars);
+  else if (first_line.startsWith("foreach")) return foreach_block(line, vars);
   error(`invalid block ${first_line}`);
   return {};
 }
@@ -65,6 +66,25 @@ function runFunction(target, args) {
   if (return_value.breaked)
     error(`invalid break statment in function ${target}`);
   return return_value;
+}
+
+function foreach_block(hash_code, vars) {
+  const scope = scopes[hash_code].slice();
+  let statment = scope.shift().split(" ");
+  let var_name = statment[1].slice(1);
+  statment = runLine("pass_input " + statment.splice(2).join(" "), vars);
+
+  if (isPointer(statment)) statment = pointer(statment);
+
+  if (typeof statment == "object") {
+    for (const index in statment) {
+      vars[var_name] = statment[index];
+      const { breaked, returned, value } = runScope(scope, vars);
+      if (breaked) break;
+      if (returned) return { returned, value };
+    }
+  } else error(`${statment} is not iterable`);
+  return {};
 }
 
 function switch_block(hash_code, vars) {
@@ -232,7 +252,7 @@ function runCommand(vars, line) {
     case "return":
       return line[0];
     case "pass_input":
-      return line[0];
+      return value(line[0], vars);
   }
 
   // NO ARG

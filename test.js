@@ -1,5 +1,9 @@
 let n = new Object() 
-n["lol"] = new Array()
-n["lol"][0] = "lol"
-n["lol"].push("yolo")
-console.log(n["lol"][0],)
+n["op"] = new Array()
+n["op"][0] = 10
+n["op"][10] = 1
+console.log(n["op"],)
+for(let index in n["op"]) {
+index = n["op"][index]
+console.log(index,)
+}

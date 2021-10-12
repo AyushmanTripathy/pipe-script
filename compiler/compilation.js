@@ -35,11 +35,31 @@ function checkForKeyWords(line, var_list) {
   else if (first_line.startsWith("if")) if_block(line, var_list);
   else if (first_line.startsWith("try")) try_block(line, var_list);
   else if (first_line.startsWith("switch")) switch_block(line, var_list);
+  else if (first_line.startsWith("foreach")) foreach_block(line, var_list);
   else error(`invalid block ${first_line}`);
 }
 
 function write(string) {
   file += str(string) + "\n";
+}
+
+function foreach_block(hash_code, var_list) {
+  const scope = scopes[hash_code].slice();
+  let statment = scope.shift().split(" ");
+  let var_name = statment[1].slice(1);
+
+  statment = compileLine(
+    "pass_input " + statment.splice(2).join(" "),
+    var_list
+  );
+
+  if (var_list.includes(var_name)) write(`for(${var_name} in ${statment}) {`);
+  else write(`for(let ${var_name} in ${statment}) {`);
+
+  write(`${var_name} = ${statment}[${var_name}]`);
+  var_list.push(var_name);
+  compileScope(scope, var_list);
+  write("}");
 }
 
 function switch_block(hash_code, var_list) {
@@ -245,7 +265,7 @@ function compileCommand(line, var_list) {
     case "new":
       return `new ${$1}()`;
     case "pass_input":
-      return checkToken(line.shift());
+      return checkToken($1);
 
     case "get":
       line = line.map((n) => checkToken(n));
