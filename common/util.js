@@ -1,11 +1,11 @@
-export function value(target, variables) {
+export function value(target, variables, var_name) {
   switch (typeof target) {
     case "string":
       const value = checkType(checkForVars(target, variables));
       if (target.startsWith("-$")) return value * -1;
       return value;
     case "undefined":
-      return error(`detected undefined value`);
+      return error(`${var_name} is undefined`);
     case "NaN":
       return error(`detected NaN value`);
     default:
@@ -43,19 +43,19 @@ function checkForVars(value, variables) {
   return value;
 }
 
-export function checkArgs (args) {
-  const options = [] 
+export function checkArgs(args) {
+  const options = [];
   const words = [];
 
   for (const arg of args) {
-    if (arg.startsWith('-')) {
-      options.push(arg.substring(1))
+    if (arg.startsWith("-")) {
+      options.push(arg.substring(1));
     } else {
-      words.push(arg)
+      words.push(arg);
     }
   }
 
-  return { options ,words }
+  return { options, words };
 }
 
 export function stringify(str) {
@@ -69,16 +69,16 @@ export function str(str) {
 }
 
 export function pointer(pointer) {
-  pointer = pointer.split('%')
-  return scopes[pointer[1]][pointer[2]]
+  pointer = pointer.split("%");
+  return scopes[pointer[1]][pointer[2]];
 }
 
 export function isPointer(input) {
-  return (typeof input == 'string' && input.startsWith('%'))
+  return typeof input == "string" && input.startsWith("%");
 }
 
-export function isNumber(num){
-  return (Number(num) || num == 0)
+export function isNumber(num) {
+  return Number(num) || num == 0;
 }
 
 export function hash() {

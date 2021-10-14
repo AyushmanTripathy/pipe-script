@@ -1,3 +1,4 @@
+#!/bin/sh
 # building files
 
 cd ~/pipe-script

@@ -8,6 +8,7 @@
     "buildc": "rollup -c compiler/rollup.config.js",
     "buildi": "rollup -c interpreter/rollup.config.js",
     "devi": "nodemon interpreter/interpreter.js test.pipescript",
+    "publish":"sh publish.sh",
     "devc": "nodemon compiler/compiler.js test.pipescript test.js"
   },
   "repository": {

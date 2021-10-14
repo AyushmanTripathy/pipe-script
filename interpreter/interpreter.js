@@ -4,8 +4,8 @@ import { checkArgs } from "../common/util.js";
 
 import { createInterface } from "readline";
 import { readFileSync, existsSync, createReadStream, watchFile } from "fs";
-
 const { options, words } = checkArgs(process.argv.splice(2));
+
 const cwd = process.cwd();
 
 globalThis.config = loadJson("../config.json");
@@ -71,8 +71,7 @@ async function run(file) {
 
 async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
-  if (!existsSync(path_to_file))
-    return error(`no such file: ${path_to_file}`);
+  if (!existsSync(path_to_file)) return error(`no such file: ${path_to_file}`);
 
   const fileStream = createReadStream(path_to_file);
 

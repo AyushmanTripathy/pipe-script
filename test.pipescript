@@ -1,6 +1,0 @@
-set n | new Object 
-set $n 'op' 0
-set $n 'lol' 1
-
-foreach $index $n 
-  log $index
