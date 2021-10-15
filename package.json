@@ -1,6 +1,6 @@
 {
   "name": "pipescript-dev-kit",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
   "type": "module",
@@ -8,7 +8,7 @@
     "buildc": "rollup -c compiler/rollup.config.js",
     "buildi": "rollup -c interpreter/rollup.config.js",
     "devi": "nodemon interpreter/interpreter.js test.pipescript",
-    "publish":"sh publish.sh",
+    "publish": "sh publish.sh",
     "devc": "nodemon compiler/compiler.js test.pipescript test.js"
   },
   "repository": {
