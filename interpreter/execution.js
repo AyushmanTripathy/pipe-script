@@ -8,7 +8,7 @@ import {
   hash,
   last,
 } from "../common/util.js";
-
+  
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);
   if (breaked) error(`invalid break statment in global scope`);
@@ -447,8 +447,7 @@ function setVar(target, value, vars) {
 }
 
 function checkArg(target, command, vars, line) {
-  if (isNumber(target)) return Number(target);
-  else if (typeof target == "undefined") {
+  if (typeof target == "undefined") {
     error(`invalid command - ${command} with arg ${line}`);
   } else return value(target, vars);
 }
