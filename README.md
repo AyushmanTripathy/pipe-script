@@ -52,6 +52,7 @@ Pipescript can be interpreted directly or be compiled into javascript.
 ├── test.js\
 ├── test.pipescript\
 ├── todo.txt
+
 </details>
 
 ## syntax
@@ -79,6 +80,21 @@ code blocks are used to encapsulate code
 
 ```ruby
 log [add 1 1]
+```
+
+- Array and Objects
+
+```ruby
+set a | new Array
+set a | new Object
+```
+
+array methods are same as javascript
+
+```ruby
+push $a 10
+pop $a
+shift $a
 ```
 
 - functions
@@ -111,5 +127,12 @@ while | ge $a 0
 
 ```ruby
 loop 10
-  log looping
+log looping
+```
+
+3. foreach loop for arrays and objects
+
+```ruby
+foreach $value $array
+  log $value
 ```

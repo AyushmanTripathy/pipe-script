@@ -1,0 +1,6 @@
+set a | new Array
+push $a 10
+
+foreach $index $a
+  break
+  log $index
