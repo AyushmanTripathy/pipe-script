@@ -151,6 +151,9 @@ function if_statement(hash_name, vars) {
       hash = statment.shift();
       break;
     }
+    else {
+      error(`invalid if block \n${condition}`)
+    }
     statment.shift();
   }
 
