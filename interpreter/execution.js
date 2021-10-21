@@ -366,9 +366,16 @@ function arr(value, var_name) {
 }
 
 function checkLog(target, vars) {
+  const var_name = target;
   target = value(target, vars);
 
-  if (isPointer(target)) target = pointer(target);
+  if (isPointer(target)) {
+    target = pointer(target);
+    if(var_name.startsWith('%array')) 
+      target = `${var_name} : [${target}]`;
+    else if(var_name.startsWith('%object'))
+      target = `${var_name} : {Object}`
+  }
   return str(target);
 }
 

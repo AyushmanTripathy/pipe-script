@@ -13,8 +13,30 @@ set n 100
 ```
 
 **return value** : null\
-**arguments** : var-name value
+**arguments** : var-name, value
 
+## get
+
+get index or key of refrence types
+
+```ruby
+get <refrence-type> <keys/indexs>
+```
+
+example
+
+```ruby
+# pipescript form 
+1. get $array 0
+2. get $array 0 10 'key'
+
+# javascript form
+1. array[0]
+2. array[0][10]['key']
+```
+
+**return value** : target value \
+**arguments** : refrence-type, multiple key/index
 
 ## log
 
@@ -28,7 +50,7 @@ log 100 100 # 100100
 ```
 
 **return value** : null\
-**arguments** : input input ...
+**arguments** : input, input ...
 
 ## call
 
@@ -44,7 +66,18 @@ function process $a $b
 ```
 
 **return value** : the return value from called function\
-**arguments** : function-name (args for function)
+**arguments** : function-name, args for function
+
+## exit
+
+exit interpreting script
+
+```ruby
+exit
+```
+
+**return value** : null\
+**arguments** : none
 
 ## Arithmetic
 

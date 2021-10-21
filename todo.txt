@@ -11,20 +11,17 @@ TODO -
 pipescript home page
 pipescript docs
 
-design
-
-|   Table   |        Content         |
-|           |                        |
-
-
-debug for error handling
-
-#if false
-	log 'ifed'
-else 
-	log 'lol'
+  debug for error handling
+  
+  #if false
+  	log 'ifed'
+  else 
+  	log 'lol'
 
 ternary operator
 remove - sign
-string functions
-  - length
+
+string commands
+object commands
+
+new Array 10 10 10

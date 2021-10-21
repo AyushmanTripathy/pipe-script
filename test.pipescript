@@ -1,9 +1,1 @@
-set n 10
-
-switch $n
-  case 10
-    log 10
-  case 1
-    log 1
-  default
-    log 'default'
+log | add '' [new Array]
