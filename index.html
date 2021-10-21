@@ -1,0 +1,57 @@
+<h1 id="core-concepts">Core Concepts</h1>
+<p>
+  Pipescript is functional, high-level, interpreted/compiled, indented, single
+  threaded,dynamically typed programming language.\
+</p>
+<p>Pipescript can be interpreted directly or be compiled into javascript.</p>
+<h2 id="believes">Believes</h2>
+<ol>
+  <li>commands for everytime</li>
+  <li>using piping for everything posible</li>
+  <li>using less symbols</li>
+</ol>
+<h2 id="variables">Variables</h2>
+<p>
+  Variables are declared using set command. use $ to use Variables. use -$ sign
+  to get negative
+</p>
+<pre><code class="lang-ruby"># setting variable
+set var 10
+
+# using variables
+log $var # 10
+log -$var # -10
+</code></pre>
+<h2 id="comments">Comments</h2>
+<p>use # to write comments and ## to write multi-line comments</p>
+<pre><code class="lang-ruby"># this is comment
+
+##
+this is a comment
+this also is a comment
+##
+</code></pre>
+<h2 id="piping">Piping</h2>
+<p>use | to use output of one command as input of another</p>
+<pre><code class="lang-ruby">log | add 1 1
+
+# how it is processed
+
+log | add 1 1
+log 2
+
+set n | add 1 | multiply 1 2
+set n | add 1 2
+set n 3
+</code></pre>
+<h2 id="code-block">Code Block</h2>
+<p>[ ] are used encapsulate code</p>
+<pre><code class="lang-ruby">log [add 1 1]
+
+# how it is processed
+log [add 1 1]
+log 2
+
+log [add 1 1] [add 1 1]
+log 2 2 
+</code></pre>

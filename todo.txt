@@ -11,6 +11,12 @@ TODO -
 pipescript home page
 pipescript docs
 
+design
+
+|   Table   |        Content         |
+|           |                        |
+
+
 debug for error handling
 
 #if false
@@ -18,3 +24,7 @@ debug for error handling
 else 
 	log 'lol'
 
+ternary operator
+remove - sign
+string functions
+  - length

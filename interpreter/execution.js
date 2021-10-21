@@ -289,6 +289,8 @@ function runCommand(vars, line) {
       return get($1, line, vars);
     case "boolean":
       return Boolean($1);
+    case "neg":
+      return -1 * $1
     case "number":
       return Number($1);
     case "not":
