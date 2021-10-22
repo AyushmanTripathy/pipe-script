@@ -1,7 +1,14 @@
 :root{
   --sec:#bbb;
   --bg:#202124;
+  --hl:#047dffcb;
 }
 
-body {
+a {
+  text-decoration:none;
+  color: var(--sec);
+}
+
+a:hover {
+  color: var(--hl);
 }

@@ -16,16 +16,12 @@
   @import "../mixins.scss";
 
   main {
-    @include absolute;
+    @include page;
     @include flex(row);
-    width:100vw;
-    height: calc( 100vh - $navbar_height );
-
     display: grid;
 
     background-color: var(--bg);
     color: var(--sec);
-    padding-top: $navbar_height;
   }
 
   section {

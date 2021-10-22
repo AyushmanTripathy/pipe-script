@@ -4,6 +4,7 @@
 
 <main>
   <a href="/" use:link>Home</a>
+  <a href="/docs" use:link>Docs</a>
   <a href="/editor" use:link>Editor</a>
 </main>
 
