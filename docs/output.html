@@ -1,10 +1,11 @@
 
-<h1 id="core-concepts">Core Concepts</h1>
-<p>Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.\</p>
+<h1 id="concepts">Concepts</h1>
+<p>Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.&lt;br&gt;</p>
 <p>Pipescript can be interpreted directly or be compiled into javascript.</p>
-<h2 id="believes">Believes</h2>
+<h3 id="believes">Believes</h3>
 <ol>
-<li>commands for everytime</li>
+<li>commands for everything</li>
+<li>human readble code</li>
 <li>using piping for everything posible</li>
 <li>using less symbols</li>
 </ol>
@@ -70,7 +71,7 @@ function example $n
 <h3 id="boolean">Boolean</h3>
 <p>boolean as usual</p>
 <h3 id="null">Null</h3>
-<p>null as usual\<br>fun fact, function return null when return statement is not mentioned</p>
+<p>null as usual&lt;br&gt;<br>fun fact, function return null when return statement is not mentioned</p>
 <h3 id="undefined">Undefined</h3>
 <p>undefined as usual;</p>
 <h1 id="refrence">Refrence</h1>
@@ -193,7 +194,7 @@ function example $n
 
 set n 100
 </code></pre>
-<p><strong>return value</strong> : null\<br><strong>arguments</strong> : var-name, value</p>
+<p><strong>return value</strong> : null<br><strong>arguments</strong> : var-name, value</p>
 <h2 id="get">get</h2>
 <p>get index or key of refrence types</p>
 <pre><code class="lang-ruby">get &lt;refrence-type&gt; &lt;keys/indexs&gt;
@@ -207,7 +208,7 @@ set n 100
 1. array[0]
 2. array[0][10][&#39;key&#39;]
 </code></pre>
-<p><strong>return value</strong> : target value \<br><strong>arguments</strong> : refrence-type, multiple key/index</p>
+<p><strong>return value</strong> : target value<br><strong>arguments</strong> : refrence-type, multiple key/index</p>
 <h2 id="log">log</h2>
 <p>log multiple inputs to console</p>
 <pre><code class="lang-ruby">log &lt;input&gt; ...
@@ -215,7 +216,7 @@ set n 100
 log &#39;this string will get logged&#39;
 log 100 100 # 100100
 </code></pre>
-<p><strong>return value</strong> : null\<br><strong>arguments</strong> : input, input ...</p>
+<p><strong>return value</strong> : null<br><strong>arguments</strong> : input, input ...</p>
 <h2 id="call">call</h2>
 <p>calling a function</p>
 <pre><code class="lang-ruby">call &lt;function_name&gt; &lt;arg&gt;
@@ -225,12 +226,12 @@ call process 10 10
 function process $a $b
   return | add $a $b
 </code></pre>
-<p><strong>return value</strong> : the return value from called function\<br><strong>arguments</strong> : function-name, args for function</p>
+<p><strong>return value</strong> : the return value from called function<br><strong>arguments</strong> : function-name, args for function</p>
 <h2 id="exit">exit</h2>
 <p>exit interpreting script</p>
 <pre><code class="lang-ruby">exit
 </code></pre>
-<p><strong>return value</strong> : null\<br><strong>arguments</strong> : none</p>
+<p><strong>return value</strong> : null<br><strong>arguments</strong> : none</p>
 <h2 id="arithmetic">Arithmetic</h2>
 <p>Arithmetic commands</p>
 <h3 id="operators">Operators</h3>
@@ -389,8 +390,8 @@ else
   log &#39;something else&#39;
 </code></pre>
 <h2 id="switch-case">Switch Case</h2>
-<p>switch case as usual.\</p>
-<p>NOTE\<br>pipescript interpreter support multiple default blocks at diffrent levels but the compiler doesnot. the compiler collects all default blocks and puts all of them in single default block at the end of switch block</p>
+<p>switch case as usual.&lt;br&gt;</p>
+<p>NOTE&lt;br&gt;<br>pipescript interpreter support multiple default blocks at diffrent levels but the compiler doesnot. the compiler collects all default blocks and puts all of them in single default block at the end of switch block</p>
 <pre><code class="lang-ruby">switch &lt;input&gt;
   case &lt;value&gt;
     # do something

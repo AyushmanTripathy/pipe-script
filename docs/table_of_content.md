@@ -1,6 +1,3 @@
-# PIPESCRIPT DOCUMENTATION
-
-## Table of Contents
 
 1. [Data Types](#data-types)
     1. [Primitive](#primitive)
@@ -17,7 +14,7 @@
     1. [Variables](#variables)
     1. [Comments](#comments)
     2. [Piping](#piping)
-    3. [Code Block](#code-Block)
+    3. [Code Block](#code-block)
     4. [Functions](#functions)
 2. [Commands](#commands)
     1. [set](#set)
@@ -29,8 +26,8 @@
         2. [Functions](#functions)
     4. [Logic Operators](#logic-operators)
 4. [Conditional Flow](#conditional-flow)
-    1. [If Statements](#if-Statements)
-    2. [Switch Case](#switch-Case)
+    1. [If Statements](#if-statements)
+    2. [Switch Case](#switch-case)
 5. [Iteration](#iteration)
     1. [While Loop](#while-loop)
     2. [Basic Loop](#basic-loop)
