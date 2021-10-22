@@ -13,7 +13,7 @@ Pipescript can be interpreted directly or be compiled into javascript.
 2. using piping for everything posible
 3. using less symbols
 
-check the [DOCS](./docs/index.md) to know more
+check the [DOCS](https://pipescript.netlify.app/editor) to know more
 
 #### check it out
 
