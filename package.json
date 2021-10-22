@@ -9,7 +9,7 @@
     "buildi": "rollup -c interpreter/rollup.config.js",
     "devi": "nodemon interpreter/interpreter.js test.pipescript",
     "devc": "nodemon compiler/compiler.js test.pipescript test.js",
-    "start":"cd ./website && npm i && sirv public -s --port $PORT"
+    "start":"cd ./website && npm i && npm run start"
   },
   "repository": {
     "type": "git"
