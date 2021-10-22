@@ -7,7 +7,6 @@ echo 'confirm pusblish?'
 read null
 
 # building files
-#
 cd ~/pipe-script
 
 echo "building interpreter"
@@ -17,6 +16,9 @@ echo 'building compiler'
 npm run buildc
 
 echo "build online_editor"
+
+cp ./interpreter/execution.js ./website/src/interpreter/
+cp ./common/process.js ./website/src/interpreter/
 cd website
 npm run build
 cd ..

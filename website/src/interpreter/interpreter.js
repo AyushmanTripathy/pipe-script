@@ -1,7 +1,5 @@
-import runScope from "../../interpreter/execution.js";
-import classifyScopes from "../../common/process.js";
-
-import { logs } from "./store.js";
+import runScope from "../../../interpreter/execution.js";
+import classifyScopes from "../../../common/process.js";
 
 globalThis.config = {
   tab: '\t',
@@ -21,8 +19,9 @@ globalThis.log = (string) => {
   logs.update((log) => log + `${string}\n`);
 };
 
-export default async function execute(file) {
+export default async function execute(file,logs) {
   logs.set("");
+  globalThis.logs = logs;
 
   globalThis.scopes = {};
   globalThis.hash_code = 0;

@@ -1,6 +1,7 @@
 <script context="module">
   import { CodeJar } from "codejar";
-  import execute from "../psre.js";
+  import { logs } from "../store.js";
+  import execute from "../interpreter/interpreter.js";
 
   let text = retrive();
   let running = false;
@@ -40,7 +41,7 @@
 
     switch (keyCode) {
       case 13:
-        if (ctrlKey) execute(text.split("\n"));
+        if (ctrlKey) execute(text.split("\n"),logs);
       default:
         break;
     }
