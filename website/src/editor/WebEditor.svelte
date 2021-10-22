@@ -1,9 +1,11 @@
 <script>
   import Editor from "./Editor.svelte";
   import Console from "./Console.svelte";
+  import Navbar from "../util/Navbar.svelte";
 </script>
 
 <main>
+  <Navbar />
   <section>
     <Editor />
     <Console />
@@ -11,14 +13,12 @@
 </main>
 
 <style lang="scss">
-  @import "src/mixins.scss";
+  @import "../mixins.scss";
 
   main {
-    @include absolute;
-    @include fullscreen;
+    @include page;
     @include flex(row);
-
-    display:grid;
+    display: grid;
 
     background-color: var(--bg);
     color: var(--sec);

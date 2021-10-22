@@ -12,6 +12,8 @@ Pipescript can be interpreted directly or be compiled into javascript.
 2. command for every thing (call,set,log,etc..)
 3. code blocks
 
+check [DOCS](./docs/index.md) to know more
+
 #### check it out
 
 1. install pipe scipt development kit from npm `sudo npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
@@ -52,4 +54,5 @@ Pipescript can be interpreted directly or be compiled into javascript.
 ├── test.js\
 ├── test.pipescript\
 ├── todo.txt
+
 </details>

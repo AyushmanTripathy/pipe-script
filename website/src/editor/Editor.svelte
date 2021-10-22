@@ -6,17 +6,20 @@
   let running = false;
 
   let code = text;
-  export function codedit(node, { code, autofocus = true, loc = true,...options }) {
+  export function codedit(
+    node,
+    { code, autofocus = true, loc = true, ...options }
+  ) {
     const editor = CodeJar(node, () => {}, options);
 
     editor.onUpdate((code) => (text = code));
 
-    function update({ code, autofocus = false, loc = true, ...options}) {
+    function update({ code, autofocus = false, loc = true, ...options }) {
       editor.updateOptions(options);
       editor.updateCode(code);
     }
 
-    update({ code, });
+    update({ code });
 
     autofocus && node.focus();
 
@@ -37,7 +40,6 @@
 
     switch (keyCode) {
       case 13:
-        console.log(text.split("\n"));
         if (ctrlKey) execute(text.split("\n"));
       default:
         break;
@@ -45,13 +47,11 @@
   }
   function save() {
     running = false;
-    console.log("saved");
     localStorage.setItem("pipescript-code", JSON.stringify(text));
   }
 
   function retrive() {
     const saved_text = JSON.parse(localStorage.getItem("pipescript-code"));
-    console.log(saved_text);
     return saved_text ? saved_text : "";
   }
 </script>

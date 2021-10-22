@@ -10,7 +10,7 @@ echo 'building compiler'
 npm run buildc
 
 echo "build online_editor"
-cd web_editor
+cd website
 npm run build
 cd ..
 

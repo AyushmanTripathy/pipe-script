@@ -80,6 +80,7 @@ function switch_block(hash_code, var_list) {
       i++;
       write(`case ${condition}:`);
       compileScope(scopes[statments[i]], var_list);
+      write('break')
     } else error(`invalid keyword ${statments[i]} in switch block`);
   }
   write("default:");
