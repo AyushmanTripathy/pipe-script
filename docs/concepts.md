@@ -1,14 +1,15 @@
-# Core Concepts
+# Concepts
 
-Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.\
+Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.
 
 Pipescript can be interpreted directly or be compiled into javascript.
 
-## Believes
+### Believes
 
-1. commands for everytime
-2. using piping for everything posible
-3. using less symbols
+1. commands for everything
+1. human readble code
+1. using piping for everything posible
+1. using less symbols
 
 ## Variables
 

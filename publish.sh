@@ -1,6 +1,13 @@
 #!/bin/sh
-# building files
 
+echo '1. update docs and compile output.html'
+echo '2. updated file structure in readme'
+echo '3. reflected changes in todo.txt'
+echo 'confirm pusblish?'
+read null
+
+# building files
+#
 cd ~/pipe-script
 
 echo "building interpreter"

@@ -23,7 +23,7 @@ boolean as usual
 
 ### Null
 
-null as usual\
+null as usual
 fun fact, function return null when return statement is not mentioned
 
 ### Undefined

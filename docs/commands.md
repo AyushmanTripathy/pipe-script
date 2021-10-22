@@ -12,7 +12,7 @@ set <name> <value>
 set n 100
 ```
 
-**return value** : null\
+**return value** : null
 **arguments** : var-name, value
 
 ## get
@@ -35,7 +35,7 @@ example
 2. array[0][10]['key']
 ```
 
-**return value** : target value \
+**return value** : target value 
 **arguments** : refrence-type, multiple key/index
 
 ## log
@@ -49,7 +49,7 @@ log 'this string will get logged'
 log 100 100 # 100100
 ```
 
-**return value** : null\
+**return value** : null
 **arguments** : input, input ...
 
 ## call
@@ -65,7 +65,7 @@ function process $a $b
   return | add $a $b
 ```
 
-**return value** : the return value from called function\
+**return value** : the return value from called function
 **arguments** : function-name, args for function
 
 ## exit
@@ -76,7 +76,7 @@ exit interpreting script
 exit
 ```
 
-**return value** : null\
+**return value** : null
 **arguments** : none
 
 ## Arithmetic

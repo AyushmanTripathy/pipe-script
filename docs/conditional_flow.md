@@ -30,9 +30,9 @@ else
 
 ## Switch Case
 
-switch case as usual.\
+switch case as usual.
 
-NOTE\
+NOTE
 pipescript interpreter support multiple default blocks at diffrent levels but the compiler doesnot. the compiler collects all default blocks and puts all of them in single default block at the end of switch block
 
 ```ruby
