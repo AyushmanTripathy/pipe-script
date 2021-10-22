@@ -9,7 +9,6 @@ pipescript (compiled to js) - 0.086s
 TODO -
 
 pipescript home page
-pipescript docs
 
   debug for error handling
   

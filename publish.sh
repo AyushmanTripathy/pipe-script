@@ -1,13 +1,15 @@
 #!/bin/sh
 
-echo '1. update docs and compile output.html'
-echo '2. updated file structure in readme'
+echo '1. update docs'
 echo '3. reflected changes in todo.txt'
 echo 'confirm pusblish?'
 read null
 
 # building files
 cd ~/pipe-script
+
+# compiling docs
+sh docs/compile.sh
 
 echo "building interpreter"
 npm run buildi
@@ -17,8 +19,6 @@ npm run buildc
 
 echo "build online_editor"
 
-cp ./interpreter/execution.js ./website/src/interpreter/
-cp ./common/process.js ./website/src/interpreter/
 cd website
 npm run build
 cd ..

@@ -5,7 +5,6 @@ $navbar_height: 30px;
   width: 100vw;
   height: calc(100vh - $navbar_height);
 
-  padding: 20px;
   padding-top: $navbar_height;
   background-color: var(--bg);
   color: var(--sec);
