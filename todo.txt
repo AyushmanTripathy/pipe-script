@@ -8,8 +8,6 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-pipescript home page
-
   debug for error handling
   
   #if false
@@ -19,8 +17,4 @@ pipescript home page
 
 ternary operator
 remove - sign
-
-string commands
 object commands
-
-new Array 10 10 10

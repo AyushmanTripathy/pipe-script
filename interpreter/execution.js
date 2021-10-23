@@ -3,12 +3,13 @@ import {
   str,
   stringify,
   pointer,
+  checkPointer,
   isPointer,
   isNumber,
   hash,
   last,
 } from "../common/util.js";
-  
+
 export default function runGlobalScope() {
   const { breaked } = runScope(scopes.global, scopes.vars);
   if (breaked) error(`invalid break statment in global scope`);
@@ -150,9 +151,8 @@ function if_statement(hash_name, vars) {
     } else if (condition.startsWith("else")) {
       hash = statment.shift();
       break;
-    }
-    else {
-      error(`invalid if block \n${condition}`)
+    } else {
+      error(`invalid if block \n${condition}`);
     }
     statment.shift();
   }
@@ -283,14 +283,14 @@ function runCommand(vars, line) {
   }
 
   // 1 ARG
-  const $1 = checkArg(line.shift(), command, vars, line_clone);
+  let $1 = checkArg(line.shift(), command, vars, line_clone);
   switch (command) {
     case "get":
       return get($1, line, vars);
     case "boolean":
       return Boolean($1);
     case "neg":
-      return -1 * $1
+      return -1 * $1;
     case "number":
       return Number($1);
     case "not":
@@ -312,7 +312,9 @@ function runCommand(vars, line) {
     case "shift":
       return arr($1, line_clone[0]).shift();
     case "length":
-      return arr($1, line_clone[0]).length;
+      if (isNumber($1)) return error(`cannot read length of number ${$1}]`);
+      if (isPointer($1)) $1 = pointer($1);
+      return str($1).length;
     case "reverse":
       return clone($1, [...arr($1, line_clone[0]).reverse()]);
     case "last":
@@ -342,6 +344,11 @@ function runCommand(vars, line) {
       return null;
     case "includes":
       return arr($1, line_clone[0]).includes($2);
+    case "indexof":
+      if (typeof $1 != "string") return error(`cannot get index of ${$1}`);
+      if ($1.startsWith("%array"))
+        return pointer($1).map(checkPointer).indexOf($2);
+      return $1.indexOf($2);
 
     // logic
     case "eq":
@@ -371,11 +378,9 @@ function checkLog(target, vars) {
 
   if (isPointer(target)) {
     target = pointer(target);
-    if(var_name.startsWith('%array')) {
-      target = `[${target.map(checkLog)}]`
-    }
-    else if(var_name.startsWith('%object'))
-      target = `Object`
+    if (var_name.startsWith("%array")) {
+      target = `[${target.map(checkLog)}]`;
+    } else if (var_name.startsWith("%object")) target = `Object`;
   }
   return str(target);
 }
@@ -388,8 +393,10 @@ function clone(pointer, value) {
 }
 
 function get(target, line, vars) {
-  if (isNumber(target) || !target.startsWith("%"))
+  if (isNumber(target))
     return error(`expected refrence type got primitive ${target}`);
+  else if (typeof target == "string" && !isPointer(target))
+    return target[value(line.shift(), vars)];
 
   target = target.split("%");
   let val = scopes[target[1]];
@@ -409,7 +416,7 @@ function get(target, line, vars) {
   return val[key];
 }
 
-function new_constructor(type,inputs) {
+function new_constructor(type, inputs) {
   const hash_num = hash();
   switch (type) {
     case "Object":

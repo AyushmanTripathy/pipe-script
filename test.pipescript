@@ -1,1 +1,1 @@
-log | new Array 10 10 'lol' | new Array 'sub'
+log | indexof 'loh' 'h'

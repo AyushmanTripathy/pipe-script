@@ -68,6 +68,11 @@ export function str(str) {
   return str;
 }
 
+export function checkPointer(input) {
+  if(isPointer(input)) return pointer(input)
+  return input;
+}
+
 export function pointer(pointer) {
   pointer = pointer.split("%");
   return scopes[pointer[1]][pointer[2]];

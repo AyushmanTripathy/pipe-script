@@ -47,6 +47,10 @@ use the new command to create a array
 
 ```ruby
 set arr | new Array
+
+# example
+log | new Array 1 2 'element'
+output -> [1,2,'element']
 ```
 
 ### Array Commands
@@ -57,6 +61,7 @@ array commands take array as first argument
 | -------- | ------------------------- | ------- | ----------------- |
 | pop      | pop last element          | 1       | .pop()            |
 | shift    | pop first element         | 1       | .shift()          |
+| indexof  | get index of element      | 2       | .indexOf()        |
 | length   | length of array           | 1       | .length           |
 | reverse  | reverse the array         | 1       | .reverse()        |
 | last     | last element of array     | 1       | arr[arr.length-1] |
@@ -74,6 +79,8 @@ set obj | new Object
 
 ### Object Commands
 
+object command takes target object as argument
+
 | command | definition | args no | js equivalent |
 | ------- | ---------- | ------- | ------------- |
 
@@ -87,5 +94,9 @@ log 'this is a string'
 
 ### String Commands
 
-| command | definition | args no | js equivalent |
-| ------- | ---------- | ------- | ------------- |
+string command takes target string as first argument
+
+| command  | definition              | args no | js equivalent |
+| -------- | ----------------------- | ------- | ------------- |
+| includes | check for search string | 2       | .includes()   |
+| indexof  | get index of string     | 2       | .indexOf()    |

@@ -1,5 +1,5 @@
 
-<h1 id="concepts">Concepts</h1>
+<h1 id="introduction">Introduction</h1>
 <p>Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.</p>
 <p>Pipescript can be interpreted directly or be compiled into javascript.</p>
 <h3 id="believes">Believes</h3>
@@ -83,6 +83,10 @@ function example $n
 <h2 id="array">Array</h2>
 <p>use the new command to create a array</p>
 <pre><code class="lang-ruby">set arr | new Array
+
+# example
+log | new Array 1 2 &#39;element&#39;
+output -&gt; [1,2,&#39;element&#39;]
 </code></pre>
 <h3 id="array-commands">Array Commands</h3>
 <p>array commands take array as first argument</p>
@@ -107,6 +111,12 @@ function example $n
 <td>pop first element</td>
 <td>1</td>
 <td>.shift()</td>
+</tr>
+<tr>
+<td>indexof</td>
+<td>get index of element</td>
+<td>2</td>
+<td>.indexOf()</td>
 </tr>
 <tr>
 <td>length</td>
@@ -151,6 +161,7 @@ function example $n
 <pre><code class="lang-ruby">set obj | new Object
 </code></pre>
 <h3 id="object-commands">Object Commands</h3>
+<p>object command takes target object as argument</p>
 <table>
 <thead>
 <tr>
@@ -171,6 +182,7 @@ function example $n
 <pre><code class="lang-ruby">log &#39;this is a string&#39;
 </code></pre>
 <h3 id="string-commands">String Commands</h3>
+<p>string command takes target string as first argument</p>
 <table>
 <thead>
 <tr>
@@ -182,7 +194,16 @@ function example $n
 </thead>
 <tbody>
 <tr>
-<td></td>
+<td>includes</td>
+<td>check for search string</td>
+<td>2</td>
+<td>.includes()</td>
+</tr>
+<tr>
+<td>indexof</td>
+<td>get index of string</td>
+<td>2</td>
+<td>.indexOf()</td>
 </tr>
 </tbody>
 </table>

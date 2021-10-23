@@ -1,1 +1,1 @@
-console.log([10,10,"lol",["sub"]],)
+console.log("this is string".length,)
