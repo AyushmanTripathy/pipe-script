@@ -6,7 +6,9 @@
   <Navbar />
   <h1>Pipescript</h1>
   <p>A programming language that revolves around piping.</p>
-  <p>home page is still in development</p>
+  <a href="https://github.com/AyushmanTripathy/pipe-script">check the repo</a>
+  <p>try it out!</p>
+  <code>npm install -g pipescript-dev-kit</code>
 </main>
 
 <style lang="scss">
@@ -20,5 +22,6 @@
 
     background-color: var(--bg);
     color: var(--sec);
+    text-align: center;
   }
 </style>

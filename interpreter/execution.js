@@ -371,10 +371,11 @@ function checkLog(target, vars) {
 
   if (isPointer(target)) {
     target = pointer(target);
-    if(var_name.startsWith('%array')) 
-      target = `${var_name} : [${target}]`;
+    if(var_name.startsWith('%array')) {
+      target = `[${target.map(checkLog)}]`
+    }
     else if(var_name.startsWith('%object'))
-      target = `${var_name} : {Object}`
+      target = `Object`
   }
   return str(target);
 }
@@ -408,14 +409,14 @@ function get(target, line, vars) {
   return val[key];
 }
 
-function new_constructor(type) {
+function new_constructor(type,inputs) {
   const hash_num = hash();
   switch (type) {
     case "Object":
       scopes.object[hash_num] = {};
       return `%object%${hash_num}`;
     case "Array":
-      scopes.array[hash_num] = [];
+      scopes.array[hash_num] = inputs;
       return `%array%${hash_num}`;
     default:
       return error(`${type} is not a constructor`);

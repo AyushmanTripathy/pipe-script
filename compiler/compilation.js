@@ -264,7 +264,7 @@ function compileCommand(line, var_list) {
     case "call":
       return call_function($1, line);
     case "new":
-      return `new ${$1}()`;
+      return new_constructer($1,line);
     case "pass_input":
       return checkToken($1);
 
@@ -368,4 +368,9 @@ function checkToken(token) {
     return `"${scopes[token[1]][token[2]]}"`;
   }
   return token;
+}
+function new_constructer(target,line){
+  if(target == 'Array')
+    return `[${line.map(checkToken)}]`
+  return `new ${target}()`
 }

@@ -9,7 +9,7 @@
 
 <Router url="{url}">
   <div>
-    <Route path="editor" component="{WebEditor}" />
+    <Route path="/editor" component="{WebEditor}" />
     <Route path="/" component="{Home}" />
     <Route path="/docs" component="{Docs}" />
   </div>

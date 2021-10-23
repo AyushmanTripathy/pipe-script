@@ -53,7 +53,7 @@
 
   function retrive() {
     const saved_text = JSON.parse(localStorage.getItem("pipescript-code"));
-    return saved_text ? saved_text : "";
+    return saved_text ? saved_text : "log 'hello world'";
   }
 </script>
 
@@ -72,7 +72,6 @@
   main {
     @include center;
     padding: 10px;
-    border: 1px solid var(--sec);
   }
 
   div {

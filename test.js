@@ -1,5 +1,1 @@
-let array = new Array();
-for (let value in array) {
-  value = array[value];
-  console.log(value);
-}
+console.log([10,10,"lol",["sub"]],)

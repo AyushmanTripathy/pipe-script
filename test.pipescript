@@ -1,1 +1,1 @@
-log | add '' [new Array]
+log | new Array 10 10 'lol' | new Array 'sub'
