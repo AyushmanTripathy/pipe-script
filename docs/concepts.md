@@ -1,4 +1,4 @@
-# Concepts
+# Introduction
 
 Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.
 

@@ -10,7 +10,7 @@
         1. [String](#string)
         1. [Array](#array)
         2. [Object](#object)
-1. [Concepts](#concepts)
+1. [Introduction](#introduction)
     1. [Variables](#variables)
     1. [Comments](#comments)
     2. [Piping](#piping)

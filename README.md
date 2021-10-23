@@ -2,7 +2,7 @@
 
 A programming language that revolves around piping.
 
-Pipescript is functional, high-level, interpreted/compiled, indented, single threaded,dynamically typed programming language.
+Pipescript is functional, high-level, interpreted/compiled, indented, single threaded, dynamically typed programming language.
 
 Pipescript can be interpreted directly or be compiled into javascript.
 
@@ -13,10 +13,12 @@ Pipescript can be interpreted directly or be compiled into javascript.
 2. using piping for everything posible
 3. using less symbols
 
-check the [DOCS](https://pipescript.netlify.app/editor) to know more
+check out the official [website](https://pipescript.herokuapp.com/) for pipescript or<br/>
+check the [DOCS](https://pipescript.herokuapp.com/docs) to know more
 
 #### check it out
 
 1. install pipe scipt development kit from npm `sudo npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
-2. or vist pipe scipt's [web editor](https://pipescript.netlify.app/editor) <br/>
-   status of webeditor - [![Netlify Status](https://api.netlify.com/api/v1/badges/a22b7a82-8fd8-4f28-9ee8-af363696dc29/deploy-status)](https://app.netlify.com/sites/pipescript/deploys)
+2. or vist pipe scipt's [web editor](https://pipescript.herokuapp.com/editor) <br/>
+
+plz report any bugs by opening a [issue](https://github.com/AyushmanTripathy/pipe-script/issues)

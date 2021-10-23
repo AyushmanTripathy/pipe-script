@@ -1,1 +1,1 @@
-web: cd ./website && npm i && npm run start
+web: cd ./website && npm i && npm run deploy

@@ -1,6 +1,6 @@
 {
   "name": "pipescript-dev-kit",
-  "version": "2.20.0",
+  "version": "2.21.0",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
   "type": "module",
@@ -25,8 +25,11 @@
   "bugs": {
     "url": "https://github.com/AyushmanTripathy/pipe-script/issues"
   },
-  "homepage": "https://github.com/AyushmanTripathy/pipe-script#readme",
+  "homepage": "https://pipescript.herokuapp.com/",
   "devDependencies": {
     "rollup-plugin-uglify": "^5.0.2"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
