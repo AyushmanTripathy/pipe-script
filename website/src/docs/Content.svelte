@@ -221,7 +221,7 @@ set n 100
 <pre><code class="lang-ruby">get &lt;refrence-type&gt; &lt;keys/indexs&gt;
 </code></pre>
 <p>example</p>
-<pre><code class="lang-ruby"># pipescript form 
+<pre><code class="lang-ruby"># pipescript form
 1. get $array 0
 2. get $array 0 10 &#39;key&#39;
 

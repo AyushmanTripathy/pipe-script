@@ -10,10 +10,7 @@ export default function compileGlobalScope() {
   for (const function_name of function_list) compileFunction(function_name);
 
   if (typeof release_mode != "undefined") return;
-
-  log("---");
   log(file);
-  log("---");
 }
 
 function compileScope(scope, var_list) {
@@ -209,6 +206,7 @@ function compileStatments(line, var_list) {
 
 function compileCommand(line, var_list) {
   const command = checkToken(line.shift());
+
   //special keyword
   switch (command) {
     case "true":
@@ -318,6 +316,8 @@ function compileCommand(line, var_list) {
       return `${$1}.push(${$2})`;
     case "includes":
       return `${$1}.includes(${$2})`;
+    case "indexof":
+      return `${$1}.indexOf(${$2})` 
     case "unshift":
       return `${$1}.unshift(${$2})`;
   }

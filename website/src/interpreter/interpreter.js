@@ -34,7 +34,6 @@ export default async function execute(file,logs) {
 
   try {
     await classifyScopes(file, import_function);
-    console.log(scopes)
     runScope(scopes.global, scopes.vars);
     console.log(scopes);
   } catch (error) {

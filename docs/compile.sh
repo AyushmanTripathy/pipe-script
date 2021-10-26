@@ -1,3 +1,5 @@
+#!/bin/sh
+
 compile(){
   markdown $1 >> website/src/docs/Content.svelte
 }

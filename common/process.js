@@ -19,7 +19,7 @@ export default async function classifyScopes(file, import_function) {
     }
 
     line = checkQuotes(line);
-    line = line.replace("[", "<").replace("]", ">");
+    line = line.split("[").join("<").split("]").join(">");
 
     line = line.trim();
     if (last_comment);
