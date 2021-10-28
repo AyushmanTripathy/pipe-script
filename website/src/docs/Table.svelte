@@ -1,4 +1,12 @@
 <ol>
+<li><a href="#introduction">Introduction</a><ol>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#piping">Piping</a></li>
+<li><a href="#code-block">Code Block</a></li>
+<li><a href="#functions">Functions</a></li>
+</ol>
+</li>
 <li><a href="#data-types">Data Types</a><ol>
 <li><a href="#primitive">Primitive</a><ol>
 <li><a href="#number">Number</a></li>
@@ -14,14 +22,6 @@
 <li><a href="#object">Object</a></li>
 </ol>
 </li>
-</ol>
-</li>
-<li><a href="#introduction">Introduction</a><ol>
-<li><a href="#variables">Variables</a></li>
-<li><a href="#comments">Comments</a></li>
-<li><a href="#piping">Piping</a></li>
-<li><a href="#code-block">Code Block</a></li>
-<li><a href="#functions">Functions</a></li>
 </ol>
 </li>
 <li><a href="#commands">Commands</a><ol>
@@ -49,3 +49,4 @@
 </ol>
 </li>
 </ol>
+

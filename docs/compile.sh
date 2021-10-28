@@ -1,11 +1,11 @@
 #!/bin/sh
 
 compile(){
-  markdown $1 >> website/src/docs/Content.svelte
+  marked $1 >> website/src/docs/Content.svelte
 }
 
 echo 'compiling Table.svelte'
-markdown docs/table_of_content.md > website/src/docs/Table.svelte 
+marked docs/table_of_content.md > website/src/docs/Table.svelte 
 
 echo 'compiling Content.svelte'
 echo '' > website/src/docs/Content.svelte

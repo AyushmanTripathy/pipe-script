@@ -24,7 +24,7 @@ sh test.sh || exit
 echo "building website"
 
 cd website
-npm run build || exit
+# npm run build || exit
 cd ..
 
 # commit to git
@@ -41,6 +41,14 @@ npm publish || exit
 # pushing to master
 git push origin master || exit
 
-merge-master-release pipe-script || exit
+echo "merging master --> release"
+
+curl \
+  -X POST \
+  -u "AyushmanTripathy":$(cat ~/.pat/git) \
+  -H "Accept: application/vnd.github.v3+json" \
+  "https://api.github.com/repos/AyushmanTripathy/pipe-script/merges" \
+  -d '{"base":"release","head":"master"}' | exit
+echo "merge complete"
 
 echo 'successfully published'
