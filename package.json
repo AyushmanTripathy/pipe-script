@@ -5,7 +5,6 @@
   "main": "build/pipescript.js",
   "type": "module",
   "scripts": {
-    "build": "npm run buildc && npm run buildi",
     "buildc": "rollup -c compiler/rollup.config.js",
     "buildi": "rollup -c interpreter/rollup.config.js",
     "devi": "nodemon interpreter/interpreter.js test.pipescript",

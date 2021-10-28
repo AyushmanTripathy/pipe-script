@@ -24,7 +24,7 @@ sh test.sh || exit
 echo "building website"
 
 cd website
-# npm run build || exit
+npm run build || exit
 cd ..
 
 # commit to git
