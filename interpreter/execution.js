@@ -32,7 +32,7 @@ function runScope(scope, vars = {}) {
         return { returned: true, value: value(output, vars) };
     }
   }
-  return {};
+  return { value: null };
 }
 
 function checkForKeyWords(line, vars) {
@@ -209,10 +209,10 @@ function runLine(line, vars) {
   line = line.split("|").filter(Boolean).reverse();
 
   // piping
-  let output = null;
+  let output = "<Empty>";
   for (let statment of line) {
     statment = statment.split(" ").filter(Boolean);
-    if (output != null) statment.push(output);
+    if (output != "<Empty>") statment.push(output);
     output = runCommand(vars, statment);
   }
   return output;
@@ -222,7 +222,6 @@ function checkForBlocks(line, vars, open_stack = []) {
   if (!line.includes("<") && !line.includes(">")) return line;
 
   let pos = 0;
-
   for (const letter of line) {
     if (letter == "<") open_stack.push(pos);
     else if (letter == ">") {
@@ -247,6 +246,8 @@ function checkForBlocks(line, vars, open_stack = []) {
 function runCommand(vars, line) {
   const command = line.shift();
   const line_clone = line.slice();
+
+  if (command.startsWith("$")) return `${value(command, vars)}`;
 
   // key words
   switch (command) {
@@ -330,7 +331,6 @@ function runCommand(vars, line) {
       else setVar($1, $2, vars);
       return null;
     case "pow":
-      sum = $1;
       return Math.pow($1, $2);
     case "reminder":
       return $1 % $2;
@@ -343,7 +343,10 @@ function runCommand(vars, line) {
       arr($1, line_clone[0]).unshift($2);
       return null;
     case "includes":
-      return arr($1, line_clone[0]).includes($2);
+      if (typeof $1 != "string") return error(`cannot get index of ${$1}`);
+      if ($1.startsWith("%array"))
+        return pointer($1).map(checkPointer).includes($2);
+      return $1.includes($2);
     case "indexof":
       if (typeof $1 != "string") return error(`cannot get index of ${$1}`);
       if ($1.startsWith("%array"))
@@ -463,7 +466,10 @@ function setValue(target, key, proprety, line, vars) {
 
 function setVar(target, value, vars) {
   if (vars.hasOwnProperty(target)) vars[target] = value;
-  else scopes.vars[target] = value;
+  else {
+    globalThis.completions.push('$'+target)
+    scopes.vars[target] = value;
+  }
 }
 
 function checkArg(target, command, vars, line) {

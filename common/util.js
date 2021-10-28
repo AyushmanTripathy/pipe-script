@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+
 export function value(target, variables, var_name) {
   switch (typeof target) {
     case "string":
@@ -97,4 +99,17 @@ export function last(arr) {
 
 export function random(x) {
   return Math.floor(Math.random() * x);
+}
+
+export function help (path) {
+   try {
+      log(readFileSync(new URL(path, import.meta.url), "utf8"))
+   } catch (error) {
+      log(error)
+   }
+}
+export function system_error(error){
+  console.log(`\x1b[31m[SYSTEM ERROR]\x1b[0m ${error}`)
+  console.log('terminating program...')
+  process.exit()
 }

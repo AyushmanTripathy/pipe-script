@@ -5,10 +5,12 @@
   "main": "build/pipescript.js",
   "type": "module",
   "scripts": {
-    "buildc": "rollup -c compiler/rollup.config.js",
-    "buildi": "rollup -c interpreter/rollup.config.js",
+    "build":"npm run buildc && npm run buildi",
+    "buildc":"rollup -c compiler/rollup.config.js",
+    "buildi":"rollup -c interpreter/rollup.config.js",
     "devi": "nodemon interpreter/interpreter.js test.pipescript",
-    "devc": "nodemon compiler/compiler.js test.pipescript test.js"
+    "devc": "nodemon compiler/compiler.js test.pipescript test.js",
+    "test":"sh test.sh"
   },
   "repository": {
     "type": "git"
@@ -28,8 +30,5 @@
   "homepage": "https://pipescript.herokuapp.com/",
   "devDependencies": {
     "rollup-plugin-uglify": "^5.0.2"
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
   }
 }

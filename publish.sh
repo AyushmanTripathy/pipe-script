@@ -1,7 +1,8 @@
 #!/bin/sh
 
 echo '1. update docs'
-echo '3. reflected changes in todo.txt'
+echo '2. reflected changes in todo.txt'
+echo '3. update autocompletions'
 echo 'confirm pusblish?'
 read null
 
@@ -9,18 +10,21 @@ read null
 cd ~/pipe-script
 
 # compiling docs
-sh docs/compile.sh
+sh docs/compile.sh || exit
 
 echo "building interpreter"
-npm run buildi
+npm run buildi || exit
 
 echo 'building compiler'
-npm run buildc
+npm run buildc || exit
 
-echo "build online_editor"
+echo 'TESTING'
+sh test.sh || exit
+
+echo "building website"
 
 cd website
-npm run build
+npm run build || exit
 cd ..
 
 # commit to git
@@ -29,15 +33,14 @@ git add .
 git commit -m 'publishing'
 
 # publishing
-npm version minor
+npm version minor || exit
 
 echo "publishing"
-npm publish
+npm publish || exit
 
 # pushing to master
-git push origin master
+git push origin master || exit
 
-merge-master-release
+merge-master-release pipe-script || exit
 
-git commit -am "published $(npm view psre version)"
 echo 'successfully published'

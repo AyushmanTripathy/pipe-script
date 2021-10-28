@@ -1,1 +1,2 @@
-log | indexof 'loh' 'h'
+log | indexof 'pipescript' 's'
+log

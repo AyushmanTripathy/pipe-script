@@ -1,0 +1,16 @@
+PIPESCRIPT COMPILER
+-------------------
+compile pipescript to javascript
+
+psc <input file> <output file>
+
+options
+  -h : help
+
+check official documentation for pipescript
+  https://pipescript.herokuapp.com/docs
+
+plz create an issue to report any bugs
+ https://github.com/AyushmanTripathy/pipe-script/issues 
+
+thank you for using pipescript

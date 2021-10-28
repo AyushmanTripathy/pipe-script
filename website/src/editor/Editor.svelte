@@ -53,7 +53,13 @@
 
   function retrive() {
     const saved_text = JSON.parse(localStorage.getItem("pipescript-code"));
-    return saved_text ? saved_text : "log 'hello world'";
+    return saved_text ? saved_text : first_time();
+  }
+
+  function first_time () {
+    alert('ctrl + enter to run!')
+    localStorage.setItem("pipescript-code", JSON.stringify("log 'hello world'"));
+    return "log 'hello world'";
   }
 </script>
 

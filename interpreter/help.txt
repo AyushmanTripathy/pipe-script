@@ -1,0 +1,21 @@
+PIPESCRIPT INTERPRETER
+----------------------
+
+pipescript
+  open in interactive mode
+  use import command to load any file in interactive mode
+
+pipescript <file name>
+  interpret target file
+
+options
+  -h : help
+  -w : watchfile
+
+check official documentation for pipescript
+  https://pipescript.herokuapp.com/docs
+
+plz create an issue to report any bugs
+ https://github.com/AyushmanTripathy/pipe-script/issues 
+
+thank you for using pipescript

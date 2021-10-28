@@ -8,13 +8,19 @@ pipescript (compiled to js) - 0.086s
 
 TODO -
 
-  debug for error handling
+solve watch delay
+indexof not working for primitives
+
+better error handling for
   
-  #if false
-  	log 'ifed'
-  else 
-  	log 'lol'
+#if false
+	log 'ifed'
+else 
+	log 'lol'
+
 
 ternary operator
 remove - sign
 object commands
+
+elobarate undefined token found error in compiler

@@ -1,1 +1,1 @@
-console.log("this is string".length,)
+console.log("pipescript".indexOf("s"),)
