@@ -10,6 +10,7 @@ DONE
 ----
 solve watch delay
 indexof not working for primitives
+ternary operator
 
 better error handling for
   
@@ -21,7 +22,6 @@ else
 TODO
 ----
 
-ternary operator
 object commands
 
 async functions

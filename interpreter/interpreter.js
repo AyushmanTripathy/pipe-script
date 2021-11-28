@@ -1,6 +1,6 @@
 import runGlobalScope from "./execution.js";
 import classifyScopes from "../common/parser.js";
-import { checkArgs, system_error, help } from "../common/util.js";
+import { str,checkArgs, system_error, help } from "../common/util.js";
 
 import { createInterface } from "readline";
 import { readFileSync, existsSync, createReadStream, watchFile } from "fs";
@@ -20,6 +20,7 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg, type) => {
+  msg = str(msg)
   if (!type) throw `\x1b[31m[RUNTIME ERROR]\x1b[0m ${msg}`;
   throw `\x1b[31m[SYNTAX ERROR]\x1b[0m ${msg}`;
 };
@@ -65,7 +66,7 @@ async function read() {
   });
 
   globalThis.completions =
-    "log help clear indexof get Array Object add multiply divide random boolean neg number round floor pop shift length reverse last pow reminder push unshift eq ge gt le lt exit set call import new includes".split(
+    "log help ternary clear indexof get Array Object add multiply divide random boolean neg number round floor pop shift length reverse last pow reminder push unshift eq ge gt le lt exit set call import new includes".split(
       " "
     );
 

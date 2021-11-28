@@ -367,7 +367,13 @@ function runCommand(vars, line) {
       return $1 <= $2;
   }
 
-  error(`invalid command or arg - ${command} with arg ${[...line_clone]}`);
+  const $3 = checkArg(line.shift(), command, vars, line_clone);
+  switch (command) {
+    case "ternary":
+      return $1 ? $2 : $3;
+  }
+
+  invalidCommandError(command, line_clone);
 }
 
 function arr(value, var_name) {
@@ -476,7 +482,10 @@ function setVar(target, value, vars) {
 }
 
 function checkArg(target, command, vars, line) {
-  if (typeof target == "undefined") {
-    error(`invalid command - ${command} with arg ${line}`);
-  } else return value(target, vars);
+  if (typeof target == "undefined") invalidCommandError(command, line);
+  else return value(target, vars);
+}
+
+function invalidCommandError(command, line) {
+  error(`invalid command - ${command} with ${line.length} arg ${line.map(checkPointer)}. missing arg or unknown command`);
 }

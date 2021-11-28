@@ -1,2 +1,1 @@
-let n = "lol is not defined" 
-console.log(n.indexOf("o"),)
+console.log(0?"true block":"false block",)
