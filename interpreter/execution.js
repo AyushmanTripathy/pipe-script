@@ -3,6 +3,7 @@ import {
   str,
   stringify,
   pointer,
+  checkType,
   checkPointer,
   isPointer,
   isNumber,
@@ -426,7 +427,9 @@ function new_constructor(type, inputs) {
       scopes.object[hash_num] = {};
       return `%object%${hash_num}`;
     case "Array":
-      scopes.array[hash_num] = inputs;
+      scopes.array[hash_num] = inputs.map((n) =>
+        isNumber(n) ? Number(n) : n
+      );
       return `%array%${hash_num}`;
     default:
       return error(`${type} is not a constructor`);
@@ -467,7 +470,7 @@ function setValue(target, key, proprety, line, vars) {
 function setVar(target, value, vars) {
   if (vars.hasOwnProperty(target)) vars[target] = value;
   else {
-    globalThis.completions.push('$'+target)
+    if (globalThis.interactive_mode) globalThis.completions.push("$" + target);
     scopes.vars[target] = value;
   }
 }

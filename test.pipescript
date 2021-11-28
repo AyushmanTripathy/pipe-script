@@ -1,2 +1,3 @@
-log | indexof 'pipescript' 's'
-log
+set n 'lol is not defined'
+#set n | new Array 'lol' 'op' 10
+log | indexof $n 'o' 

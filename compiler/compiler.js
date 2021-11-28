@@ -1,4 +1,4 @@
-import classifyScopes from "../common/process.js";
+import classifyScopes from "../common/parser.js";
 import compileScope from "./compilation.js";
 
 import { system_error, checkArgs, help } from "../common/util.js";

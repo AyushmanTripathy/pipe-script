@@ -1,2 +1,2 @@
-console.log("pipescript".indexOf("s"),)
-console.log()
+let n = "lol is not defined" 
+console.log(n.indexOf("o"),)

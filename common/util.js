@@ -14,7 +14,8 @@ export function value(target, variables, var_name) {
       return target;
   }
 }
-function checkType(value) {
+
+export function checkType(value) {
   // check for type
   if (value == 0) return 0;
   if (Number(value)) return Number(value);
