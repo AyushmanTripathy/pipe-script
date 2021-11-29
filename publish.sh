@@ -27,6 +27,7 @@ cd website
 npm run build || exit
 cd ..
 
+update-npm
 # commit to git
 
 git add .
