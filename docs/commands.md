@@ -113,3 +113,4 @@ Arithmetic commands
 | le      | less than or equal    | 2       | <=            |
 | lt      | less than             | 2       | <             |
 | not     | not operator          | 1       | !             |
+| ternary | ternary operator      | 3       | $1 ? $2 : $3  |

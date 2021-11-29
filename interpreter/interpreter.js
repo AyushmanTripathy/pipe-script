@@ -1,6 +1,6 @@
 import runGlobalScope from "./execution.js";
 import classifyScopes from "../common/parser.js";
-import { str,checkArgs, system_error, help } from "../common/util.js";
+import { str, checkArgs, system_error, help } from "../common/util.js";
 
 import { createInterface } from "readline";
 import { readFileSync, existsSync, createReadStream, watchFile } from "fs";
@@ -20,7 +20,7 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg, type) => {
-  msg = str(msg)
+  msg = str(msg);
   if (!type) throw `\x1b[31m[RUNTIME ERROR]\x1b[0m ${msg}`;
   throw `\x1b[31m[SYNTAX ERROR]\x1b[0m ${msg}`;
 };
