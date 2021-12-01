@@ -22,5 +22,5 @@ else
 TODO
 ----
 
+implement regex string dectectaion
 object commands
-async functions
