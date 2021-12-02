@@ -1,6 +1,6 @@
 {
   "name": "pipescript-dev-kit",
-  "version": "2.22.0",
+  "version": "1.3.0",
   "description": "A programming language that revolves around piping",
   "main": "build/pipescript.js",
   "type": "module",
@@ -29,5 +29,8 @@
   "homepage": "https://pipescript.herokuapp.com/",
   "devDependencies": {
     "rollup-plugin-uglify": "^5.0.2"
+  },
+  "dependencies": {
+    "btss": "^1.0.0"
   }
 }

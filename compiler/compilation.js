@@ -322,6 +322,12 @@ function compileCommand(line, var_list) {
       return `${$1}.unshift(${$2})`;
   }
 
+  const $3 = checkToken(line.shift());
+  switch (command) {
+    case "ternary":
+      return `${$1}?${$2}:${$3}`
+  }
+
   error(`invalid command ${command}`);
 }
 

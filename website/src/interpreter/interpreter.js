@@ -1,5 +1,5 @@
 import runScope from "../../../interpreter/execution.js";
-import classifyScopes from "../../../common/process.js";
+import classifyScopes from "../../../common/parser.js";
 
 globalThis.config = {
   tab: '\t',

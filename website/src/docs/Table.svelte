@@ -4,7 +4,7 @@
 <li><a href="#comments">Comments</a></li>
 <li><a href="#piping">Piping</a></li>
 <li><a href="#code-block">Code Block</a></li>
-<li><a href="#functions">Functions</a></li>
+<li><a href="#function">Function</a></li>
 </ol>
 </li>
 <li><a href="#data-types">Data Types</a><ol>

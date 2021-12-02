@@ -3,7 +3,7 @@
     1. [Comments](#comments)
     2. [Piping](#piping)
     3. [Code Block](#code-block)
-    4. [Functions](#functions)
+    4. [Function](#function)
 1. [Data Types](#data-types)
     1. [Primitive](#primitive)
         1. [Number](#number)

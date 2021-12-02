@@ -1,6 +1,7 @@
 import runGlobalScope from "./execution.js";
-import classifyScopes from "../common/process.js";
-import { checkArgs, system_error, help } from "../common/util.js";
+import { dim,red,green } from "btss"
+import classifyScopes from "../common/parser.js";
+import { str, checkArgs, system_error, help } from "../common/util.js";
 
 import { createInterface } from "readline";
 import { readFileSync, existsSync, createReadStream, watchFile } from "fs";
@@ -20,20 +21,14 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg, type) => {
-  if (!type) throw `\x1b[31m[RUNTIME ERROR]\x1b[0m ${msg}`;
-  throw `\x1b[31m[SYNTAX ERROR]\x1b[0m ${msg}`;
+  msg = str(msg);
+  if (!type) throw red("[RUNTIME ERROR]")+ msg;
+  throw red("[SYNTAX ERROR]") + msg;
 };
 
 init();
 function init() {
-  globalThis.scopes = {};
-  globalThis.hash_code = 0;
-  scopes.global = [];
-
-  scopes.vars = {};
-  scopes.object = {};
-  scopes.array = {};
-  scopes.string = {};
+  resetScope();
 
   if (!words.length && !options.length) return read();
   for (const option of options)
@@ -45,6 +40,17 @@ function init() {
     }
 
   run([`import ${words.shift()}`]);
+}
+
+function resetScope() {
+  globalThis.scopes = {};
+  globalThis.hash_code = 0;
+  scopes.global = [];
+
+  scopes.vars = {};
+  scopes.object = {};
+  scopes.array = {};
+  scopes.string = {};
 }
 
 async function read() {
@@ -61,7 +67,7 @@ async function read() {
   });
 
   globalThis.completions =
-    "log help clear indexof get Array Object add multiply divide random boolean neg number round floor pop shift length reverse last pow reminder push unshift eq ge gt le lt exit set call import new includes".split(
+    "log help ternary clear indexof get Array Object add multiply divide random boolean neg number round floor pop shift length reverse last pow reminder push unshift eq ge gt le lt exit set call import new includes".split(
       " "
     );
 
@@ -69,7 +75,7 @@ async function read() {
 }
 
 function ask(rl) {
-  rl.question("\x1b[32m>>> \x1b[0m", async (input) => {
+  rl.question(green(">>> "), async (input) => {
     input = input.trim();
     try {
       if (input.startsWith("import"))
@@ -100,10 +106,10 @@ async function watchPath(file_name) {
   const watch_options = config_swap.watch_options;
 
   watchFile(file_name, {}, async () => {
-    console.log('op')
     if (watch_options.clear_screen) console.clear();
-    log(`detected change on ${file_name}`);
+    log(dim(`> detected change on ${file_name}`));
     await run([`import ${file_name}`]);
+    resetScope();
     config = config_swap;
   });
 }
@@ -115,10 +121,10 @@ async function run(file) {
   } catch (error) {
     console.log(error);
     console.log("FATAL ERROR - terminating program...");
-    if (typeof release_mode == "undefined") console.log(scopes);
     process.exit(1);
+  } finally {
+    if (typeof release_mode == "undefined") console.log(scopes);
   }
-  if (typeof release_mode == "undefined") console.log(scopes);
 }
 
 async function importFile(path) {

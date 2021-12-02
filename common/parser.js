@@ -3,7 +3,7 @@ import { last, hash, stringify } from "./util.js";
 export default async function classifyScopes(file, import_function) {
   let scope_stack = ["global"];
   let last_depth = 0;
-  let line_before;
+  let line_before = "";
   let last_comment = false;
 
   let if_hash_code = [];
@@ -133,7 +133,12 @@ export default async function classifyScopes(file, import_function) {
           scopes[last(scope_stack)].push(hash_code);
           scope_stack.push(hash_code);
         } else {
-          error(`invalid scope change\n${line_before}\n${line}`, true);
+          error(
+            `invalid scope change\n${line_before}\n${
+              addTabs(depth - last_depth) + line
+            }`,
+            true
+          );
         }
       }
       last_depth = depth;
@@ -190,4 +195,10 @@ function checkTab(line) {
     line = line.substring(1);
   }
   return count;
+}
+
+function addTabs(n) {
+  let str = "";
+  for (let i = 0; i < n; i++) str += "  ";
+  return str;
 }

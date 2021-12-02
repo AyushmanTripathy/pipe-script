@@ -3,6 +3,7 @@ import {
   str,
   stringify,
   pointer,
+  checkType,
   checkPointer,
   isPointer,
   isNumber,
@@ -366,7 +367,13 @@ function runCommand(vars, line) {
       return $1 <= $2;
   }
 
-  error(`invalid command or arg - ${command} with arg ${[...line_clone]}`);
+  const $3 = checkArg(line.shift(), command, vars, line_clone);
+  switch (command) {
+    case "ternary":
+      return $1 ? $2 : $3;
+  }
+
+  invalidCommandError(command, line_clone);
 }
 
 function arr(value, var_name) {
@@ -426,7 +433,9 @@ function new_constructor(type, inputs) {
       scopes.object[hash_num] = {};
       return `%object%${hash_num}`;
     case "Array":
-      scopes.array[hash_num] = inputs;
+      scopes.array[hash_num] = inputs.map((n) =>
+        isNumber(n) ? Number(n) : n
+      );
       return `%array%${hash_num}`;
     default:
       return error(`${type} is not a constructor`);
@@ -467,13 +476,16 @@ function setValue(target, key, proprety, line, vars) {
 function setVar(target, value, vars) {
   if (vars.hasOwnProperty(target)) vars[target] = value;
   else {
-    globalThis.completions.push('$'+target)
+    if (globalThis.interactive_mode) globalThis.completions.push("$" + target);
     scopes.vars[target] = value;
   }
 }
 
 function checkArg(target, command, vars, line) {
-  if (typeof target == "undefined") {
-    error(`invalid command - ${command} with arg ${line}`);
-  } else return value(target, vars);
+  if (typeof target == "undefined") invalidCommandError(command, line);
+  else return value(target, vars);
+}
+
+function invalidCommandError(command, line) {
+  error(`invalid command - ${command} with ${line.length} arg ${line.map(checkPointer)}. missing arg or unknown command`);
 }

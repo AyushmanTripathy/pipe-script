@@ -1,2 +1,1 @@
-console.log("pipescript".indexOf("s"),)
-console.log()
+console.log(0?"true block":"false block",)

@@ -1,2 +1,1 @@
-log | indexof 'pipescript' 's'
-log
+log | ternary 0 'true block' 'false block'

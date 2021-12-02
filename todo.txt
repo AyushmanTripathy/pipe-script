@@ -6,10 +6,11 @@ python - 0.289s
 pipescript (interpreted)- 6.064s
 pipescript (compiled to js) - 0.086s
 
-TODO -
-
+DONE
+----
 solve watch delay
 indexof not working for primitives
+ternary operator
 
 better error handling for
   
@@ -18,9 +19,8 @@ better error handling for
 else 
 	log 'lol'
 
+TODO
+----
 
-ternary operator
-remove - sign
+implement regex string dectectaion
 object commands
-
-elobarate undefined token found error in compiler

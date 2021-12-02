@@ -51,7 +51,7 @@ log 2
 log [add 1 1] [add 1 1]
 log 2 2
 </code></pre>
-<h2 id="functions">Functions</h2>
+<h2 id="function">Function</h2>
 <p>functions as usual</p>
 <pre><code class="language-ruby">function &lt;name&gt; $arg1 $arg2
   return $arg1
@@ -382,6 +382,12 @@ function process $a $b
 <td>not operator</td>
 <td>1</td>
 <td>!</td>
+</tr>
+<tr>
+<td>ternary</td>
+<td>ternary operator</td>
+<td>3</td>
+<td>$1 ? $2 : $3</td>
 </tr>
 </tbody></table>
 

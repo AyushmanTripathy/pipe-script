@@ -1,4 +1,5 @@
-import classifyScopes from "../common/process.js";
+import classifyScopes from "../common/parser.js";
+import { red, dim } from "btss";
 import compileScope from "./compilation.js";
 
 import { system_error, checkArgs, help } from "../common/util.js";
@@ -20,8 +21,8 @@ globalThis.log = (string) => {
 };
 
 globalThis.error = (msg, type) => {
-  if (!type) throw `\x1b[31m[RUNTIME ERROR]\x1b[0m ${msg}`;
-  throw `\x1b[31m[COMPILATION ERROR]\x1b[0m ${msg}`;
+  if (!type) throw red(`[RUNTIME ERROR]`) + msg;
+  throw red("[COMPILATION ERROR]") + msg;
 };
 
 init();
@@ -60,6 +61,7 @@ async function run(file) {
     log("compiled successfully!");
   } catch (error) {
     log(error);
+    log(dim("use the interpreter to get a better debuging experience"));
     log("FATAL ERROR - terminating program...");
     if (typeof release_mode == "undefined") console.log(scopes);
     process.exit(1);
