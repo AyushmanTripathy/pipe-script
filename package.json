@@ -29,5 +29,8 @@
   "homepage": "https://pipescript.herokuapp.com/",
   "devDependencies": {
     "rollup-plugin-uglify": "^5.0.2"
+  },
+  "dependencies": {
+    "btss": "^1.0.0"
   }
 }

@@ -1,4 +1,5 @@
 import runGlobalScope from "./execution.js";
+import { dim,red,green } from "btss"
 import classifyScopes from "../common/parser.js";
 import { str, checkArgs, system_error, help } from "../common/util.js";
 
@@ -21,8 +22,8 @@ globalThis.log = (string) => {
 
 globalThis.error = (msg, type) => {
   msg = str(msg);
-  if (!type) throw `\x1b[31m[RUNTIME ERROR]\x1b[0m ${msg}`;
-  throw `\x1b[31m[SYNTAX ERROR]\x1b[0m ${msg}`;
+  if (!type) throw red("[RUNTIME ERROR]")+ msg;
+  throw red("[SYNTAX ERROR]") + msg;
 };
 
 init();
@@ -74,7 +75,7 @@ async function read() {
 }
 
 function ask(rl) {
-  rl.question("\x1b[32m>>> \x1b[0m", async (input) => {
+  rl.question(green(">>> "), async (input) => {
     input = input.trim();
     try {
       if (input.startsWith("import"))
@@ -106,7 +107,7 @@ async function watchPath(file_name) {
 
   watchFile(file_name, {}, async () => {
     if (watch_options.clear_screen) console.clear();
-    log(`\x1b[2m> detected change on ${file_name} \x1b[0m`);
+    log(dim(`> detected change on ${file_name}`));
     await run([`import ${file_name}`]);
     resetScope();
     config = config_swap;
