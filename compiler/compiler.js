@@ -3,8 +3,7 @@ import { red, dim } from "btss";
 import compileScope from "./compilation.js";
 
 import { system_error, checkArgs, help } from "../common/util.js";
-import { createInterface } from "readline";
-import { readFileSync, existsSync, createReadStream, writeFileSync } from "fs";
+import { readFileSync, existsSync, writeFileSync } from "fs";
 const { options, words } = checkArgs(process.argv.splice(2));
 
 const cwd = process.cwd();
@@ -34,7 +33,7 @@ function init() {
     }
   }
   if (!words.length) return system_error("input file required");
-  run([`import ${words.shift()}`]);
+  run(`import ${words.shift()}`);
 }
 
 async function run(file) {
@@ -73,13 +72,6 @@ async function importFile(path) {
   if (!existsSync(path_to_file))
     return system_error(`path: ${path_to_file} doesnot exist`);
 
-  const fileStream = createReadStream(path_to_file);
-
-  const rl = createInterface({
-    input: fileStream,
-  });
-
-  const file = [];
-  for await (const line of rl) file.push(line);
+  const file = readFileSync(path_to_file,"utf-8")
   await classifyScopes(file, importFile);
 }

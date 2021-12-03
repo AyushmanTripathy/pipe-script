@@ -1,4 +1,4 @@
-import runScope from "../../../interpreter/execution.js";
+import runGlobalScope from "../../../interpreter/execution.js";
 import classifyScopes from "../../../common/parser.js";
 
 globalThis.config = {
@@ -7,10 +7,6 @@ globalThis.config = {
 };
 
 globalThis.error = (msg, type) => {
-  if (globalThis.enable_catch) {
-    globalThis.currentError = msg;
-    return !undefined_var;
-  }
   if (!type) throw `[RUNTIME ERROR] ${msg}`;
   throw `[SYNTAX ERROR] ${msg}`;
 };
@@ -34,11 +30,11 @@ export default async function execute(file,logs) {
 
   try {
     await classifyScopes(file, import_function);
-    runScope(scopes.global, scopes.vars);
+    runGlobalScope(scopes.global, scopes.vars);
     console.log(scopes);
   } catch (error) {
     log(error);
-    log("FATAL ERROR - terminating program...");
+    log("FATAL ERROR - terminating execution...");
   }
 }
 
