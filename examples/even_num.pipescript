@@ -4,4 +4,4 @@ function even $n
   while | ge $n 0
     if | not | reminder $n 2
       log $n
-    set n | subtract $n 1
+    set n | add $n -1
