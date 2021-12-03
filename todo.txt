@@ -11,6 +11,7 @@ DONE
 solve watch delay
 indexof not working for primitives
 ternary operator
+implement regex string dectectaion
 
 better error handling for
   
@@ -22,5 +23,4 @@ else
 TODO
 ----
 
-implement regex string dectectaion
 object commands

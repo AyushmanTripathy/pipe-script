@@ -9,6 +9,7 @@ export default async function classifyScopes(file, import_function) {
   let if_hash_code = [];
   let try_hash_code = false;
 
+  file = checkQuotes(file).split("\n")
   for (let line of file) {
     const depth = checkDepth(line);
 
@@ -18,7 +19,6 @@ export default async function classifyScopes(file, import_function) {
       line = line.split("#")[0];
     }
 
-    line = checkQuotes(line);
     line = line.split("[").join("<").split("]").join(">");
 
     line = line.trim();
@@ -147,30 +147,15 @@ export default async function classifyScopes(file, import_function) {
   }
 }
 
-function checkQuotes(line) {
-  let last_index = 0;
-  let pair = false;
-
-  let index = 0;
-  for (const letter of line) {
-    if (letter == "'") {
-      if (pair) {
-        const hash_code = hash();
-
-        let temp = line.slice(0, last_index);
-        temp += `%string%${hash_code}`;
-        temp += line.slice(index + 1, line.length);
-        scopes.string[hash_code] = stringify(
-          line.slice(last_index + 1, index)
-        );
-        return checkQuotes(temp);
-      } else last_index = index;
-      pair = pair ? false : true;
-    }
-    index++;
+function checkQuotes(file) {
+  const matches = file.match(/'(\n||.)[^']*'/g)
+  if(!matches) return file;
+  for(const match of matches) {
+    const hash_code = hash();
+    file = file.replace(match,`%string%${hash_code}`)
+    scopes.string[hash_code] = match.slice(1,-1);
   }
-
-  return line;
+  return file;
 }
 
 function checkDepth(line) {

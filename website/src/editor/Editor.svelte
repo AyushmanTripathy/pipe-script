@@ -41,7 +41,7 @@
 
     switch (keyCode) {
       case 13:
-        if (ctrlKey) execute(text.split("\n"),logs);
+        if (ctrlKey) execute(text,logs);
       default:
         break;
     }

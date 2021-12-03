@@ -4,7 +4,7 @@ import classifyScopes from "../common/parser.js";
 import { str, checkArgs, system_error, help } from "../common/util.js";
 
 import { createInterface } from "readline";
-import { readFileSync, existsSync, createReadStream, watchFile } from "fs";
+import { readFileSync, existsSync, watchFile } from "fs";
 const { options, words } = checkArgs(process.argv.splice(2));
 
 const cwd = process.cwd();
@@ -39,7 +39,7 @@ function init() {
         return help("../interpreter/help.txt");
     }
 
-  run([`import ${words.shift()}`]);
+  run(`import ${words.shift()}`);
 }
 
 function resetScope() {
@@ -108,7 +108,7 @@ async function watchPath(file_name) {
   watchFile(file_name, {}, async () => {
     if (watch_options.clear_screen) console.clear();
     log(dim(`> detected change on ${file_name}`));
-    await run([`import ${file_name}`]);
+    await run(`import ${file_name}`);
     resetScope();
     config = config_swap;
   });
@@ -131,13 +131,6 @@ async function importFile(path) {
   const path_to_file = cwd + "/" + path.trim();
   if (!existsSync(path_to_file)) return error(`no such file: ${path_to_file}`);
 
-  const fileStream = createReadStream(path_to_file);
-
-  const rl = createInterface({
-    input: fileStream,
-  });
-
-  const file = [];
-  for await (const line of rl) file.push(line);
+  const file = readFileSync(path_to_file,"utf-8")
   await classifyScopes(file, importFile);
 }
