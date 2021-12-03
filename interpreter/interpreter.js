@@ -79,10 +79,10 @@ function ask(rl) {
     input = input.trim();
     try {
       if (input.startsWith("import"))
-        await classifyScopes([input], importFile);
+        await classifyScopes(input, importFile);
       else if (input == "clear") console.clear();
       else if (input == "help") help("../interpreter/help.txt");
-      else await classifyScopes(["log | " + input], importFile);
+      else await classifyScopes("log | " + input, importFile);
       runGlobalScope();
     } catch (error) {
       console.log(error);
