@@ -8,6 +8,9 @@ pipescript (compiled to js) - 0.086s
 
 DONE
 ----
+
+remake website
+
 solve watch delay
 indexof not working for primitives
 ternary operator

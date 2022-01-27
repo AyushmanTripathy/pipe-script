@@ -1,0 +1,18 @@
+{
+  "uhc": "1.8.0",
+  "src_dir": "src",
+  "build_dir": "public",
+  "template": "template.html",
+  "minify": true,
+  "css": {
+    "autoprefix": true,
+    "prefix": "@import \"./global.scss\";",
+    "sass": true 
+  },
+  "vars": {
+    "foo": "bar"
+  },
+  "routes": {
+    "/": "doc.html"
+  }
+}

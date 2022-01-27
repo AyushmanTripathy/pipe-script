@@ -13,12 +13,10 @@ Pipescript can be interpreted directly or be compiled into javascript.
 2. using piping for everything posible
 3. using less symbols
 
-check out the official [website](https://pipescript.herokuapp.com/) for pipescript or<br/>
 check the [DOCS](https://pipescript.herokuapp.com/docs) to know more
 
 #### check it out
 
-1. install pipe scipt development kit from npm `npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
-2. or vist pipe scipt's [web editor](https://pipescript.herokuapp.com/editor) <br/>
-
+install pipe scipt development kit from npm `npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
+<br>
 plz report any bugs by opening a [issue](https://github.com/AyushmanTripathy/pipe-script/issues)
