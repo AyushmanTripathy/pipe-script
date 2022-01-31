@@ -10,10 +10,11 @@ Pipescript can be interpreted directly or be compiled into javascript.
 
 1. commands for everything
 1. human readble code
-2. using piping for everything posible
-3. using less symbols
+1. using piping for everything posible
+1. using less symbols
 
-check the [DOCS](https://pipescript.herokuapp.com/docs) to know more
+check the [DOCS](https://pipescript.netlify.app/) to know more. <br>
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2967d764-d690-4a4a-8266-4b31b41e4cfe/deploy-status)](https://app.netlify.com/sites/pipescript/deploys)
 
 #### check it out
 
