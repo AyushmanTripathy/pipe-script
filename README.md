@@ -10,15 +10,14 @@ Pipescript can be interpreted directly or be compiled into javascript.
 
 1. commands for everything
 1. human readble code
-2. using piping for everything posible
-3. using less symbols
+1. using piping for everything posible
+1. using less symbols
 
-check out the official [website](https://pipescript.herokuapp.com/) for pipescript or<br/>
-check the [DOCS](https://pipescript.herokuapp.com/docs) to know more
+check the [DOCS](https://pipescript.netlify.app/) to know more. <br>
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2967d764-d690-4a4a-8266-4b31b41e4cfe/deploy-status)](https://app.netlify.com/sites/pipescript/deploys)
 
 #### check it out
 
-1. install pipe scipt development kit from npm `npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
-2. or vist pipe scipt's [web editor](https://pipescript.herokuapp.com/editor) <br/>
-
+install pipe scipt development kit from npm `npm install -g pipescript-dev-kit` which comes with pipescript interpreter (command - pipescript) and pipescript compiler (command - psc)
+<br>
 plz report any bugs by opening a [issue](https://github.com/AyushmanTripathy/pipe-script/issues)

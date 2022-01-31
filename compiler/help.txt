@@ -8,7 +8,7 @@ options
   -h : help
 
 check official documentation for pipescript
-  https://pipescript.herokuapp.com/docs
+  https://pipescript.netlify.app/
 
 plz create an issue to report any bugs
  https://github.com/AyushmanTripathy/pipe-script/issues 

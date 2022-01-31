@@ -1,0 +1,65 @@
+$pri: #202020;
+$light: #bbb;
+$mobile: 680px;
+
+@mixin section($height, $width) {
+  height: $height;
+  width: $width;
+}
+
+@mixin relative($top, $left) {
+  position: relative;
+  top: $top;
+  left: $left;
+}
+
+@mixin grid($row, $column) {
+  display: grid;
+  grid-template-columns: $column;
+  grid-template-rows: $row;
+}
+
+@mixin fullscreen {
+  height: 100vh;
+  width: 100vw;
+}
+
+@mixin cover-image($src) {
+  background-image: url($src);
+  background-size: cover;
+}
+
+@mixin absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@mixin fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@mixin font {
+  font-family: "Montserrat", sans-serif;
+}
+
+@mixin flex($dir) {
+  display: flex;
+  flex-direction: $dir;
+}
+
+@mixin flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin no-padding-margin {
+  padding: 0;
+  margin: 0;
+}
+
+@mixin noto {
+  font-family: "Noto Sans Mono", monospace;
+}
