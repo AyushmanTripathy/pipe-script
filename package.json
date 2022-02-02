@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/AyushmanTripathy/pipe-script/issues"
   },
-  "homepage": "https://pipescript.netlify.app/",
+  "homepage": "https://github.com/AyushmanTripathy/pipe-script",
   "devDependencies": {
     "rollup-plugin-uglify": "^5.0.2"
   },

@@ -8,9 +8,9 @@ options
   -h : help
 
 check official documentation for pipescript
-  https://pipescript.netlify.app/
+  https://github.com/AyushmanTripathy/pipe-script/#documentation
 
 plz create an issue to report any bugs
- https://github.com/AyushmanTripathy/pipe-script/issues 
+  https://github.com/AyushmanTripathy/pipe-script/issues 
 
 thank you for using pipescript
