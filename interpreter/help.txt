@@ -12,8 +12,8 @@ options
   -h : help
   -w : watchfile
 
-check official documentation for pipescript
-  https://pipescript.netlify.app/
+stuck? read the documentation
+ https://github.com/AyushmanTripathy/pipe-script/#documentation
 
 plz create an issue to report any bugs
  https://github.com/AyushmanTripathy/pipe-script/issues 
