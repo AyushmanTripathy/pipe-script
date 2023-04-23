@@ -1,5 +1,5 @@
 import runGlobalScope from "./execution.js";
-import { dim,red,green } from "btss"
+import { grey,red,green } from "btss"
 import classifyScopes from "../common/parser.js";
 import { str, checkArgs, system_error, help } from "../common/util.js";
 
@@ -107,7 +107,7 @@ async function watchPath(file_name) {
 
   watchFile(file_name, {}, async () => {
     if (watch_options.clear_screen) console.clear();
-    log(dim(`> detected change on ${file_name}`));
+    log(grey(`> detected change on ${file_name}`));
     await run(`import ${file_name}`);
     resetScope();
     config = config_swap;
