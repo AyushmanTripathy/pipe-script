@@ -1,5 +1,5 @@
 import classifyScopes from "../common/parser.js";
-import { red, dim } from "btss";
+import { red, grey } from "btss";
 import compileScope from "./compilation.js";
 
 import { system_error, checkArgs, help } from "../common/util.js";
@@ -60,7 +60,7 @@ async function run(file) {
     log("compiled successfully!");
   } catch (error) {
     log(error);
-    log(dim("use the interpreter to get a better debuging experience"));
+    log(grey("use the interpreter to get a better debuging experience"));
     log("FATAL ERROR - terminating program...");
     if (typeof release_mode == "undefined") console.log(scopes);
     process.exit(1);
